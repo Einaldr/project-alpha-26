@@ -1,32 +1,36 @@
-The git flow inside this repository follows Github Flow with following branch names:
+### CODENAME: PROJECT ALPHA
 
-    hontai -> main/master, default, long-lived branch. Every commit to this branch should be a working state of app.
+    A github-like web application with focous on documentation.
 
-    kairo/* -> development, daily workspace for building, always a branch of stable hontai branch. Merge to hontai when feature is done and delete the branch.
+## The git flow inside this repository follows Github Flow with following branch names:
 
-    hayate/* -> a hotfix branch, a quick hotfix branch branched off hontai for swift bugfixing. Merged back into hontai.
+    - **'hontai'** -> main/master, default, long-lived branch. Every commit to this branch should be a working state of app.
 
-Additionally, this repository uses Git Tags:
+    - **'kairo/*'** -> development, daily workspace for building, always a branch of stable hontai branch. Merged back to hontai when feature is done using '--no-ff' flag.
 
-    kansei/* -> milestone, marks a commit of hontai branch with a specified 'release-ready' version tag like kansei/v1.0.0.
+    - **'hayate/*'** -> a hotfix branch, a quick hotfix branch branched off hontai for swift bugfixing. Merged back into hontai.
 
-Commit policy:
+## Additionally, this repository uses Git Tags:
+
+    **'kansei/*'** -> milestone, marks a commit of hontai branch with a specified 'release-ready' version tag like kansei/v1.0.0.
+
+## Commit policy:
 
     Commits should follow imperative Mood. The commit message should complete this sentence:
 
-        "If applied, this commit will..."
+        *"If applied, this commit will..."*
     
     Additionally each commit's subject should be simple and short (up to 50 characters).
 
     Prefix system in place:
 
-        "feat:" should signify a new feature -> feat: add user authentication
+        - "feat:" should signify a new feature -> feat: add user authentication
 
-        "fix:" should signify a bug fix -> fix: resolve crash on logout
+        - "fix:" should signify a bug fix -> fix: resolve crash on logout
 
-        "docs:" should signify a documentation update -> docs: update comments in example.php
+        - "docs:" should signify a documentation update -> docs: update comments in example.php
 
-        "chore:" should signify a maintenance task -> chore: consolidate gitignore files
+        - "chore:" should signify a maintenance task -> chore: consolidate gitignore files
 
-        "refactor:" should signify a code cleanup without feature change -> refactor: simplify database connection logic
+        - "refactor:" should signify a code cleanup without feature change -> refactor: simplify database connection logic
 

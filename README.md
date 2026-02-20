@@ -1,6 +1,14 @@
-## CODENAME: PROJECT ALPHA
+# CODENAME: PROJECT ALPHA
 
 > A github-like web application with focous on documentation.
+
+## Folder structure:
+
+> **/backend** -> folder used for laravel backend.
+
+> **/frontend** -> folder used for Vite frontend.
+
+## Git Workflow:
 
 ### The git flow inside this repository follows Github Flow with following branch names:
 

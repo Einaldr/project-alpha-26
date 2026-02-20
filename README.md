@@ -4,9 +4,9 @@
 
 ## Folder structure:
 
-> **/backend** -> folder used for laravel backend.
+- **/backend** -> folder used for laravel backend.
 
-> **/frontend** -> folder used for Vite frontend.
+- **/frontend** -> folder used for Vite frontend.
 
 ## Git Workflow:
 

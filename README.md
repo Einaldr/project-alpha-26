@@ -2,15 +2,15 @@
 
 > A github-like web application with focous on documentation.
 
-## Folder structure:
+## Folder structure
 
 - **/backend** -> folder used for laravel backend.
 
 - **/frontend** -> folder used for Vite frontend.
 
-## Git Workflow:
+## Git Workflow
 
-### The git flow inside this repository follows Github Flow with following branch names:
+### The git flow inside this repository follows Github Flow with following branch names
 
 - **'hontai'** -> main/master, default, long-lived branch. Every commit to this branch should be a working state of app.
 
@@ -18,19 +18,19 @@
 
 - **'hayate/*'** -> a hotfix branch, a quick hotfix branch branched off hontai for swift bugfixing. Merged back into hontai.
 
-### Additionally, this repository uses Git Tags:
+### Additionally, this repository uses Git Tags
 
 - **'kansei/*'** -> milestone, marks a commit of hontai branch with a specified 'release-ready' version tag like kansei/v1.0.0.
 
-### Commit policy:
+### Commit policy
 
-#### Commits should follow imperative Mood. The commit message should complete this sentence:
+#### Commits should follow imperative Mood. The commit message should complete this sentence
 
 > *"If applied, this commit will..."*
-    
+
 Additionally each commit's subject should be simple and short (up to 50 characters).
 
-#### Prefix system in place:
+#### Prefix system in place
 
 - "feat:" should signify a new feature -> feat: add user authentication
 
@@ -41,4 +41,3 @@ Additionally each commit's subject should be simple and short (up to 50 characte
 - "chore:" should signify a maintenance task -> chore: consolidate gitignore files
 
 - "refactor:" should signify a code cleanup without feature change -> refactor: simplify database connection logic
-

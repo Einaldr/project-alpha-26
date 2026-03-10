@@ -14,13 +14,13 @@
 
 - **'main'** -> main/master, default, long-lived branch. Every commit to this branch should be a working state of app.
 
-- **'dev/*'** -> development, daily workspace for building, always a branch of stable hontai branch. Merged back to hontai when feature is done using '--no-ff' flag.
+- **'dev/*'** -> development, daily workspace for building, always a branch of stable main branch. Merged back to main when feature is done using '--no-ff' flag.
 
-- **'hotfix/*'** -> a hotfix branch, a quick hotfix branch branched off hontai for swift bugfixing. Merged back into hontai.
+- **'hotfix/*'** -> a hotfix branch, a quick hotfix branch branched off main for swift bugfixing. Merged back into main.
 
 ### Additionally, this repository uses Git Tags
 
-- **'release/*'** -> milestone, marks a commit of hontai branch with a specified 'release-ready' version tag like kansei/v1.0.0.
+- **'release/*'** -> milestone, marks a commit of main branch with a specified 'release-ready' version tag like kansei/v1.0.0.
 
 ### Commit policy
 

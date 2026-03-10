@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -14,11 +15,23 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // --- Custom fields for TOS ---
+            $table->timestampsTz('tos_accepted_at')->nullable();
+            $table->string('tos_version', 15);
+
+            // --- Field for account status ---
+            $table->string('account_status')->default('active');
+
+            // --- Timezone-aware timestamps ---
             $table->rememberToken();
-            $table->timestamps();
+            $table->softDeletesTz();
+
+            # --- DB statement ---
+            DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email) WHERE deleted_at IS NULL');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

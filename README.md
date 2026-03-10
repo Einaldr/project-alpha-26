@@ -32,7 +32,7 @@ Additionally each commit's subject should be simple and short (up to 72 characte
 
 #### Prefix system in place
 
-The prefix system is inspired by [Conventional Commits](www.conventionalcommits.org).
+The prefix system is inspired by [Conventional Commits](https://www.conventionalcommits.org).
 
 - "feat:" should signify a new feature -> feat: add user authentication
 

@@ -1,6 +1,6 @@
 # CODENAME: PROJECT ALPHA
 
-> A github-like web application with focous on documentation.
+> A github-like web application with focus on documentation.
 
 ## Folder structure
 
@@ -12,15 +12,15 @@
 
 ### The git flow inside this repository follows Github Flow with following branch names
 
-- **'hontai'** -> main/master, default, long-lived branch. Every commit to this branch should be a working state of app.
+- **'main'** -> main/master, default, long-lived branch. Every commit to this branch should be a working state of app.
 
-- **'kairo/*'** -> development, daily workspace for building, always a branch of stable hontai branch. Merged back to hontai when feature is done using '--no-ff' flag.
+- **'dev/*'** -> development, daily workspace for building, always a branch of stable hontai branch. Merged back to hontai when feature is done using '--no-ff' flag.
 
-- **'hayate/*'** -> a hotfix branch, a quick hotfix branch branched off hontai for swift bugfixing. Merged back into hontai.
+- **'hotfix/*'** -> a hotfix branch, a quick hotfix branch branched off hontai for swift bugfixing. Merged back into hontai.
 
 ### Additionally, this repository uses Git Tags
 
-- **'kansei/*'** -> milestone, marks a commit of hontai branch with a specified 'release-ready' version tag like kansei/v1.0.0.
+- **'release/*'** -> milestone, marks a commit of hontai branch with a specified 'release-ready' version tag like kansei/v1.0.0.
 
 ### Commit policy
 
@@ -28,9 +28,11 @@
 
 > *"If applied, this commit will..."*
 
-Additionally each commit's subject should be simple and short (up to 50 characters).
+Additionally each commit's subject should be simple and short (up to 72 characters).
 
 #### Prefix system in place
+
+The prefix system is inspired by [Conventional Commits](www.conventionalcommits.org).
 
 - "feat:" should signify a new feature -> feat: add user authentication
 

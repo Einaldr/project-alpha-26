@@ -20,16 +20,21 @@ return new class extends Migration
             $table->string('password');
 
             // --- Custom fields for TOS ---
-            $table->timestampsTz('tos_accepted_at')->nullable();
+            $table->timestampTz('tos_accepted_at')->nullable();
             $table->string('tos_version', 15);
 
             // --- Field for account status ---
             $table->string('account_status')->default('active');
 
-            // --- Timezone-aware timestamps ---
             $table->rememberToken();
+
+            // --- Softdeletes ---
+            $table->timestampsTz();
             $table->softDeletesTz();
         });
+
+        // --- DB statement to enable Trigram extension of postgre ---
+        DB::statement('CREATE EXTENSION IF NOT EXISTS pg_trgm');
 
         // --- DB statement to create unique index for user emails ---
         DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email) WHERE deleted_at IS NULL');

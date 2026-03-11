@@ -3,11 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enum\AccountStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -15,7 +18,10 @@ class User extends Authenticatable
      * HasUuids: Automatically generates UUIDs for 'id' column.
      * SoftDeletes: Enables standard Laravel soft delete functionallity.
     */
-    use HasFactory, Notifiable, HasUuids, SoftDeletes;
+    use HasFactory, Notifiable, HasUuids, SoftDeletes, HasApiTokens;
+
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +35,15 @@ class User extends Authenticatable
         'tos_accepted_at',
         'tos_version',
         'account_status'
+    ];
+
+    /**
+     * The default attributes.
+     * 
+     * @var array
+     */
+    protected $attributes = [
+        'account_status' => AccountStatus::ACTIVE,
     ];
 
     /**
@@ -52,7 +67,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime:d-m-Y',
             'tos_accepted_at'=> 'datetime:d-m-Y',
             'password' => 'hashed',
-
+            'account_status' => AccountStatus::class,
         ];
     }
 }

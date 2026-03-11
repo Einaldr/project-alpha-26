@@ -20,7 +20,7 @@
 
 ### Additionally, this repository uses Git Tags
 
-- **'release/*'** -> milestone, marks a commit of main branch with a specified 'release-ready' version tag like kansei/v1.0.0.
+- **'release/*'** -> milestone, marks a commit of main branch with a specified 'release-ready' version tag like release/v1.0.0.
 
 ### Commit policy
 

@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->string('name');
             $table->string('email');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestampTz('email_verified_at')->nullable();
             $table->string('password');
 
             // --- Custom fields for TOS ---
@@ -29,10 +29,10 @@ return new class extends Migration
             // --- Timezone-aware timestamps ---
             $table->rememberToken();
             $table->softDeletesTz();
-
-            # --- DB statement ---
-            DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email) WHERE deleted_at IS NULL');
         });
+
+        // --- DB statement to create unique index for user emails ---
+        DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email) WHERE deleted_at IS NULL');
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

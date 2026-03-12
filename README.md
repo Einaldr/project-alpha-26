@@ -4,13 +4,11 @@
 
 ## Motivation
 
-### Aim
+**Problem:** Existing documentation tools are often too bulky or disconnected from the developer workflow. I wanted something that felt as natural as pushing code to a repo.
 
-Main aim of this project is to create a web-based documentation tool while being developer-friendly similarly to how [Github](https://github.com) handles code.
+**Aim:** To build a web-based documentation tool that brings the seamless, developer-centric workflow of GitHub to the world of documentation.
 
-### Personal motivation
-
-My main motivation for creating this project is to challange myself as well as learn modern web application creation process and create my own documentation tool.
+**Personal Motivation:** This project serves as a deep dive into the modern web development lifecycle. My goal is to master full-stack architecture while solving a personal need for a more intuitive documentation tool.
 
 ## Folder structure
 

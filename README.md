@@ -4,9 +4,9 @@
 
 ## Motivation
 
-**Problem:** Existing documentation tools are often too bulky or disconnected from the developer workflow. I wanted something that felt as natural as pushing code to a repo.
+**Problem:** Documentation often lives in a silo. Existing tools require high-friction UI interactions or manual syncs that don't fit into a standard git push cycle.
 
-**Aim:** To build a web-based documentation tool that brings the seamless, developer-centric workflow of GitHub to the world of documentation.
+**Aim:** To build a web-based documentation tool to bridge the gap between development and documentation by treating docs like code.
 
 **Personal Motivation:** This project serves as a deep dive into the modern web development lifecycle. My goal is to master full-stack architecture while solving a personal need for a more intuitive documentation tool.
 

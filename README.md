@@ -2,6 +2,16 @@
 
 > A github-like web application with focus on documentation.
 
+## Motivation
+
+### Aim
+
+Main aim of this project is to create a web-based documentation tool while being developer-friendly similarly to how [Github](https://github.com) handles code.
+
+### Personal motivation
+
+My main motivation for creating this project is to challange myself as well as learn modern web application creation process and create my own documentation tool.
+
 ## Folder structure
 
 - **/backend** -> folder used for laravel backend.

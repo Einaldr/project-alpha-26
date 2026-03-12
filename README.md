@@ -6,9 +6,9 @@
 
 **Problem:** Documentation often lives in a silo. Existing tools require high-friction UI interactions or manual syncs that don't fit into a standard git push cycle.
 
-**Aim:** To build a web-based documentation tool to bridge the gap between development and documentation by treating docs like code.
+**Aim:** To build a web platform that bridges the gap between developers and technical writing by treating docs as code.
 
-**Personal Motivation:** This project serves as a deep dive into the modern web development lifecycle. My goal is to master full-stack architecture while solving a personal need for a more intuitive documentation tool.
+**Personal Motivation:** My goal is to master full-stack architecture while solving my own need for a frictionless documentation workflow.
 
 ## Folder structure
 

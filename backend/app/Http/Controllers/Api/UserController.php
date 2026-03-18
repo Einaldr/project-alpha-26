@@ -67,9 +67,15 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Request $request, User $user): UserResource
     {
-        //
+        $isMe = auth('sanctum')->check() && auth('sanctum')->id() === $user->id;
+
+        if ($user->account_status !== AccountStatus::ACTIVE && ! $isMe) {
+            abort(404, 'User not found');
+        }
+
+        return new UserResource($user);
     }
 
     /**

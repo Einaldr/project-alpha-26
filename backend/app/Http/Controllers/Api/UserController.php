@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a list of users.
      */
     public function index(Request $request)
     {
@@ -39,7 +39,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Register a user.
      */
     public function store(StoreUserRequest $request): JsonResponse
     {
@@ -65,7 +65,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
      */
     public function show(Request $request, User $user): UserResource
     {

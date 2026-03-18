@@ -11,7 +11,7 @@ Route::post('/auth/register', [UserController::class, 'store']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/password/reset');
 
-// --- User endpoints
+// --- User endpoints ---
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/{user}', [UserController::class, 'show']);
 
@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/logout-all', [AuthController::class, 'logoutAll']);
     Route::post('/auth/password/change', [AuthController::class, 'changePassword']);
-
+    
+    // --- User related secure endpoints
     Route::get('/users/me', [ProfileController::class, 'me']);
 });

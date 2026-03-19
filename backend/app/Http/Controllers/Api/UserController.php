@@ -7,12 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
     /**
+     * GET /v1/users?per_page=?search=}
+     * 
      * Display a list of users.
      */
     public function index(Request $request)
@@ -39,6 +42,8 @@ class UserController extends Controller
     }
 
     /**
+     * POST /v1/auth/register
+     * 
      * Register a user.
      */
     public function store(StoreUserRequest $request): JsonResponse
@@ -65,6 +70,8 @@ class UserController extends Controller
     }
 
     /**
+     * GET /v1/users/{users}
+     * 
      * Display the specified user.
      */
     public function show(Request $request, User $user): UserResource
@@ -76,21 +83,5 @@ class UserController extends Controller
         }
 
         return new UserResource($user);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
-    }
+    } 
 }

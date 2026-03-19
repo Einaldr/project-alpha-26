@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use function Pest\Laravel\patch;
+
 // --- Authentication endpoints ---
 Route::post('/auth/register', [UserController::class, 'store']);
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -23,4 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // --- User related secure endpoints
     Route::get('/users/me', [ProfileController::class, 'me']);
+    Route::patch('/users/me', [UserController::class, 'update']);
+    Route::delete('/users/me', [UserController::class, 'destroy']);
+    Route::delete('/users/me/pernament', [UserController::class, 'forceDestroy']);
+
 });

@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { z } from 'zod'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Controller, useForm } from 'react-hook-form'
-import api from '@/lib/api'
+import api from '@/lib/api.ts'
 
 
 const loginFormSchema = z.object({

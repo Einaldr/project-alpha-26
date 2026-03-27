@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import LoginPage from "@/pages/LoginPage"
-import ProtectedRoute from "@/lib/middlewere"
+import ProtectedRoute from "@/lib/middleware"
 import { Toaster } from "sonner"
 
 export function App() {

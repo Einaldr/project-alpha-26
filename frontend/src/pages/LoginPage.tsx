@@ -5,7 +5,7 @@ import DesktopLoginLayout from "@/components/layouts/desktop/DesktopLoginLayout"
 export default function LoginPage() {
     const viewType = useViewType();
 
-    if (viewType == VIEW_TYPES.MOBILE || viewType == VIEW_TYPES.TABLET) {
+    if (viewType == VIEW_TYPES.MOBILE) {
         return <MobileLoginLayout />
     }
 

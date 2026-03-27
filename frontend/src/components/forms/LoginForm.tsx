@@ -52,7 +52,7 @@ export default function LoginForm() {
     }
 
     return (
-        <div className='flex flex-col w-full h-full items-center'>
+        <div className='relative flex flex-col w-full h-full items-center'>
 
             <h1 className="text-4xl text-foreground m-16 font-extrabold">Welcome!</h1>
 

@@ -69,7 +69,7 @@ class AuthController extends Controller
 
     /**
      * 
-     * Logout from one device
+     * Logout from the current device
      * 
      */
     public function logout(Request $request): JsonResponse

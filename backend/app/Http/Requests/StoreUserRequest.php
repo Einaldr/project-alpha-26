@@ -34,9 +34,11 @@ class StoreUserRequest extends FormRequest
                 Rule::unique('users', 'email')->whereNull('deleted_at')
             ],
 
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => ['required', 'confirmed', Password::defaults(), 'min:8'],
 
             'tos_accepted' => ['accepted'],
+
+            'privacy_policy_acknowledged' => ['accepted']
         ];
     }
 }

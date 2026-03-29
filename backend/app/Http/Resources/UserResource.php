@@ -27,6 +27,7 @@ class UserResource extends JsonResource
             'email' => $this->when($isMe, $this->email),
             'status' => $this->getNormalizedStatus($isMe),
             'tos_version' => $this->when($isMe, $this->tos_version),
+            'privacy_policy_version' => $this->when($isMe, $this->privacy_policy_version),
             'joined_at' => $this->created_at->toIso8601String(),
         ];
     }

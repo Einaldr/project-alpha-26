@@ -51,6 +51,7 @@ class UserController extends Controller
         $validated = $request->validated();
 
         $currentTosVersion = config('settings.tos_version');
+        $currentPrivacyPolicyVersion = config('settings.privacy_version');
 
         $user = User::create([
             'name' => $validated['name'],
@@ -58,6 +59,8 @@ class UserController extends Controller
             'password' => $validated['password'],
             'tos_accepted_at' => now(),
             'tos_version' => $currentTosVersion,
+            'privacy_policy_acknowledged_at' => now(),
+            'privacy_policy_version' => $currentPrivacyPolicyVersion,
         ]);
 
         $token = $user->createToken('frontend_token')->plainTextToken;

@@ -34,6 +34,8 @@ class User extends Authenticatable
         'password',
         'tos_accepted_at',
         'tos_version',
+        'privacy_policy_accepted_at',
+        'privacy_policy_version',
         'account_status'
     ];
 
@@ -65,7 +67,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime:d-m-Y',
-            'tos_accepted_at'=> 'datetime:d-m-Y',
+            'tos_accepted_at' => 'datetime:d-m-Y',
+            'privacy_policy_accepted_at' => 'datetime:d-m-Y',
             'password' => 'hashed',
             'account_status' => AccountStatus::class,
         ];

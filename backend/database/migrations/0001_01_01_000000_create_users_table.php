@@ -19,9 +19,12 @@ return new class extends Migration
             $table->timestampTz('email_verified_at')->nullable();
             $table->string('password');
 
-            // --- Custom fields for TOS ---
+            // --- Custom fields for TOS and privacy policy ---
             $table->timestampTz('tos_accepted_at')->nullable();
             $table->string('tos_version', 15);
+
+            $table->timestampTz('privacy_policy_acknowledged_at')->nullable();
+            $table->string('privacy_policy_version', 15);
 
             // --- Field for account status ---
             $table->string('account_status')->default('active');

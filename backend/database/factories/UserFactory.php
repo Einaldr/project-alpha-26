@@ -34,6 +34,9 @@ class UserFactory extends Factory
             'tos_accepted_at' => now(),
             'tos_version' => config('settings.tos_version', '1.0.0'),
 
+            'privacy_policy_acknowledged_at' => now(),
+            'privacy_policy_version' => config('settings.privacy_version', '1.0.0'),
+
             'account_status' => AccountStatus::ACTIVE,
         ];
     }

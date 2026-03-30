@@ -11,7 +11,8 @@ use function Pest\Laravel\patch;
 // --- Authentication endpoints ---
 Route::post('/auth/register', [UserController::class, 'store']);
 Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/password/reset');
+Route::post('/auth/password/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+Route::post('/auth/password/reset-password', [AuthController::class, 'resetPassword']);
 
 // --- User endpoints ---
 Route::get('/users', [UserController::class, 'index']);

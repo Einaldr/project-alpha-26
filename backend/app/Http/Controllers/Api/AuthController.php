@@ -12,6 +12,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Password as PasswordFacade;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -43,6 +45,39 @@ class AuthController extends Controller
             'user' => new UserResource($user),
             'token' => $token,
         ], 200);
+    }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $status = PasswordFacade::broker()->sendResetLink($request->only('email'));
+
+        return $status === PasswordFacade::RESET_LINK_SENT
+            ? response()->json(['message' => __($status)])
+            : response()->json(['message' => __($status)], 400);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'reset_token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required||confirmed|min:8',
+        ]);
+
+        $status = PasswordFacade::broker()->reset($request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill(['password' => Hash::make($password)])->setRememberToken(Str::random(60));
+
+                $user->tokens()->delete();
+
+                $user->save();
+            });
+        
+        return $status === PasswordFacade::PASSWORD_RESET
+            ? response()->json(['message' => __($status)])
+            : response()->json(['message' => __($status)], 400);
     }
 
 

@@ -74,6 +74,9 @@ export default function LoginForm() {
                         <Field>
                             <FieldLabel htmlFor='filegroup-password'>Password</FieldLabel>
                             <Input{...field} aria-invalid={fieldState.invalid} type='password' id='fieldgroup-password' placeholder='************' className='' autoComplete='current-password' required />
+                            {fieldState.invalid && (
+                                <FieldError errors={[fieldState.error]} />
+                            )}
                             <div className='flex justify-end'>
                                 <Link to='/forgot-password' className='hover:text-foreground text-muted-foreground hover:underline text-xs'>Forgot password</Link>
                             </div>

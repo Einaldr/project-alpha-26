@@ -64,8 +64,8 @@ const RegistrationForm = () => {
         <div className='relative flex flex-col w-full h-full items-center'>
             <h1 className="text-4xl text-foreground m-16 font-extrabold">Register</h1>
 
-            <form className="flex flex-col w-full items-center" onSubmit={form.handleSubmit(onSubmit)}>
-                <FieldGroup className='p-4 pr-8 pl-8 border border-border rounded-sm mb-2'>
+            <form className="flex flex-col w-full items-center border border-border rounded-sm" onSubmit={form.handleSubmit(onSubmit)}>
+                <FieldGroup className='p-4 pr-8 pl-8 rounded-sm mb-2'>
                     <Controller name="username" control={form.control} render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                             <FieldLabel htmlFor="registration-information-username">Username</FieldLabel>
@@ -86,7 +86,7 @@ const RegistrationForm = () => {
                         </Field>
                     )} />
                 </FieldGroup>
-                <FieldGroup className='p-4 pr-8 pl-8 border border-border rounded-sm mb-2'>
+                <FieldGroup className='p-4 pr-8 pl-8 mb-2'>
                     <Controller name="password" control={form.control} render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                             <FieldLabel htmlFor="registration-passwords-password">Password</FieldLabel>
@@ -106,7 +106,7 @@ const RegistrationForm = () => {
                         </Field>
                     )} />
                 </FieldGroup>
-                <FieldGroup className='flex flex-row p-4 pr-8 pl-8 border border-border rounded-sm'>
+                <FieldGroup className='flex flex-row p-4 pr-8 pl-8'>
                     <Controller name="termsAndPrivacy" control={form.control} render={({ field, fieldState }) => (
                         <Field orientation="horizontal" data-invalid={fieldState.invalid}>
                             <Checkbox id="registration-checkboxes-termsAndPrivacy" checked={field.value} onCheckedChange={field.onChange} />
@@ -120,7 +120,7 @@ const RegistrationForm = () => {
                     )} />
                 </FieldGroup>
 
-                <Field className="p-16">
+                <Field className="p-8">
                     <Button type="submit" variant="default" size="lg">Register</Button>
                 </Field>
             </form>

@@ -98,11 +98,8 @@ return [
         ],
 
         'mailtrap' => [
-            'mailtrap' => [
-                'transport' => 'mailtrap'
-            ]
-        ]
-
+                'transport' => 'mailtrap-sdk'
+            ],
     ],
 
     /*

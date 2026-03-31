@@ -12,10 +12,11 @@ import { toast } from "sonner";
 const RegistrationFormSchema = z.object({
     username: z.string(),
     email: z.email(),
-    password: z.string(),
+    password: z.string().min(8, 'Password must be at least 8 characters.'),
     confirmPassword: z.string(),
     termsAndPrivacy: z.boolean().default(false).refine((val) => val === true, { message: "You must accept the terms and conditions to proceed." }),
 })
+.refine((data) => data.password === data.confirmPassword, {message: "Passwords don't match", path: ["confirmPassword"],});
 
 const RegistrationForm = () => {
     const navigate = useNavigate();
@@ -109,7 +110,7 @@ const RegistrationForm = () => {
                 <FieldGroup className='flex flex-row p-4 pr-8 pl-8'>
                     <Controller name="termsAndPrivacy" control={form.control} render={({ field, fieldState }) => (
                         <Field orientation="horizontal" data-invalid={fieldState.invalid}>
-                            <Checkbox id="registration-checkboxes-termsAndPrivacy" checked={field.value} onCheckedChange={field.onChange} />
+                            <Checkbox id="registration-checkboxes-termsAndPrivacy" checked={field.value} onCheckedChange={field.onChange} required/>
                             <FieldContent>
                                 <FieldTitle>Accept <Link to="/terms-and-conditions" className="hover:text-primary underline">Terms & Conditions</Link> and acknowledge <Link to="/privacy-policy" className="hover:text-primary underline">Privacy Policy</Link></FieldTitle>
                             </FieldContent>

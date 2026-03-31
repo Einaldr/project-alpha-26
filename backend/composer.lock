@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e48b81c378ec624d8a3b3703cb0861f4",
+    "content-hash": "9536216ceeae22f14ac52237850aa642",
     "packages": [
         {
             "name": "brick/math",
@@ -3627,16 +3627,16 @@
         },
         {
             "name": "railsware/mailtrap-php",
-            "version": "3.10.0",
+            "version": "3.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailtrap/mailtrap-php.git",
-                "reference": "306d117ddbcbea1ae69cc8302f20e24b2cd7addd"
+                "reference": "788c164430bd74b79f4c6a0d83258e8be45340e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailtrap/mailtrap-php/zipball/306d117ddbcbea1ae69cc8302f20e24b2cd7addd",
-                "reference": "306d117ddbcbea1ae69cc8302f20e24b2cd7addd",
+                "url": "https://api.github.com/repos/mailtrap/mailtrap-php/zipball/788c164430bd74b79f4c6a0d83258e8be45340e4",
+                "reference": "788c164430bd74b79f4c6a0d83258e8be45340e4",
                 "shasum": ""
             },
             "require": {
@@ -3695,9 +3695,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mailtrap/mailtrap-php/issues",
-                "source": "https://github.com/mailtrap/mailtrap-php/tree/3.10.0"
+                "source": "https://github.com/mailtrap/mailtrap-php/tree/3.11.0"
             },
-            "time": "2026-01-15T16:08:19+00:00"
+            "time": "2026-03-31T07:13:44+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

@@ -1,13 +1,22 @@
-import DesktopForgotPasswordLayout from "@/components/layouts/desktop/DesktopForgotPasswordLayout";
-import MobileForgotPasswordLayout from "@/components/layouts/mobile/MobileForgotPasswordLayout";
-import { useViewType, VIEW_TYPES } from "@/hooks/useViewType";
+import CardBasedLayout from "@/components/layouts/mobile/CardBasedLayout";
+import ForgotPasswordForm from "@/components/forms/ForgotPasswordForm";
+import BgImage from "@/assets/login/login-image-horizontal.webp";
+import SplitScreenLayout from "@/components/layouts/desktop/SplitScreenLayout";
 
 export default function ForgotPasswordPage() {
-    const viewType = useViewType();
-    
-    if (viewType === VIEW_TYPES.MOBILE) {
-        return <MobileForgotPasswordLayout />
-    }
+    return (
+        <>
+            <div className="block md:hidden">
+                <CardBasedLayout>
+                    <ForgotPasswordForm />
+                </CardBasedLayout>
+            </div>
 
-    return <DesktopForgotPasswordLayout />
+            <div className="hidden md:block">
+                <SplitScreenLayout backgroundImage={BgImage}>
+                    <ForgotPasswordForm />
+                </SplitScreenLayout>
+            </div>
+        </>
+    )
 }

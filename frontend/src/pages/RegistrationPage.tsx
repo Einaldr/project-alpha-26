@@ -1,13 +1,18 @@
-import DesktopRegisterLayout from "@/components/layouts/desktop/DesktopRegisterLayout";
-import MobileRegisterLayout from "@/components/layouts/mobile/MobileRegisterLayout";
-import { useViewType, VIEW_TYPES } from "@/hooks/useViewType";
+import RegistrationForm from "@/components/forms/RegistrationForm";
+import SplitScreenLayout from "@/components/layouts/desktop/SplitScreenLayout";
+import CardBasedLayout from "@/components/layouts/mobile/CardBasedLayout";
+import BgImage from "@/assets/login/login-image-horizontal.webp";
 
 export default function RegistrationPage() {
-    const viewType = useViewType();
+    return (
+        <>
+            <div className="block md:hidden">
+                <CardBasedLayout><RegistrationForm /></CardBasedLayout>
+            </div>
 
-    if (viewType === VIEW_TYPES.MOBILE) {
-        return <MobileRegisterLayout />
-    }
-
-    return <DesktopRegisterLayout />
+            <div className="hidden md:block">
+                <SplitScreenLayout backgroundImage={BgImage}><RegistrationForm /></SplitScreenLayout>
+            </div>
+        </>
+    )
 }

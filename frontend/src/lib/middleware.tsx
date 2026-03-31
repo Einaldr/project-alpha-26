@@ -22,7 +22,7 @@ const ProtectedRoute = () => {
                 return;
             }
 
-            let retries = 5;
+            let retries = 2;
 
             while (retries > 0) {
                 try {

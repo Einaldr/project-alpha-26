@@ -1,13 +1,18 @@
-import { useViewType, VIEW_TYPES } from "@/hooks/useViewType"
-import MobileLoginLayout from "@/components/layouts/mobile/MobileLoginLayout";
-import DesktopLoginLayout from "@/components/layouts/desktop/DesktopLoginLayout";
+import CardBasedLayout from "@/components/layouts/mobile/CardBasedLayout";
+import LoginForm from "@/components/forms/LoginForm";
+import BgImage from "@/assets/login/login-image-horizontal.webp";
+import SplitScreenLayout from "@/components/layouts/desktop/SplitScreenLayout";
 
 export default function LoginPage() {
-    const viewType = useViewType();
+    return (
+        <>
+            <div className="block md:hidden">
+                <CardBasedLayout><LoginForm /></CardBasedLayout>
+            </div>
 
-    if (viewType == VIEW_TYPES.MOBILE) {
-        return <MobileLoginLayout />
-    }
-
-    return <DesktopLoginLayout />
+            <div className="hidden md:block">
+                <SplitScreenLayout backgroundImage={BgImage}><LoginForm /></SplitScreenLayout>
+            </div>
+        </>
+    )
 }

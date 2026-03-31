@@ -1,14 +1,23 @@
-import DesktopResetPasswordLayout from "@/components/layouts/desktop/DesktopForgotPasswordLayout";
-import MobileResetPasswordLayout from "@/components/layouts/mobile/MobileResetPasswordLayout";
-import { useViewType, VIEW_TYPES } from "@/hooks/useViewType";
+import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
+import SplitScreenLayout from "@/components/layouts/desktop/SplitScreenLayout";
+import CardBasedLayout from "@/components/layouts/mobile/CardBasedLayout";
+import BgImage from "@/assets/login/login-image-horizontal.webp";
 
 
 export default function ResetPasswordPage() {
-    const viewType = useViewType();
+    return (
+        <>
+            <div className="block md:hidden">
+                <CardBasedLayout>
+                    <ResetPasswordForm />
+                </CardBasedLayout>
+            </div>
 
-    if (viewType === VIEW_TYPES.MOBILE) {
-        return <MobileResetPasswordLayout />
-    }
-
-    return <DesktopResetPasswordLayout />
+            <div className="hidden md:block">
+                <SplitScreenLayout backgroundImage={BgImage}>
+                    <ResetPasswordForm />
+                </SplitScreenLayout>
+            </div>
+        </>
+    )
 }

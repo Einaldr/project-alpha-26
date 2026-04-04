@@ -9,6 +9,20 @@ const api = axios.create({
     },
 });
 
+// --- INTERCEPTORS ---
+
+/*
+    Intercept outgoing request and check if the token exists,
+
+    If token exists:
+
+    Add Authorization header with the bearer token,
+
+    Otherwise:
+
+    Just pass the request to the server.
+*/
+
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
 
@@ -19,6 +33,16 @@ api.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 })
+
+/*
+    Intercept incoming response from the server and depending on the returned HTTP status:
+
+    401:
+    If token existed, delete it and throw expired error, otherwise throw unauthenticated error,
+
+    403:
+    Return that the user is forbidden (unauthorized) from doing that action.
+*/
 
 api.interceptors.response.use(undefined, async (error) => {
     if (error.response?.status === 401) {

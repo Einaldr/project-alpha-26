@@ -4,6 +4,12 @@ import api from "./api.ts";
 import { AuthAlert, type AuthVariant } from "@/components/alerts/AuthAlert"
 import axios from "axios";
 
+/*
+    Middleware used to guard protected routes
+
+    It handles different user states and displays either content or toasts depending on user's authentication status.
+*/
+
 const ProtectedRoute = () => {
     const [variant, setVariant] = useState<AuthVariant>("unauthenticated");
     const [isValidating, setIsValidating] = useState(true);
@@ -11,6 +17,9 @@ const ProtectedRoute = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    /*
+     Initialize session
+    */
     useEffect(() => {
         const verifySession = async () => {
             const token = localStorage.getItem('token');
@@ -71,6 +80,7 @@ const ProtectedRoute = () => {
         verifySession();
     }, []);
 
+    // Run on session-error event from api.ts, responsible for properly showing toasts
     useEffect(() => {
         const handleSessionError = (event: Event) => {
             const customEvent = event as CustomEvent;
@@ -89,12 +99,14 @@ const ProtectedRoute = () => {
         return null;
     }
 
+    // If user is unauthenticated or session expired, displays the toast in its respective variant
     if (showDialog) {
         return (
             <AuthAlert isOpen={true} variant={variant} onLogin={() => navigate('/login', { state: { from: location } })} />
         )
     }
 
+    // Otherwise, returns the page's content
     return <Outlet />
 };
 

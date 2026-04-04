@@ -3,16 +3,19 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use function Pest\Laravel\patch;
-
 // --- Authentication endpoints ---
-Route::post('/auth/register', [UserController::class, 'store']);
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/password/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
-Route::post('/auth/password/reset-password', [AuthController::class, 'resetPassword']);
+Route::prefix('auth') -> group(function() {
+    Route::post('/register', [UserController::class, 'store']);
+    Route::post('/login', [AuthController::class, 'login']);
+
+    // --- Password reset endpoints ---
+    Route::prefix('password')->group(function () {
+        Route::post('/password/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+        Route::post('/password/reset-password', [AuthController::class, 'resetPassword']);
+    });
+});
 
 // --- User endpoints ---
 Route::get('/users', [UserController::class, 'index']);
@@ -20,14 +23,17 @@ Route::get('/user/{user}', [UserController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // --- Secure Auth-related endpoints
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
-    Route::post('/auth/logout-all', [AuthController::class, 'logoutAll']);
-    Route::post('/auth/password/change', [AuthController::class, 'changePassword']);
-    
-    // --- User related secure endpoints
-    Route::get('/users/me', [ProfileController::class, 'me']);
-    Route::patch('/users/me', [UserController::class, 'update']);
-    Route::delete('/users/me', [UserController::class, 'destroy']);
-    Route::delete('/users/me/pernament', [UserController::class, 'forceDestroy']);
+    Route::prefix('auth')->group(function() {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+        Route::post('/password/change', [AuthController::class, 'changePassword']);
+    });
 
+    // --- User related secure endpoints
+    Route::prefix('users')->group(function () {
+        Route::get('/me', [ProfileController::class, 'me']);
+        Route::patch('/me', [UserController::class, 'update']);
+        Route::delete('/me', [UserController::class, 'destroy']);
+        Route::delete('/me/pernament', [UserController::class, 'forceDestroy']);
+    });
 });

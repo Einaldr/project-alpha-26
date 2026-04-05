@@ -1,0 +1,77 @@
+name: Example Workflow
+
+# It only shows up in the Actions tab for manual triggering, comment/delete for production use
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why are you running this manually?'
+        required: false
+        default: 'Manual Test'
+
+# To enable automatic runs, uncomment these lines:
+# on:
+#   push:
+#     branch: [ main ] 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # This 'if' check acts as secondary kill switch to prevent running a template workflow,
+    # Change to 'true' or remove the line to enable the job
+    if: false
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Mark status as 'pending' on Forgejo when job starts
+      - name: Set Forgejo Pending Status
+        run: |
+          curl -X POST "${{ secrets.FORGEJO_URL }}/api/v1/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
+               -H "ci-token: ${{ secrets.CI_HEADER_TOKEN }}" \
+               -H "Authorization: token ${{ secrets.FORGEJO_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               -H "Accept: application/json" \
+               -H "ci-token: ${{ secrets.CI_HEADER_TOKEN }}" \
+               -d '{
+                 "state": "pending",
+                 "context": "github-actions",
+                 "description": "Running tests on GitHub Actions...",
+                 "target_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+               }'
+
+      # Build / Test steps
+      - name: Run Tests
+        run: echo running tests... 
+
+      # Report success
+      - name: Set Forgejo Success Status
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.FORGEJO_URL }}/api/v1/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
+               -H "ci-token: ${{ secrets.CI_HEADER_TOKEN }}" \
+               -H "Authorization: token ${{ secrets.FORGEJO_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               -H "Accept: application/json" \
+               -H "ci-token: ${{ secrets.CI_HEADER_TOKEN }}" \
+               -d '{
+                 "state": "success",
+                 "context": "github-actions",
+                 "description": "GitHub Actions passed!",
+                 "target_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+               }'
+
+      # Report failure
+      - name: Set Forgejo Failure Status
+        if: failure()
+        run: |
+          curl -X POST "${{ secrets.FORGEJO_URL }}/api/v1/repos/${{ github.repository }}/statuses/${{ github.sha }}" \
+               -H "ci-token: ${{ secrets.CI_HEADER_TOKEN }}" \
+               -H "Authorization: token ${{ secrets.FORGEJO_TOKEN }}" \
+               -H "Content-Type: application/json" \
+               -H "Accept: application/json" \
+               -d '{
+                 "state": "failure",
+                 "context": "github-actions",
+                 "description": "GitHub Actions failed.",
+                 "target_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+               }'

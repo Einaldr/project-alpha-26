@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,14 +13,34 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('email');
+            $table->timestampTz('email_verified_at')->nullable();
             $table->string('password');
+
+            // --- Custom fields for TOS and privacy policy ---
+            $table->timestampTz('tos_accepted_at')->nullable();
+            $table->string('tos_version', 15);
+
+            $table->timestampTz('privacy_policy_acknowledged_at')->nullable();
+            $table->string('privacy_policy_version', 15);
+
+            // --- Field for account status ---
+            $table->string('account_status')->default('active');
+
             $table->rememberToken();
-            $table->timestamps();
+
+            // --- Softdeletes ---
+            $table->timestampsTz();
+            $table->softDeletesTz();
         });
+
+        // --- DB statement to enable Trigram extension of postgre ---
+        DB::statement('CREATE EXTENSION IF NOT EXISTS pg_trgm');
+
+        // --- DB statement to create unique index for user emails ---
+        DB::statement('CREATE UNIQUE INDEX users_email_unique ON users (email) WHERE deleted_at IS NULL');
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

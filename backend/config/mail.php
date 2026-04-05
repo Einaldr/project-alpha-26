@@ -97,6 +97,9 @@ return [
             'retry_after' => 60,
         ],
 
+        'mailtrap' => [
+                'transport' => 'mailtrap-sdk'
+            ],
     ],
 
     /*
@@ -114,5 +117,13 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
+
+    'mailtrap' => [
+        'api-key' => env('MAILTRAP_API_KEY')
+    ],
+
+    'test' => [
+        'testing-mail' => env('MAIL_TESTING_ADDRESS')
+    ]
 
 ];

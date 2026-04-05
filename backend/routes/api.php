@@ -1,13 +1,39 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpFoundation\Response;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// --- Authentication endpoints ---
+Route::prefix('auth') -> group(function() {
+    Route::post('/register', [UserController::class, 'store']);
+    Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/test', function () {
-    return response()->json(['message'=>'Hello from Laravel Postgres API!']);
+    // --- Password reset endpoints ---
+    Route::prefix('password')->group(function () {
+        Route::post('/password/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+        Route::post('/password/reset-password', [AuthController::class, 'resetPassword']);
+    });
+});
+
+// --- User endpoints ---
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/user/{user}', [UserController::class, 'show']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // --- Secure Auth-related endpoints
+    Route::prefix('auth')->group(function() {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/logout-all', [AuthController::class, 'logoutAll']);
+        Route::post('/password/change', [AuthController::class, 'changePassword']);
+    });
+
+    // --- User related secure endpoints
+    Route::prefix('users')->group(function () {
+        Route::get('/me', [ProfileController::class, 'me']);
+        Route::patch('/me', [UserController::class, 'update']);
+        Route::delete('/me', [UserController::class, 'destroy']);
+        Route::delete('/me/pernament', [UserController::class, 'forceDestroy']);
+    });
 });

@@ -2,6 +2,10 @@
 
 > A github-like web application with focus on documentation.
 
+## WARNING
+
+**!!! Github is a a ci/cd and visibility mirror only, all issues and PRs should be made to [official git repository on forgejo](https://kaizen.einaldr.nexus/Einaldr/project-alpha) !!!**
+
 ## Motivation
 
 **Problem:** Documentation often lives in a silo. Existing tools require high-friction UI interactions or manual syncs that don't fit into a standard git push cycle.

@@ -21,6 +21,12 @@ Route::prefix('auth') -> group(function() {
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/{user}', [UserController::class, 'show']);
 
+// --- Group endpoints ---
+Route::prefix('groups')->group(function () {
+    Route::get('/');
+    Route::get('/{group_id}');
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     // --- Secure Auth-related endpoints
     Route::prefix('auth')->group(function() {
@@ -35,5 +41,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/me', [UserController::class, 'update']);
         Route::delete('/me', [UserController::class, 'destroy']);
         Route::delete('/me/pernament', [UserController::class, 'forceDestroy']);
+    });
+
+    // --- Secure group endpoints
+    Route::prefix('groups')->group(function () {
+        Route::post('/');
+        Route::patch('/{group_id}');
+        Route::delete('/{group_id}');
     });
 });

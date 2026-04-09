@@ -5,7 +5,11 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enum\AccountStatus;
+use App\Enum\GroupType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -72,5 +76,29 @@ class User extends Authenticatable
             'password' => 'hashed',
             'account_status' => AccountStatus::class,
         ];
+    }
+
+    // Personal group of the user
+    public function personalGroup(): HasOne
+    {
+        return $this->hasOne(Group::class, 'owner_id')->where('type', GroupType::INDIVIDUAL);
+    }
+
+    // All groups owned by the user
+    public function ownedGroups(): HasMany
+    {
+        return $this->hasMany(Group::class, 'owner_id');
+    }
+
+    // All groups the user is in
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_members')->using(GroupMember::class)->withPivot('id')->withTimestamps();
+    }
+
+    // All memberships the user has
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(GroupMember::class, 'user_id');
     }
 }

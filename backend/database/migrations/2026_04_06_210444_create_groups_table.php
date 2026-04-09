@@ -18,11 +18,12 @@ return new class extends Migration
             $table->string('name');
 
             // --- ID of a parent id ---
-            $table->foreignUuid('parent_id')->nullable()->constrained('groups')->onDelete('cascade');
+            $table->foreignUuid('parent_id')->nullable();
             
             // --- Type of the group e.g. INDIVIDUAL, TEAM, ORGANIZATION ---
             $table->string('type');
 
+            $table->foreignUuid('owner_id')->constrained('users')->onDelete('cascade');
             // --- Billing email for possible invoices ---
             $table->string('billing_email')->nullable();
 
@@ -32,13 +33,26 @@ return new class extends Migration
             $table->softDeletesTz();
         });
 
+        // Create a foreign key for parent_id field
+        Schema::table('groups', function (Blueprint $table) {
+            $table->foreign('parent_id')
+                  ->references('id')
+                  ->on('groups')
+                  ->onDelete('cascade');
+        });
+
+        // DB Statement for partial unique indexing
+        DB::statement("CREATE UNIQUE INDEX unique_individual_owner ON groups (owner_id) WHERE (type = 'individual')");
+
         // Group Roles table
         Schema::create('group_roles', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignUuid('group_id')->constrained()->onDelete('cascade');
             $table->string('name', 64);
             $table->jsonb('permissions');
             $table->timestampsTz();
+
+            $table->unique(['name', 'group_id']);
         });
 
         // Join table for group members
@@ -48,10 +62,19 @@ return new class extends Migration
             // If either the group or user is deleted, cascade deletion
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('group_id')->constrained()->onDelete('cascade');
-            $table->foreignId('role_id')->constrained('group_roles');
             $table->timestampsTz();
 
             $table->unique(['user_id', 'group_id']);
+        });
+
+        // Pivot table for group members to have roles
+        Schema::create('pivot_group_roles', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->foreignUuid('group_member_id')->constrained('group_members')->onDelete('cascade');
+            $table->foreignUuid('role_id')->constrained('group_roles')->onDelete('cascade');
+            $table->timestampsTz();
+
+            $table->unique(['group_member_id', 'role_id']);
         });
 
         // Audit logs table

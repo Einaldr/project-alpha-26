@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -100,5 +101,10 @@ class User extends Authenticatable
     public function memberships(): HasMany
     {
         return $this->hasMany(GroupMember::class, 'user_id');
+    }
+
+    public function groupLogs(): MorphMany
+    {
+        return $this->morphMany(AuditLog::class, 'target');
     }
 }

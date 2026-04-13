@@ -45,6 +45,7 @@ class Group extends Model
     {
         return [
             'type' => GroupType::class,
+            'is_private_child' => 'boolean',
         ];
     }
 

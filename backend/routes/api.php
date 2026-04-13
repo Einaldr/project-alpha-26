@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,7 @@ Route::get('/users/{user}', [UserController::class, 'show']);
 
 // --- Group endpoints ---
 Route::prefix('groups')->group(function () {
-    Route::get('/');
+    Route::get('/', [GroupController::class, 'index']);
     Route::get('/{group_id}');
 });
 
@@ -45,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // --- Secure group endpoints
     Route::prefix('groups')->group(function () {
-        Route::post('/');
+        Route::post('/', [GroupController::class, 'store']);
         Route::patch('/{group_id}');
         Route::delete('/{group_id}');
     });

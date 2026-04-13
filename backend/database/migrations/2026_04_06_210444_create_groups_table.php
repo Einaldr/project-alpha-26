@@ -19,6 +19,7 @@ return new class extends Migration
 
             // --- ID of a parent id ---
             $table->foreignUuid('parent_id')->nullable();
+            $table->boolean('is_private_child')->default(false);
             
             // --- Type of the group e.g. INDIVIDUAL, TEAM, ORGANIZATION ---
             $table->string('type');

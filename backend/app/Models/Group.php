@@ -30,6 +30,7 @@ class Group extends Model
     protected $fillable = [
         'name',
         'parent_id',
+        'is_private_child',
         'type',
         'billing_email',
         'icon_path'
@@ -63,5 +64,18 @@ class Group extends Model
     public function auditLogs(): MorphMany
     {
         return $this->morphMany(AuditLog::class, 'target');
+    }
+
+    public function scopeVisibleTo($query, $userId = null)
+    {
+        return $query->where(function ($q) use ($userId) {
+        $q->where('is_private_child', false);
+
+        if ($userId) {
+            $q->orWhereHas('users', function ($sq) use ($userId) {
+                $sq->where('users.id', $userId);
+            });
+        }
+    });
     }
 }

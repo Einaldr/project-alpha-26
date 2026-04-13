@@ -19,7 +19,7 @@ Route::prefix('auth') -> group(function() {
 
 // --- User endpoints ---
 Route::get('/users', [UserController::class, 'index']);
-Route::get('/user/{user}', [UserController::class, 'show']);
+Route::get('/users/{user}', [UserController::class, 'show']);
 
 // --- Group endpoints ---
 Route::prefix('groups')->group(function () {

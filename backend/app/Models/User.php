@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enum\AccountStatus;
 use App\Enum\GroupType;
+use App\Traits\HasGroupPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -23,7 +24,7 @@ class User extends Authenticatable
      * HasUuids: Automatically generates UUIDs for 'id' column.
      * SoftDeletes: Enables standard Laravel soft delete functionallity.
     */
-    use HasFactory, Notifiable, HasUuids, SoftDeletes, HasApiTokens;
+    use HasFactory, Notifiable, HasUuids, SoftDeletes, HasApiTokens, HasGroupPermissions;
 
     protected $keyType = 'string';
     public $incrementing = false;

@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enum\GroupType;
 use App\Enum\RolePermissions;
 use App\Models\Group;
 
@@ -18,18 +19,20 @@ class GroupObserver
         ]);
 
         // 2. Create the 'Admin' Role (Management permissions)
-        $group->roles()->create([
-            'name' => 'Admin',
-            'permissions' => [
-                RolePermissions::GROUP_UPDATE->value,
-                RolePermissions::MEMBER_INVITE->value,
-                RolePermissions::MEMBER_KICK->value,
-                RolePermissions::ROLES_MANAGE->value,
-                RolePermissions::PROJECT_MANAGE->value,
-                RolePermissions::PROJECT_INVITE->value,
-                RolePermissions::REPOSITORY_MANAGE->value,
-            ],
-        ]);
+        if ($group->type != GroupType::INDIVIDUAL) {
+            $group->roles()->create([
+                'name' => 'Admin',
+            '   permissions' => [
+                    RolePermissions::GROUP_UPDATE->value,
+                    RolePermissions::MEMBER_INVITE->value,
+                    RolePermissions::MEMBER_KICK->value,
+                    RolePermissions::ROLES_MANAGE->value,
+                    RolePermissions::PROJECT_MANAGE->value,
+                    RolePermissions::PROJECT_INVITE->value,
+                    RolePermissions::REPOSITORY_MANAGE->value,
+                ],
+            ]);
+        }
 
         // 3. Create the 'Member' Role (Basic permissions)
         $group->roles()->create([

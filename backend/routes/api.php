@@ -25,7 +25,7 @@ Route::get('/users/{user}', [UserController::class, 'show']);
 // --- Group endpoints ---
 Route::prefix('groups')->group(function () {
     Route::get('/', [GroupController::class, 'index']);
-    Route::get('/{group_id}');
+    Route::get('/{group_id}', [GroupController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -47,7 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Secure group endpoints
     Route::prefix('groups')->group(function () {
         Route::post('/', [GroupController::class, 'store']);
-        Route::patch('/{group_id}');
-        Route::delete('/{group_id}');
+        Route::patch('/{group_id}', [GroupController::class, 'update']);
+        Route::delete('/{group_id}', [GroupController::class, 'destroy']);
     });
 });

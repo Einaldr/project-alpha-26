@@ -8,11 +8,13 @@ use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\FileExtension;
 use Intervention\Image\Format;
 use Intervention\Image\ImageManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class GroupController extends Controller
 {
@@ -45,7 +47,7 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreGroupRequest $request)
+    public function store(StoreGroupRequest $request): GroupResource
     {
         $data = $request->safe()->except('icon');
 
@@ -65,30 +67,42 @@ class GroupController extends Controller
             $group->update(['icon_path' => $path]);
         }
 
-        return response()->json($group, 201);
+        return new GroupResource($group);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Group $group)
+    public function show(Group $group): GroupResource
     {
-        //
+        return new GroupResource($group);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Group $group)
+    public function update(Request $request, Group $group): GroupResource
     {
-        //
+        Gate::authorize('update', $group);
+        
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'min:5', 'max:255']
+        ]);
+
+        $group->update(['name' => $validated->name]);
+
+        return new GroupResource($group);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Group $group)
+    public function destroy(Group $group): JsonResponse
     {
-        //
+        Gate::authorize('delete', $group);
+
+        $group->delete();
+
+        return response()->json(['message' => 'Successfully deleted'], 200);
     }
 }

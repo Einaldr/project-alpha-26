@@ -30,6 +30,7 @@ class GroupObserver
                     RolePermissions::PROJECT_MANAGE->value,
                     RolePermissions::PROJECT_INVITE->value,
                     RolePermissions::REPOSITORY_MANAGE->value,
+                    RolePermissions::AUDIT_LOG_VIEW->value,
                 ],
             ]);
         }

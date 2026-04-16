@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('billing_email')->nullable();
 
             // --- Miscellaneous ---
-            $table->text('icon_path');
+            $table->text('icon_path')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
         });

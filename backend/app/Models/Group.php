@@ -29,6 +29,7 @@ class Group extends Model
      */
     protected $fillable = [
         'name',
+        'owner_id',
         'parent_id',
         'is_private_child',
         'type',
@@ -70,13 +71,18 @@ class Group extends Model
     public function scopeVisibleTo($query, $userId = null)
     {
         return $query->where(function ($q) use ($userId) {
-        $q->where('is_private_child', false);
+            $q->where('is_private_child', false);
 
-        if ($userId) {
-            $q->orWhereHas('users', function ($sq) use ($userId) {
-                $sq->where('users.id', $userId);
-            });
-        }
-    });
+            if ($userId) {
+                $q->orWhereHas('users', function ($sq) use ($userId) {
+                    $sq->where('users.id', $userId);
+                });
+            }
+        });
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(GroupRole::class);
     }
 }

@@ -18,9 +18,9 @@ class GroupRole extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        group_id,
-        name,
-        permissions
+        'group_id',
+        'name',
+        'permissions'
     ];
 
     protected $casts = [

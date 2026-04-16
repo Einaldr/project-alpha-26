@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Pivots\GroupMemberRolePivot;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,6 +42,8 @@ class GroupMember extends Pivot
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(GroupRole::class, 'pivot_group_roles', 'group_member_id', 'role_id')->withTimestamps();
+        return $this->belongsToMany(GroupRole::class, 'pivot_group_roles', 'group_member_id', 'role_id')
+                    ->using(GroupMemberRolePivot::class)
+                    ->withTimestamps();
     }
 }

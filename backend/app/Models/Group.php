@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Alignment;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\FileExtension;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Typography\FontFactory;
 
 class Group extends Model
 {
@@ -84,5 +90,39 @@ class Group extends Model
     public function roles(): HasMany
     {
         return $this->hasMany(GroupRole::class);
+    }
+
+    /**
+     * =======================
+     * Utility
+     * =======================
+     */
+
+    public function generateDefaultIcon(): string
+    {
+        $colors = ['#5865F2', '#EB459E', '#F47B67', '#FEE75C', '#3BA55C', '#72767D'];
+        $index = crc32($this->id) % count($colors);
+        $backgroundColor = $colors[$index];
+        $initial = strtoupper(mb_substr($this->name, 0, 1));
+
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->createImage(400, 400)->fill($backgroundColor);
+
+        $image->text($initial, 200, 200, function (FontFactory $font) {
+            $font->file(storage_path('fonts/Inter-VariableFont_opsz,wght.ttf'));
+            $font->size(200);
+            $font->color('#ffffff');
+            $font->align(Alignment::CENTER, Alignment::CENTER);
+        });
+
+        $path = "groups/{$this->id}/icon.webp";
+        $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
+
+        Storage::disk('public')->put($path, $encoded);
+
+        $this->update(['icon_path' => $path]);
+
+        return $path;
     }
 }

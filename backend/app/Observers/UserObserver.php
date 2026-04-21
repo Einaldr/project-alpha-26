@@ -18,6 +18,8 @@ class UserObserver
             'type' => GroupType::INDIVIDUAL,
             'owner_id' => $user->id,
         ]);
+
+        $group->generateDefaultIcon();
     }
 
     /**

@@ -53,19 +53,21 @@ class GroupController extends Controller
 
         $group = Group::create($data);
 
-        if ($request->hasFile('icon')) {
-            $fileName = 'icon.webp';
-            $path = "groups/{$group->id}/{$fileName}";
+        $fileName = 'icon.webp';
 
+        $path = "groups/{$group->id}/{$fileName}";
+
+        if ($request->hasFile('icon')) {
             $image = ImageManager::usingDriver(Driver::class)->decode($request->file('icon'))
                                                              ->cover(400, 400);
-
             $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
 
             Storage::disk('public')->put($path, $encoded);
-
-            $group->update(['icon_path' => $path]);
+        } else {
+            $group->generateDefaultIcon();
         }
+
+        $group->update(['icon_path' => $path]);
 
         return new GroupResource($group);
     }

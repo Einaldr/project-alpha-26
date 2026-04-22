@@ -25,7 +25,7 @@ Route::get('/users/{user}', [UserController::class, 'show']);
 // --- Group endpoints ---
 Route::prefix('groups')->group(function () {
     Route::get('/', [GroupController::class, 'index']);
-    Route::get('/{group_id}', [GroupController::class, 'show']);
+    Route::get('/{group}', [GroupController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {

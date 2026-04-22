@@ -58,11 +58,13 @@ class Group extends Model
         ];
     }
 
+    // Get GroupMembers associated with this group
     public function members(): HasMany
     {
         return $this->hasMany(GroupMember::class);
     }
 
+    // Get users associated with this group
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_members')
@@ -70,12 +72,14 @@ class Group extends Model
                     ->withPivot('id')
                     ->withTimestamps();
     }
-
+    
+    // Get audit logs associated with this group
     public function auditLogs(): MorphMany
     {
         return $this->morphMany(AuditLog::class, 'target');
     }
 
+    // Scope by role
     public function scopeVisibleTo($query, $userId = null)
     {
         return $query->where(function ($q) use ($userId) {
@@ -89,21 +93,25 @@ class Group extends Model
         });
     }
 
+    // Get all roles associated with this group
     public function roles(): HasMany
     {
         return $this->hasMany(GroupRole::class);
     }
 
+    // Get the groups's parent group
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Group::class, 'parent_id', 'id');
     }
 
+    // Get the group's Owner
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id', 'id');
     }
 
+    // Get group's children
     public function children(): HasMany
     {
         return $this->hasMany(Group::class, 'parent_id', 'id');
@@ -115,6 +123,7 @@ class Group extends Model
      * =======================
      */
 
+    // Generate custom icon
     public function generateDefaultIcon(): string
     {
         $colors = ['#5865F2', '#EB459E', '#F47B67', '#FEE75C', '#3BA55C', '#72767D'];
@@ -143,6 +152,13 @@ class Group extends Model
         return $path;
     }
 
+    /**
+     * =======================
+     * ATTRIBUTES
+     * =======================
+     */
+
+    // Generate Url to the group's icon
     protected function iconUrl(): Attribute
     {
         return Attribute::make(

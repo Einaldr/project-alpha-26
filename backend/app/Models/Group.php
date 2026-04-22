@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enum\GroupType;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -119,10 +120,17 @@ class Group extends Model
         $path = "groups/{$this->id}/icon.webp";
         $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
 
-        Storage::disk('public')->put($path, $encoded);
+        Storage::disk('icons')->put($path, $encoded);
 
         $this->update(['icon_path' => $path]);
 
         return $path;
+    }
+
+    protected function iconUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->icon_path ? asset('assets/icons/' . $this->icon_path) : null,
+        );
     }
 }

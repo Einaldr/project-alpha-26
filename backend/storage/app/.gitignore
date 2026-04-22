@@ -2,3 +2,6 @@
 !private/
 !public/
 !.gitignore
+!assets/
+!assets/icons
+!assets/images

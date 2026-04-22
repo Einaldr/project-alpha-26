@@ -19,7 +19,7 @@ class GroupResource extends JsonResource
             'name' => $this->name,
             'parent_id' => $this->parent_id,
             'group_type' => $this->type,
-            'icon_url' => $this->icon_path,
+            'icon_url' => $this->icon_url,
             'created_at' => $this->created_at->toIso8601String(),
         ];
     }

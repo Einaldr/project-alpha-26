@@ -41,7 +41,25 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/assets/storage',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'icons' => [
+            'driver' => 'local',
+            'root' => storage_path('app/assets/icons'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/assets/icons',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/assets/images'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/assets/images',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -74,7 +92,9 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        public_path('/assets/storage') => storage_path('app/public'),
+        public_path('/assets/icons') => storage_path('app/assets/icons'),
+        public_path('/assets/images') => storage_path('app/assets/images'),
     ],
 
 ];

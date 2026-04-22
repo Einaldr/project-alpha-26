@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -91,6 +92,21 @@ class Group extends Model
     public function roles(): HasMany
     {
         return $this->hasMany(GroupRole::class);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Group::class, 'parent_id', 'id');
+    }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id', 'id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Group::class, 'parent_id', 'id');
     }
 
     /**

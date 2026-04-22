@@ -17,10 +17,10 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'parent_id' => $this->parent_id,
             'group_type' => $this->type,
             'icon_url' => $this->icon_url,
             'created_at' => $this->created_at->toIso8601String(),
+            'parent' => new GroupResource($this->whenLoaded('parent')),
         ];
     }
 }

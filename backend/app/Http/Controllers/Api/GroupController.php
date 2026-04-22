@@ -77,7 +77,7 @@ class GroupController extends Controller
      */
     public function show(Group $group): GroupResource
     {
-        return new GroupResource($group);
+        return new GroupResource($group->load('parent'));
     }
 
     /**

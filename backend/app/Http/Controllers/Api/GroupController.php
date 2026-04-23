@@ -73,6 +73,9 @@ class GroupController extends Controller
      */
     public function show(Group $group): GroupResource
     {
+        if (!Gate::allows('view', $group)) {
+            abort(404);
+        }
         return new GroupResource($group->load('parent'));
     }
 

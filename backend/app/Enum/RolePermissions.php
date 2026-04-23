@@ -5,9 +5,11 @@ namespace App\Enum;
 enum RolePermissions: string
 {
     // Group permissions
+    case GROUP_VIEW = 'group.view';
     case GROUP_UPDATE = 'group.update';
     case GROUP_DELETE = 'group.delete';
     case GROUP_CREATE_CHILD = 'group.create_child';
+    case GROUP_VIEW_CHILD = 'group.view_child';
     
     // Member permissions
     case MEMBER_INVITE = 'member.invite';

@@ -6,7 +6,7 @@ enum GroupType: string
 {
     case INDIVIDUAL = 'individual';
     case TEAM = 'team';
-    case ORG = 'organisation';
+    case ORG = 'org';
 
     public function label(): string
     {

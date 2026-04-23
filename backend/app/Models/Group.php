@@ -18,6 +18,8 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\FileExtension;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Typography\FontFactory;
+use Pest\Plugin\Manager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Group extends Model
 {
@@ -119,6 +121,20 @@ class Group extends Model
 
     /**
      * =======================
+     * ATTRIBUTES
+     * =======================
+     */
+
+    // Generate Url to the group's icon
+    protected function iconUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->icon_path ? asset('assets/icons/' . $this->icon_path) : null,
+        );
+    }
+
+    /**
+     * =======================
      * Utility
      * =======================
      */
@@ -152,17 +168,17 @@ class Group extends Model
         return $path;
     }
 
-    /**
-     * =======================
-     * ATTRIBUTES
-     * =======================
-     */
-
-    // Generate Url to the group's icon
-    protected function iconUrl(): Attribute
+    public function saveCustomIcon(UploadedFile $file): string
     {
-        return Attribute::make(
-            get: fn () => $this->icon_path ? asset('assets/icons/' . $this->icon_path) : null,
-        );
+        $image = new ImageManager(new Driver())->decode($file)->cover(400, 400);
+
+        $path = "groups/{$this->id}/icon.webp";
+        
+        $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
+
+        Storage::disk('icons')->put($path, $encoded);
+        $this->update(['icon_path' => $path]);
+
+        return $path;
     }
 }

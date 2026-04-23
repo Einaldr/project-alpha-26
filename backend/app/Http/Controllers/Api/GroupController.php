@@ -49,25 +49,21 @@ class GroupController extends Controller
      */
     public function store(StoreGroupRequest $request): GroupResource
     {
-        $data = $request->safe()->except('icon');
+        if ($request->filled('parent_id')) {
+            $parent = Group::findOrFail($request->parent_id);
+            Gate::authorize('createTeam', $parent);
+        }
+
+        $data = $request->validated();
+        $data['owner_id'] = $request->user()->id();
 
         $group = Group::create($data);
 
         if ($request->hasFile('icon')) {
-            $fileName = 'icon.webp';
-
-            $path = "groups/{$group->id}/{$fileName}";
-            
-            $image = ImageManager::usingDriver(Driver::class)->decode($request->file('icon'))
-                                                             ->cover(400, 400);
-            $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
-
-            Storage::disk('icons')->put($path, $encoded);
+            $group->saveCustomIcon($request->file('icon'));
         } else {
-            $group->generateDefaultIcon();
+            $group->generatePlaceholderIcon();
         }
-
-        $group->update(['icon_path' => $path]);
 
         return new GroupResource($group);
     }

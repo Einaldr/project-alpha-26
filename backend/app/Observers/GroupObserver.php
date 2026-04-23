@@ -22,7 +22,7 @@ class GroupObserver
         if ($group->type != GroupType::INDIVIDUAL) {
             $group->roles()->create([
                 'name' => 'Admin',
-            '   permissions' => [
+                'permissions' => [
                     RolePermissions::GROUP_UPDATE->value,
                     RolePermissions::MEMBER_INVITE->value,
                     RolePermissions::MEMBER_KICK->value,

@@ -55,14 +55,14 @@ class GroupController extends Controller
         }
 
         $data = $request->validated();
-        $data['owner_id'] = $request->user()->id();
+        $data['owner_id'] = $request->user()->id;
 
         $group = Group::create($data);
 
         if ($request->hasFile('icon')) {
             $group->saveCustomIcon($request->file('icon'));
         } else {
-            $group->generatePlaceholderIcon();
+            $group->generateDefaultIcon();
         }
 
         return new GroupResource($group);

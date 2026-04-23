@@ -22,10 +22,13 @@ class GroupRole extends Model
         'name',
         'permissions'
     ];
-
-    protected $casts = [
-        'permissions' => 'array'
-    ];
+    
+    protected function casts(): array 
+    {
+        return [
+            'permissions' => 'array'
+        ];
+    }
 
     public function members(): BelongsToMany
     {

@@ -30,7 +30,7 @@ class GroupController extends Controller
 
         $per_page = $request->integer('per_page', 15);
 
-        $query = Group::VisibleTo(Auth::id());
+        $query = Group::public(Auth::id());
 
         if ($search = $request->search) {
             $query->whereRaw('name % ?', [$search])

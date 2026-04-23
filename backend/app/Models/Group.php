@@ -81,20 +81,6 @@ class Group extends Model
         return $this->morphMany(AuditLog::class, 'target');
     }
 
-    // Scope by role
-    public function scopeVisibleTo($query, $userId = null)
-    {
-        return $query->where(function ($q) use ($userId) {
-            $q->where('is_private_child', false);
-
-            if ($userId) {
-                $q->orWhereHas('users', function ($sq) use ($userId) {
-                    $sq->where('users.id', $userId);
-                });
-            }
-        });
-    }
-
     // Get all roles associated with this group
     public function roles(): HasMany
     {
@@ -131,6 +117,32 @@ class Group extends Model
         return Attribute::make(
             get: fn () => $this->icon_path ? asset('assets/icons/' . $this->icon_path) : null,
         );
+    }
+
+    /**
+     * =======================
+     * SCOPES
+     * =======================
+     */
+
+    // Scope by role
+    public function scopeMemberOf($query, $userId = null)
+    {
+        return $query->where(function ($q) use ($userId) {
+            $q->where('owner_id', $userId)
+              ->orWhereHas('members', function ($m) use ($userId) {
+                $m->where('user_id', $userId);
+              })
+              ->orWhereHas('parent.members', function ($pm) use ($userId) {
+                $pm->where('user_id', $userId);
+              });
+        });
+    }
+
+    public function scopePublic($query, $userId = null)
+    {
+        $query->where('type', GroupType::ORG)
+              ->whereNull('parent_id');
     }
 
     /**

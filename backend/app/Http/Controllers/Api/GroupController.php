@@ -7,6 +7,7 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +22,7 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): ResourceCollection
     {
         $request->validate([
             'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
@@ -105,5 +106,15 @@ class GroupController extends Controller
         $group->delete();
 
         return response()->json(['message' => 'Successfully deleted'], 200);
+    }
+
+    public function myGroups(Request $request): ResourceCollection
+    {
+        $groups = Group::memberOf($request->user())
+                       ->with('parent')
+                       ->latest()
+                       ->get();
+        
+        return GroupResource::collection($groups);
     }
 }

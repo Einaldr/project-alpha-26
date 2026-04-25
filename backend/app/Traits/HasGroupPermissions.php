@@ -30,9 +30,10 @@ trait HasGroupPermissions
         }
 
         return $this->memberships()
-                    ->where('group_id')
+                    ->where('group_id', $group->id)
                     ->whereHas('roles', function ($query) use ($permission) {
                         $query->whereJsonContains('permissions', $permission->value());
-                    });
+                    })
+                    ->exits();
    }
 }

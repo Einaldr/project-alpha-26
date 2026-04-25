@@ -24,26 +24,21 @@ class GroupPolicy
      */
     public function view(User $user,  Group $group): bool
     {
-        if ($group->owner_id === $user->id) {
-            return true;
-        }
-
-        if ($group->type === GroupType::INDIVIDUAL) {
-            return false;
-        }
-
         if ($user->hasGroupPermission($group, RolePermissions::GROUP_VIEW)) {
             return true;
         }
 
         if ($group->parent_id) {
-            $parent = $group->parent()->first();
+            $parent = $group->parent_id;
 
-            if (!$group->is_private_child) {
-                return $user->hasGroupPermission($parent, RolePermissions::GROUP_VIEW);
+            if (!$parent) return false;
+
+            if (!$group->is_private_child){
+                return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
             }
 
-            return $user->hasGroupPermission($parent, RolePermissions::GROUP_VIEW_CHILD);
+            return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW_CHILD);
+            
         }
 
         return false;

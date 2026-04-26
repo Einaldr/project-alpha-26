@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Mailtrap\Helper\ResponseHelper;
 use Mailtrap\MailtrapClient;
 use Mailtrap\Mime\MailtrapEmail;
@@ -27,3 +29,7 @@ Artisan::command('send-test-mail', function ()
 
     var_dump(ResponseHelper::toArray($response));
 })->purpose('Send Mail');
+
+Artisan::command('clear-icons', function () {
+    File::deleteDirectories(storage_path('app/assets/icons'));
+})->purpose('Delete all icon files inside app/assets/icons');

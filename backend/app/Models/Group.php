@@ -126,8 +126,10 @@ class Group extends Model
      */
 
     // Scope by role
-    public function scopeMemberOf($query, $userId = null)
+    public function scopeMemberOf($query, $user)
     {
+        $userId = $user instanceof User ? $user->id : $user;
+
         return $query->where(function ($q) use ($userId) {
             $q->where('owner_id', $userId)
               ->orWhereHas('members', function ($m) use ($userId) {

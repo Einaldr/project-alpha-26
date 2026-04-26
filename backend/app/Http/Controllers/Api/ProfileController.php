@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 class ProfileController extends Controller
 {
     /**
-     *  GET /users/me
+     *  GET /me
      * 
      *  Get the logged-in user's profile
      */
@@ -20,7 +20,7 @@ class ProfileController extends Controller
     }
 
     /**
-     *  PATCH /users/me
+     *  PATCH /me
      * 
      *  Update user's account name
      */

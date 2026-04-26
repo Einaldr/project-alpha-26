@@ -6,6 +6,12 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
+/**
+ * ================
+ * STATIC ROUTES
+ * ================
+ */
+
 // --- Authentication endpoints ---
 Route::prefix('auth') -> group(function() {
     Route::post('/register', [UserController::class, 'store']);
@@ -20,12 +26,10 @@ Route::prefix('auth') -> group(function() {
 
 // --- User endpoints ---
 Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{user}', [UserController::class, 'show']);
 
 // --- Group endpoints ---
 Route::prefix('groups')->group(function () {
     Route::get('/', [GroupController::class, 'index']);
-    Route::get('/{group}', [GroupController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -37,16 +41,38 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // --- User related secure endpoints
-    Route::prefix('users')->group(function () {
-        Route::get('/me', [ProfileController::class, 'me']);
-        Route::patch('/me', [UserController::class, 'update']);
-        Route::delete('/me', [UserController::class, 'destroy']);
-        Route::delete('/me/pernament', [UserController::class, 'forceDestroy']);
+    Route::prefix('me')->group(function () {
+        Route::get('/', [ProfileController::class, 'me']);
+        Route::patch('/', [ProfileController::class, 'update']);
+        Route::delete('/', [ProfileController::class, 'destroy']);
+        Route::delete('/pernament', [ProfileController::class, 'forceDestroy']);
+
+        Route::get('/groups', [GroupController::class, 'myGroups']);
     });
 
     // --- Secure group endpoints
     Route::prefix('groups')->group(function () {
         Route::post('/', [GroupController::class, 'store']);
+    });
+});
+
+/**
+ * ==========================
+ * DYNAMIC/WILDCARD ROUTES
+ * ==========================
+ */
+
+// User non secure routes
+Route::get('/users/{user}', [UserController::class, 'show']);
+
+// Group non secure routes
+Route::get('/groups/{group}', [GroupController::class, 'show']);
+
+// Secure routes
+Route::middleware('auth:sanctum')->group(function () {
+
+    // Secure group routes
+    Route::prefix('groups')->group(function () {
         Route::patch('/{group_id}', [GroupController::class, 'update']);
         Route::delete('/{group_id}', [GroupController::class, 'destroy']);
     });

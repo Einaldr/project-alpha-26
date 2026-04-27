@@ -24,8 +24,8 @@ class GroupPolicy
      */
     public function view(?User $user,  Group $group): bool
     {
-        if ($group->is_private_child || $group->type === GroupType::INDIVIDUAL) {
-            return $user && $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
+        if ($user && ($group->is_private_child || $group->type === GroupType::INDIVIDUAL)) {
+            return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
         } 
 
         return true;

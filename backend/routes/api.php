@@ -73,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Secure group routes
     Route::prefix('groups')->group(function () {
-        Route::patch('/{group_id}', [GroupController::class, 'update']);
-        Route::delete('/{group_id}', [GroupController::class, 'destroy']);
+        Route::patch('/{group}', [GroupController::class, 'update']);
+        Route::delete('/{group}', [GroupController::class, 'destroy']);
     });
 });

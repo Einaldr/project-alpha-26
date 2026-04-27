@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
 use Illuminate\Http\Request;
@@ -83,17 +84,17 @@ class GroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Group $group): GroupResource
+    public function update(UpdateGroupRequest $request, Group $group): GroupResource
     {
         Gate::authorize('update', $group);
-        
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'min:5', 'max:255']
-        ]);
 
-        $group->update(['name' => $validated->name]);
+        $group->update($request->validated());
 
-        return new GroupResource($group);
+        if ($request->hasFile('icon')) {
+            $group->saveCustomIcon($request->file('icon'));
+        }
+
+        return new GroupResource($group->refresh());
     }
 
     /**

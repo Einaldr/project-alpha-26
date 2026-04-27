@@ -34,6 +34,6 @@ trait HasGroupPermissions
                     ->whereHas('roles', function ($query) use ($permission) {
                         $query->whereJsonContains('permissions', $permission->value());
                     })
-                    ->exits();
+                    ->exists();
    }
 }

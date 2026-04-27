@@ -22,26 +22,13 @@ class GroupPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user,  Group $group): bool
+    public function view(?User $user,  Group $group): bool
     {
-        if ($user->hasGroupPermission($group, RolePermissions::GROUP_VIEW)) {
-            return true;
-        }
+        if ($group->is_private_child || $group->type === GroupType::INDIVIDUAL) {
+            return $user && $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
+        } 
 
-        if ($group->parent_id) {
-            $parent = $group->parent_id;
-
-            if (!$parent) return false;
-
-            if (!$group->is_private_child){
-                return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
-            }
-
-            return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW_CHILD);
-            
-        }
-
-        return false;
+        return true;
     }
 
     /**

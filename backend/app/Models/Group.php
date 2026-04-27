@@ -130,21 +130,38 @@ class Group extends Model
     {
         $userId = $user instanceof User ? $user->id : $user;
 
-        return $query->where(function ($q) use ($userId) {
+        return $query->where(function ($q) use ($user, $userId) {
             $q->where('owner_id', $userId)
+
               ->orWhereHas('members', function ($m) use ($userId) {
                 $m->where('user_id', $userId);
               })
-              ->orWhereHas('parent.members', function ($pm) use ($userId) {
-                $pm->where('user_id', $userId);
+              ->orWhereHas('parent', function ($p) use ($userId) {
+                $p->where('owner_id', $userId)
+                  ->orWhereHas('members', function ($m) use ($userId) {
+                    $m->where('user_id', $userId);
+                  });
               });
         });
+
     }
 
-    public function scopePublic($query, $userId = null)
+    public function scopePublic($query)
     {
-        $query->where('type', GroupType::ORG)
-              ->whereNull('parent_id');
+        $query->where('is_private_child', false)
+              ->where('type', '!=', GroupType::INDIVIDUAL);
+    }
+
+     public function scopeVisibleTo($query, $user) {
+        $query->where(function ($q) use ($user) {
+            $q->public();
+
+            if ($user) {
+               $q->orWhere(function ($q) use ($user) {
+                $q->memberOf($user);
+               });
+            }
+        });
     }
 
     /**

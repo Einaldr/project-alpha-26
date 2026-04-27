@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +34,7 @@ class GroupController extends Controller
 
         $per_page = $request->integer('per_page', 15);
 
-        $query = Group::public(Auth::id());
+        $query = Group::visibleTo(Auth::id());
 
         if ($search = $request->search) {
             $query->whereRaw('name % ?', [$search])
@@ -67,6 +69,13 @@ class GroupController extends Controller
             $group->generateDefaultIcon();
         }
 
+        $group->load('owner');
+
+        if ($group->parent_id) {
+            $group->load('parent');
+        }
+        
+
         return new GroupResource($group);
     }
 
@@ -78,7 +87,23 @@ class GroupController extends Controller
         if (!Gate::allows('view', $group)) {
             abort(404);
         }
-        return new GroupResource($group->load('parent'));
+
+        /**
+         * @var User
+         */
+        $user = auth('sanctum')->user();
+
+        if ($group->parent_id) {
+            $group->load('parent');
+        } else {
+            $group->load(['children' => fn($q) => $q->visibleTo($user)]);
+        }
+
+
+        $group->load('owner');
+        
+
+        return new GroupResource($group);
     }
 
     /**

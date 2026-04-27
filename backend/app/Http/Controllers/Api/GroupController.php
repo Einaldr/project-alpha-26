@@ -137,9 +137,10 @@ class GroupController extends Controller
     public function myGroups(Request $request): ResourceCollection
     {
         $groups = Group::memberOf($request->user())
-                       ->with('parent')
                        ->latest()
-                       ->get();
+                       ->get()
+                       ->load('children')
+                       ->load('owner');
         
         return GroupResource::collection($groups);
     }

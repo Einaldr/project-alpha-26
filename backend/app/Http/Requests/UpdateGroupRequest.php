@@ -5,6 +5,16 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * UpdateGroupRequest
+ * 
+ * Handles validation for group metadata updates.
+ * Supports partial updates (PATCH) where all fields are optional.
+ * 
+ * @property-read string|null $name
+ * @property-read \Illuminate\Http\UploadedFile|null $icon
+ * @property-read string|null $billing_email
+ */
 class UpdateGroupRequest extends FormRequest
 {
     /**

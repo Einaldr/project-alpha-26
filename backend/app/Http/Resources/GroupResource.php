@@ -6,6 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Enum\RolePermissions;
 
+/**
+ * GroupResource
+ * 
+ * A Json representation of Group eloquent model.
+ * 
+ * The Json representation is dynamic depending on requester's permissions.
+ * 
+ * @mixin \App\Models\Group
+ */
 class GroupResource extends JsonResource
 {
     /**

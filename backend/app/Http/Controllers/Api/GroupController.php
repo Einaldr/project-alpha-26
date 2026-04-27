@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
@@ -13,17 +12,30 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\FileExtension;
-use Intervention\Image\Format;
-use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * GroupController
+ * 
+ * Manages the lifecycle of Organizations and Teams.
+ * Handles public discovery, personal dashboards, and hierarchical group management.
+ */
 class GroupController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a paginated list of groups available for discovery.
+     * 
+     * This method implements high-performance fuzzy search using PostgreSQL's
+     * pg_trgm extension. It filters results through the 'visibleTo' scope,
+     * ensuring users only see public content or groups they have access to.
+     * 
+     * Search logic:
+     *  - Uses the '%' operator for trigram distance filtering.
+     *  - Ranks results using 'similarity' function to put the closest matches first.
+     *  - Requires minimum of 3 characters to trigger search mode.
+     * 
+     * @param Request $request
+     * @return ResourceCollection<GroupResource>
      */
     public function index(Request $request): ResourceCollection
     {
@@ -49,7 +61,15 @@ class GroupController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a new Organization or Team.
+     * 
+     * Logic:
+     *  - Authorizes against 'createTeam' if parent_id is provided.
+     *  - Triggers GroupObserver to initialize default RBAC roles.
+     *  - Generates a placeholder icon if no file is uploaded.
+     * 
+     * @param StoreGroupRequest $request
+     * @return GroupResource
      */
     public function store(StoreGroupRequest $request): GroupResource
     {
@@ -80,7 +100,13 @@ class GroupController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display specific group with context-aware loading.
+     * 
+     * Security: 'view' Policy. Supports stealth mode (404 on failure).
+     * Context: Loads 'parent' for Teams and 'children' for Organizations.
+     * 
+     * @param Group $group
+     * @return GroupResource
      */
     public function show(Group $group): GroupResource
     {
@@ -107,7 +133,13 @@ class GroupController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update group metadata or branding.
+     * 
+     * Security: 'update' Policy.
+     * 
+     * @param UpdateGroupRequest $request
+     * @param Group $group
+     * @return GroupResource
      */
     public function update(UpdateGroupRequest $request, Group $group): GroupResource
     {
@@ -123,7 +155,12 @@ class GroupController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete specified group.
+     * 
+     * Security: 'delete' Policy.
+     * 
+     * @param Group $group
+     * @return JsonResponse
      */
     public function destroy(Group $group): JsonResponse
     {

@@ -21,6 +21,55 @@ use Intervention\Image\Typography\FontFactory;
 use Pest\Plugin\Manager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @property string $id
+ * @property string $name
+ * @property string|null $parent_id
+ * @property bool $is_private_child
+ * @property GroupType $type
+ * @property string $owner_id
+ * @property string|null $billing_email
+ * @property string|null $icon_path
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AuditLog> $auditLogs
+ * @property-read int|null $audit_logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Group> $children
+ * @property-read int|null $children_count
+ * @property-read mixed $icon_url
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GroupMember> $members
+ * @property-read int|null $members_count
+ * @property-read \App\Models\User|null $owner
+ * @property-read Group|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GroupRole> $roles
+ * @property-read int|null $roles_count
+ * @property-read \App\Models\GroupMember|null $pivot
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\GroupFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group memberOf($user)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group public()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group visibleTo($user)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereBillingEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereIconPath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereIsPrivateChild($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Group extends Model
 {
     /** @use HasFactory<\Database\Factories\GroupFactory>
@@ -170,7 +219,11 @@ class Group extends Model
      * =======================
      */
 
-    // Generate custom icon
+    /**
+     * Generate default icon.
+     * 
+     * @return string Path to the icon.
+     */
     public function generateDefaultIcon(): string
     {
         $colors = ['#5865F2', '#EB459E', '#F47B67', '#FEE75C', '#3BA55C', '#72767D'];
@@ -199,6 +252,11 @@ class Group extends Model
         return $path;
     }
 
+    /**
+     * Save user-provided icon.
+     * @param UploadedFile $file The user-provided icon.
+     * @return string Path to the icon.
+     */
     public function saveCustomIcon(UploadedFile $file): string
     {
         $image = new ImageManager(new Driver())->decode($file)->cover(400, 400);

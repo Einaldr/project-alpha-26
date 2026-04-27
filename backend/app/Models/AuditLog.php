@@ -9,6 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property-read \App\Models\Group|null $group
+ * @property-read Model|\Eloquent $target
+ * @property-read \App\Models\User|null $user
+ * @method static \Database\Factories\AuditLogFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog withoutTrashed()
+ * @mixin \Eloquent
+ */
 class AuditLog extends Model
 {
     /** @use HasFactory<\Database\Factories\AuditLogFactory> */

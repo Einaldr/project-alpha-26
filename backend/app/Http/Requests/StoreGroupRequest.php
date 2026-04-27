@@ -6,6 +6,21 @@ use App\Enum\GroupType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * StoreGroupRequest
+ * 
+ * Handles validation for group creation request.
+ * Enforces a strict 2-deep hierarchy:
+ * - Root level: Must be type 'ORG'.
+ * - Child level: Must have a parent 'ORG' and be type 'TEAM'.
+ * 
+ * @property-read string $name
+ * @property-read string|null $parent_id
+ * @property-read bool|null $is_private_child
+ * @property-read \App\Enum\GroupType $type
+ * @property-read string|null $billing_email
+ * @property-read \Illuminate\Http\UploadedFile|null $icon
+ */
 class StoreGroupRequest extends FormRequest
 {
     /**

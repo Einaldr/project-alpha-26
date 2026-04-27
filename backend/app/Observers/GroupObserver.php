@@ -10,6 +10,9 @@ class GroupObserver
 {
     /**
      * Handle the group "created" event.
+     * 
+     * Automatically add default roles to the group that's being created
+     * and auto assign Owner role to the group's owner.
      */
     public function created(Group $group): void
     {
@@ -52,37 +55,5 @@ class GroupObserver
         // 5. Attach the 'Owner' role to this new member
         // This populates your 'pivot_group_roles' table
         $member->roles()->attach($ownerRole->id);
-    }
-
-    /**
-     * Handle the group "updated" event.
-     */
-    public function updated(group $group): void
-    {
-        //
-    }
-
-    /**
-     * Handle the group "deleted" event.
-     */
-    public function deleted(group $group): void
-    {
-        //
-    }
-
-    /**
-     * Handle the group "restored" event.
-     */
-    public function restored(group $group): void
-    {
-        //
-    }
-
-    /**
-     * Handle the group "force deleted" event.
-     */
-    public function forceDeleted(group $group): void
-    {
-        //
     }
 }

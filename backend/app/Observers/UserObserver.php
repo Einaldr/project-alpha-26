@@ -9,7 +9,16 @@ use App\Models\User;
 class UserObserver
 {
     /**
-     * Handle the User "created" event.
+     * Handle the user "created" event.
+     * 
+     * Automatically intializes a private workspace instance for the new user
+     * and triggers the default icon generation for that group.
+     * 
+     * Note:
+     * It will subsequently trigger GroupObserver to initialize roles and memberships.
+     * 
+     * @param \App\Models\User $user The user that has been created.
+     * @return void
      */
     public function created(User $user): void
     {
@@ -20,37 +29,5 @@ class UserObserver
         ]);
 
         $group->generateDefaultIcon();
-    }
-
-    /**
-     * Handle the User "updated" event.
-     */
-    public function updated(User $user): void
-    {
-        //
-    }
-
-    /**
-     * Handle the User "deleted" event.
-     */
-    public function deleted(User $user): void
-    {
-        //
-    }
-
-    /**
-     * Handle the User "restored" event.
-     */
-    public function restored(User $user): void
-    {
-        //
-    }
-
-    /**
-     * Handle the User "force deleted" event.
-     */
-    public function forceDeleted(User $user): void
-    {
-        //
     }
 }

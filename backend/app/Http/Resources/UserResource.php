@@ -6,6 +6,13 @@ use App\Enum\AccountStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * UserResource
+ * 
+ * A Json resource representation of the User eloquent model.
+ * 
+ * @mixin \App\Models\User
+ */
 class UserResource extends JsonResource
 {
     /**
@@ -32,6 +39,11 @@ class UserResource extends JsonResource
         ];
     }
 
+    /**
+     * Utility function returning human-readable version of AccountStatus.
+     * @param bool $isMe Is the requester the same user as the eloquent model requested.
+     * @return string Normalized status
+     */
     private function getNormalizedStatus(bool $isMe): string
     {
         if ($this->trashed()) {

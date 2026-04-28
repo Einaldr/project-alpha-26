@@ -23,5 +23,7 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function ($user, string $token) {
             return config('settings.frontend_url') . 'reset-password?token=' . $token . '&email=' . $user->email;
         });
+        \App\Models\Group::observe(\App\Observers\GroupObserver::class);
+        \App\Models\User::observe(\App\Observers\UserObserver::class);
     }
 }

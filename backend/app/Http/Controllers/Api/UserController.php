@@ -73,7 +73,7 @@ class UserController extends Controller
     }
 
     /**
-     * GET /v1/users/{users}
+     * GET /v1/users/{user}
      * 
      * Display the specified user.
      */

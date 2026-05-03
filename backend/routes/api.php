@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\Api\GroupMemberController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -73,7 +74,19 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Secure group routes
     Route::prefix('groups')->group(function () {
-        Route::patch('/{group}', [GroupController::class, 'update']);
-        Route::delete('/{group}', [GroupController::class, 'destroy']);
+        Route::prefix('{group}')->group(function () {
+
+            Route::patch('/', [GroupController::class, 'update']);
+            Route::delete('/', [GroupController::class, 'destroy']);
+
+            Route::prefix('members')->scopeBindings()->group(function () {
+                Route::get('/', [GroupMemberController::class, 'index']);
+                Route::post('/invite', [GroupMemberController::class, 'invite']);
+
+                Route::prefix('{member}')->group(function () {
+                    Route::get('/', [GroupMemberController::class, 'show']);
+                });
+            });
+        });
     });
 });

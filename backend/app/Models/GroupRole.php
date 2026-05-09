@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupRole whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupRole wherePermissions($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupRole whereUpdatedAt($value)
+ * @property-read \App\Models\Group|null $group
  * @mixin \Eloquent
  */
 class GroupRole extends Model

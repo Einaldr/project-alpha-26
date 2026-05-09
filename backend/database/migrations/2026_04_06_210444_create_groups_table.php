@@ -120,5 +120,6 @@ return new class extends Migration
         Schema::dropIfExists('group_roles');
         Schema::dropIfExists('group_members');
         Schema::dropIfExists('group_audit_logs');
+        Schema::dropIfExists('group_invitations');
     }
 };

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\RolePermissions;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateGroupRoleRequest extends FormRequest
 {
@@ -22,7 +24,9 @@ class UpdateGroupRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // TODO: Implement the request
+            'name' => ['nullable', 'string', 'min:5', 'max:255'],
+            'permissions' => ['required', 'array', 'min:1'],
+            'permissions.*' => ['required', 'string', Rule::enum(RolePermissions::class), 'distinct'],
         ];
     }
 }

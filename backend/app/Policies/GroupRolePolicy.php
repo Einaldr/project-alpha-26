@@ -2,15 +2,35 @@
 
 namespace App\Policies;
 
+use App\Enum\RolePermissions;
+use App\Models\Group;
 use App\Models\User;
 
 class GroupRolePolicy
 {
-    // TODO: Implement viewAny policy
+    public function anyView(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES) || $user->hasGroupPermission($group, RolePermissions::ROLES_MANAGE);
+    }
 
-    // TODO: Implement view policy
+    public function view(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES) || $user->hasGroupPermission($group, RolePermissions::ROLES_MANAGE);
+    }
 
-    // TODO: Implement create policy
+    public function create(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES);
+    }
 
-    // TODO: Implement update policy
+    public function update(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES);
+    }
+
+    public function delete(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES);
+    }
+
 }

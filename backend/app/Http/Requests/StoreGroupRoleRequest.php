@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\RolePermissions;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreGroupRoleRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreGroupRoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,9 @@ class StoreGroupRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // TODO: Implement the request
+            'name' => ['required', 'string', 'min:5', 'max:255'],
+            'permissions' => ['required', 'array', 'min:1'],
+            'permissions.*' => ['required', 'string', Rule::enum(RolePermissions::class), 'distinct'],
         ];
     }
 }

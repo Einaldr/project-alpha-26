@@ -9,7 +9,7 @@ use App\Models\User;
 class GroupRolePolicy
 {
     // Determine whether the user can display all the roles at the same time.
-    public function anyView(User $user, Group $group): bool
+    public function viewAny(User $user, Group $group): bool
     {
         return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES) || $user->hasGroupPermission($group, RolePermissions::ROLES_MANAGE);
     }

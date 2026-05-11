@@ -33,7 +33,7 @@ class GroupRoleController extends Controller
      */
     public function index(Request $request, Group $group): ResourceCollection
     {
-        $this->authrizeStealth($group, 'anyView', 'You are not authorized to list roles');
+        $this->authorizeStealth($group, 'viewAny', 'You are not authorized to list roles', [GroupRole::class, $group]);
 
         $request->validate([
             'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
@@ -67,7 +67,7 @@ class GroupRoleController extends Controller
      */
     public function show(Group $group, GroupRole $groupRole): GroupRoleResource
     {
-        $this->authrizeStealth($group, 'view', "You are not authorized to see role settings");
+        $this->authorizeStealth($group, 'view', "You are not authorized to see role settings", [GroupRole::class, $group]);
 
         return new GroupRoleResource($groupRole);
     }
@@ -81,7 +81,7 @@ class GroupRoleController extends Controller
      */
     public function store(StoreGroupRoleRequest $request, Group $group): GroupRoleResource
     {
-        $this->authrizeStealth($group, 'create', 'You are not authorized to create roles');
+        $this->authorizeStealth($group, 'create', 'You are not authorized to create roles', [GroupRole::class, $group]);
 
         $role = GroupRole::create([
             'name' => $request->name,
@@ -104,7 +104,7 @@ class GroupRoleController extends Controller
      */
     public function update(UpdateGroupRoleRequest $request, Group $group, GroupRole $role): GroupRoleResource
     {
-        $this->authrizeStealth($group, 'update', 'You are not authorized to edit roles');
+        $this->authorizeStealth($group, 'update', 'You are not authorized to edit roles', [GroupRole::class, $group]);
 
         if ($request->name) {
             $role->update([
@@ -130,7 +130,7 @@ class GroupRoleController extends Controller
      */
     public function destroy(Group $group, GroupRole $role): JsonResponse
     {
-        $this->authrizeStealth($group, 'delete', 'You are not authorized to delete roles');
+        $this->authorizeStealth($group, 'delete', 'You are not authorized to delete roles', [GroupRole::class, $group]);
 
         $role->delete();
 

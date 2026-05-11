@@ -44,7 +44,7 @@ class GroupMemberController extends Controller
      */
     public function index(Group $group, Request $request): ResourceCollection
     {
-        $this->authrizeStealth($group, 'anyView', "You don't have access to the group members.");
+        $this->authorizeStealth($group, 'viewAny', "You don't have access to the group members.", [GroupMember::class, $group]);
 
         $request->validate([
             'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
@@ -77,7 +77,7 @@ class GroupMemberController extends Controller
      */
     public function show(Group $group, GroupMember $groupMember, Request $request): GroupMemberResource
     {
-        $this->authrizeStealth($group, 'view', "You don't have access to the group member.");
+        $this->authorizeStealth($group, 'view', "You don't have access to the group member.", [GroupMember::class, $group]);
 
         return new GroupMemberResource($groupMember);
     }
@@ -91,7 +91,7 @@ class GroupMemberController extends Controller
      */
     public function invite(StoreGroupMemberRequest $request, Group $group): JsonResponse
     {
-        $this->authrizeStealth($group, 'invite', "You don't have permission to invite members.");
+        $this->authorizeStealth($group, 'invite', "You don't have permission to invite members.", [GroupMember::class, $group]);
 
         $email = $request->email;
         $roleIds = $request->roles ?? [];
@@ -160,7 +160,7 @@ class GroupMemberController extends Controller
      */
     public function kickMember(Group $group, GroupMember $member): JsonResponse
     {
-        $this->authrizeStealth($group, 'kick', "You don't have permissions to kick members.");
+        $this->authorizeStealth($group, 'kick', "You don't have permissions to kick members.", $member);
 
         if ($member->user_id === $group->owner_id) {
             abort(403, "The group owner cannot be kicked.");
@@ -182,7 +182,7 @@ class GroupMemberController extends Controller
      */
     public function syncRoles(SyncGroupMemberRolesRequest $request, Group $group, GroupMember $member): GroupMemberResource
     {
-        $this->authrizeStealth($group, 'syncRoles', "You don't have permissions to change the member's roles.");
+        $this->authorizeStealth($group, 'syncRoles', "You don't have permissions to change the member's roles.", [GroupMember::class, $group]);
 
         if ($member->user_id === $group->owner_id) {
             abort(403, "The group owner's roles cannot be modified.");

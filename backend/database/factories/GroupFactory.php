@@ -6,6 +6,7 @@ use App\Enum\GroupType;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Override;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Group>
@@ -54,5 +55,15 @@ class GroupFactory extends Factory
             'type' => GroupType::INDIVIDUAL,
             'parent_id' => null,
         ]);
+    }
+
+    #[Override]
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Group $group) {
+            if (empty($group->icon_path)) {
+                $group->generateDefaultIcon();
+            }
+        });
     }
 }

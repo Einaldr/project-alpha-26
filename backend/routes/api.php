@@ -57,9 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Secure group endpoints
     Route::prefix('groups')->group(function () {
         Route::post('/', [GroupController::class, 'store']);
-        Route::get('/members', [GroupMemberController::class, 'index']);
-        Route::get('/roles', [GroupRoleController::class, 'index']);
-        Route::post('/roles', [GroupRoleController::class, 'store']);
     });
 });
 
@@ -88,6 +85,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/', [GroupController::class, 'destroy']);
 
             Route::prefix('roles')->scopeBindings()->group(function () {
+
+                Route::get('/', [GroupRoleController::class, 'index']);
+                Route::post('/', [GroupRoleController::class, 'store']);
+
                 Route::prefix('{groupRole}')->group(function () {
                     Route::get('/', [GroupRoleController::class, 'show']);
                     Route::patch('/', [GroupRoleController::class, 'update']);
@@ -96,6 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
             });
 
             Route::prefix('members')->scopeBindings()->group(function () {
+                Route::get('/', [GroupMemberController::class, 'index']);
                 Route::post('/invite', [GroupMemberController::class, 'invite']);
 
                 Route::prefix('{member}')->group(function () {

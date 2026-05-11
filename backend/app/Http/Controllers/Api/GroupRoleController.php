@@ -14,10 +14,23 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * GroupRoleController
+ * 
+ * Manages the lifecycle of group roles' lifecycle.
+ * Handles displaying, creating and editing group roles.
+ */
 class GroupRoleController extends Controller
 {
     use HandlesStealthAuth;
 
+    /**
+     * Display a paginated list of group's roles.
+     * 
+     * @param Request $request
+     * @param Group $group
+     * @return ResourceCollection
+     */
     public function index(Request $request, Group $group): ResourceCollection
     {
         $this->authrizeStealth($group, 'anyView', 'You are not authorized to list roles');
@@ -45,6 +58,13 @@ class GroupRoleController extends Controller
         );
     }
 
+    /**
+     * Display individual role's information.
+     * 
+     * @param Group $group
+     * @param GroupRole $groupRole
+     * @return GroupRoleResource
+     */
     public function show(Group $group, GroupRole $groupRole): GroupRoleResource
     {
         $this->authrizeStealth($group, 'view', "You are not authorized to see role settings");
@@ -52,6 +72,13 @@ class GroupRoleController extends Controller
         return new GroupRoleResource($groupRole);
     }
 
+    /**
+     * Create a new group role.
+     * 
+     * @param StoreGroupRoleRequest $request
+     * @param Group $group
+     * @return GroupRoleResource
+     */
     public function store(StoreGroupRoleRequest $request, Group $group): GroupRoleResource
     {
         $this->authrizeStealth($group, 'create', 'You are not authorized to create roles');
@@ -67,6 +94,14 @@ class GroupRoleController extends Controller
         return new GroupRoleResource($role);
     }
 
+    /**
+     * Update a group role.
+     * 
+     * @param UpdateGroupRoleRequest $request
+     * @param Group $group
+     * @param GroupRole $role
+     * @return GroupRoleResource
+     */
     public function update(UpdateGroupRoleRequest $request, Group $group, GroupRole $role): GroupRoleResource
     {
         $this->authrizeStealth($group, 'update', 'You are not authorized to edit roles');
@@ -86,6 +121,13 @@ class GroupRoleController extends Controller
         return new GroupRoleResource($role->refresh());
     }
 
+    /**
+     * Delete a group role
+     * 
+     * @param Group $group
+     * @param GroupRole $role
+     * @return JsonResponse
+     */
     public function destroy(Group $group, GroupRole $role): JsonResponse
     {
         $this->authrizeStealth($group, 'delete', 'You are not authorized to delete roles');

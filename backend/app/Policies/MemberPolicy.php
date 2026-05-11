@@ -10,7 +10,7 @@ use Illuminate\Auth\Access\Response;
 class MemberPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view all members.
      */
     public function viewAny(User $user, Group $group): bool
     {
@@ -22,7 +22,7 @@ class MemberPolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can view the group member.
      */
     public function view(User $user, Group $group): bool
     {
@@ -34,7 +34,7 @@ class MemberPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can invite group members.
      */
     public function invite(User $user, Group $group): bool
     {
@@ -46,7 +46,7 @@ class MemberPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can kick the group members.
      */
     public function kick(User $user, Group $group): bool
     {

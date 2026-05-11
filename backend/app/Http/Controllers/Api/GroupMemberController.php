@@ -21,10 +21,26 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 
+/**
+ * GroupMemberController
+ * 
+ * Manages the lifecycle of group members.
+ * Handles displaying group members, their details as well as invite flow.
+ */
 class GroupMemberController extends Controller
 {
     use HandlesStealthAuth;
 
+    /**
+     * Display a paginated list of group members of a given group.
+     * 
+     * Like groupcontroller's index method, it implements high-performance
+     * fuzzy search using PostgreSQL's pg_trgm extension.
+     * 
+     * @param Group $group
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(Group $group, Request $request): ResourceCollection
     {
         $this->authrizeStealth($group, 'anyView', "You don't have access to the group members.");
@@ -50,6 +66,14 @@ class GroupMemberController extends Controller
         return GroupMemberResource::collection($query->paginate($per_page)->appends($request->query()));
     }
 
+    /**
+     * Display individual group member information like their roles.
+     * 
+     * @param Group $group
+     * @param GroupMember $groupMember
+     * @param Request $request
+     * @return GroupMemberResource
+     */
     public function show(Group $group, GroupMember $groupMember, Request $request): GroupMemberResource
     {
         $this->authrizeStealth($group, 'view', "You don't have access to the group member.");
@@ -57,6 +81,13 @@ class GroupMemberController extends Controller
         return new GroupMemberResource($groupMember);
     }
 
+    /**
+     * Invite a new user to the group or team.
+     * 
+     * @param StoreGroupMemberRequest $request
+     * @param Group $group
+     * @return JsonResponse
+     */
     public function invite(StoreGroupMemberRequest $request, Group $group): JsonResponse
     {
         $this->authrizeStealth($group, 'invite', "You don't have permission to invite members.");
@@ -88,6 +119,13 @@ class GroupMemberController extends Controller
         return response()->json(['message' => 'Invitation sent!']);
     }
 
+    /**
+     * Accept an invite to a group or team.
+     * 
+     * @param Request $request
+     * @param GroupInvitation $invitation
+     * @return JsonResponse
+     */
     public function acceptInvite(Request $request, GroupInvitation $invitation): JsonResponse
     {
         if (!$request->hasValidSignature()) {
@@ -110,6 +148,15 @@ class GroupMemberController extends Controller
         return response()->json(['message' => 'Invitation accepted!']);
     }
 
+    /**
+     * Kick a user out of a group or team.
+     * 
+     * It also blocks the request if the given user to kick is an Owner.
+     * 
+     * @param Group $group
+     * @param GroupMember $member
+     * @return JsonResponse
+     */
     public function kickMember(Group $group, GroupMember $member): JsonResponse
     {
         $this->authrizeStealth($group, 'kick', "You don't have permissions to kick members.");

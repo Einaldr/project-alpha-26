@@ -53,7 +53,7 @@ class GroupRoleController extends Controller
             $query->orderBy('created_at', $order);
         }
 
-        return GroupRole::collection(
+        return GroupRoleResource::collection(
             $query->paginate($per_page)->appends($request->query())
         );
     }

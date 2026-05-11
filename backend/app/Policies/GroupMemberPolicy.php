@@ -7,18 +7,14 @@ use App\Models\Group;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class MemberPolicy
+class GroupMemberPolicy
 {
     /**
      * Determine whether the user can view all members.
      */
     public function viewAny(User $user, Group $group): bool
     {
-        if ($user->hasGroupPermission($group, RolePermissions::GROUP_VIEW)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
     }
 
     /**
@@ -26,11 +22,7 @@ class MemberPolicy
      */
     public function view(User $user, Group $group): bool
     {
-        if ($user->hasGroupPermission($group, RolePermissions::GROUP_VIEW)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->hasGroupPermission($group, RolePermissions::GROUP_VIEW);
     }
 
     /**
@@ -38,11 +30,7 @@ class MemberPolicy
      */
     public function invite(User $user, Group $group): bool
     {
-        if ($user->hasGroupPermission($group, RolePermissions::MEMBER_INVITE)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_INVITE);
     }
 
     /**
@@ -50,11 +38,7 @@ class MemberPolicy
      */
     public function kick(User $user, Group $group): bool
     {
-        if ($user->hasGroupPermission($group, RolePermissions::MEMBER_KICK)) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_KICK);
     }
 
     /**

@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Gate;
 
 trait HandlesStealthAuth
 {
-    protected function authrizeStealth(Group $group, string $ability, ?string $message = null): void
+    protected function authorizeStealth(Group $group, string $ability, ?string $message = null, mixed $target = null): void
     {
-        if (Gate::denies($ability, $group)) {
+        $policySubject = $target ?? $group;
+
+        if (Gate::denies($ability, $policySubject)) {
             if ($group->parent_id && $group->is_private_child) {
                 abort(404, __('Group not found.'));
             }

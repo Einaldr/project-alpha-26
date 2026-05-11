@@ -58,11 +58,11 @@ class MemberPolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can sync member's roles.
      */
-    public function delete(User $user): bool
+    public function syncRole(User $user, Group $group): bool
     {
-        return false;
+        return $user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES);
     }
 
     /**

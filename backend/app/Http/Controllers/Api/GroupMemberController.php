@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupMemberRequest;
+use App\Http\Requests\SyncGroupMemberRolesRequest;
 use App\Http\Resources\GroupMemberResource;
 use App\Mail\GroupInvitationMail;
 use App\Models\Group;
@@ -169,5 +170,26 @@ class GroupMemberController extends Controller
         $member->delete();
 
         return response()->json(['message' => $userName . ' has been kicked.']);
+    }
+
+    /**
+     * Update group member's roles by synchronizing them.
+     * 
+     * @param SyncGroupMemberRolesRequest $request
+     * @param Group $group
+     * @param GroupMember $member
+     * @return GroupMemberResource
+     */
+    public function syncRoles(SyncGroupMemberRolesRequest $request, Group $group, GroupMember $member): GroupMemberResource
+    {
+        $this->authrizeStealth($group, 'syncRoles', "You don't have permissions to change the member's roles.");
+
+        if ($member->user_id === $group->owner_id) {
+            abort(403, "The group owner's roles cannot be modified.");
+        }
+
+        $member->roles()->sync($request->roles);
+
+        return new GroupMemberResource($member);
     }
 }

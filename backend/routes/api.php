@@ -3,8 +3,11 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupMemberController;
+use App\Http\Controllers\Api\GroupRoleController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
+use App\Models\GroupMember;
+use App\Models\GroupRole;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -54,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- Secure group endpoints
     Route::prefix('groups')->group(function () {
         Route::post('/', [GroupController::class, 'store']);
+        Route::get('/members', [GroupMemberController::class, 'index']);
+        Route::get('/roles', [GroupRoleController::class, 'index']);
+        Route::post('/roles', [GroupRoleController::class, 'store']);
     });
 });
 
@@ -74,17 +80,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Secure group routes
     Route::prefix('groups')->group(function () {
+        Route::post('/invites/{invitation}', [GroupMemberController::class,'acceptInvite']);
+
         Route::prefix('{group}')->group(function () {
 
             Route::patch('/', [GroupController::class, 'update']);
             Route::delete('/', [GroupController::class, 'destroy']);
 
+            Route::prefix('roles')->scopeBindings()->group(function () {
+                Route::prefix('{groupRole}')->group(function () {
+                    Route::get('/', [GroupRoleController::class, 'show']);
+                    Route::patch('/', [GroupRoleController::class, 'update']);
+                    Route::delete('/', [GroupRoleController::class,'destroy']);
+                });
+            });
+
             Route::prefix('members')->scopeBindings()->group(function () {
-                Route::get('/', [GroupMemberController::class, 'index']);
                 Route::post('/invite', [GroupMemberController::class, 'invite']);
 
                 Route::prefix('{member}')->group(function () {
                     Route::get('/', [GroupMemberController::class, 'show']);
+                    Route::delete('/', [GroupMemberController::class, 'kick']);
                 });
             });
         });

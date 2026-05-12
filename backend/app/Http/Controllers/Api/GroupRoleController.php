@@ -44,7 +44,7 @@ class GroupRoleController extends Controller
         $per_page = $request->integer('per_page', 15);
         $order = $request?->order == 'asc' ? 'asc' : 'desc';
 
-        $query = GroupRole::query();
+        $query = $group->groupRoles();
 
         if ($search = $request->search) {
             $query->whereRaw('name % ?', [$search])

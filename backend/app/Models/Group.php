@@ -131,9 +131,9 @@ class Group extends Model
     }
 
     // Get all roles associated with this group
-    public function roles(): HasMany
+    public function groupRoles(): HasMany
     {
-        return $this->hasMany(GroupRole::class);
+        return $this->hasMany(GroupRole::class, 'group_id', 'id');
     }
 
     // Get the groups's parent group

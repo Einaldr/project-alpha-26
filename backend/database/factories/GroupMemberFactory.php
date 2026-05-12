@@ -33,15 +33,9 @@ class GroupMemberFactory extends Factory
                              ->where('name', $roleName)
                              ->first();
 
-            if (!$role) {
-                $role = GroupRole::create([
-                    'group_id' => $member->group_id,
-                    'name'=> $roleName,
-                    'permissions' => [],
-                ]);
+            if ($role) {
+                $member->roles()->syncWithoutDetaching([$role->id]);
             }
-
-            $member->roles()->attach($role->id);
         });
     }
 }

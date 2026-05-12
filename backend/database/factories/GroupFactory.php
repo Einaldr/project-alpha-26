@@ -23,11 +23,8 @@ class GroupFactory extends Factory
         return [
             "name" => $this->faker->company(),
             'type' => GroupType::ORG,
-            'owner_id' => User::factory(),
+            'owner_id' => User::factory()->create(),
             'parent_id' => null,
-            'is_private_child' => false,
-            'billing_email' => $this->faker->companyEmail(),
-            'icon_path' => null,
         ];
     }
 
@@ -37,6 +34,7 @@ class GroupFactory extends Factory
             'name' => $this->faker->jobTitle() . ' Team',
             'type' => GroupType::TEAM,
             'parent_id' => $parent->id ?? Group::factory()->org(),
+            'owner_id' => $parent->owner_id ?? User::factory()->create(),
         ]);
     }
 
@@ -61,8 +59,10 @@ class GroupFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Group $group) {
-            if (empty($group->icon_path)) {
-                $group->generateDefaultIcon();
+            $group->refresh();
+
+            if ($group->groupRoles()->count() === 0 || empty($group->icon_path)) {
+                $group->initialize();
             }
         });
     }

@@ -68,8 +68,8 @@ class GroupRoleController extends Controller
     public function show(Group $group, GroupRole $groupRole): GroupRoleResource
     {
         $this->authorizeStealth($group, 'view', "You are not authorized to see role settings", [GroupRole::class, $group]);
-
-        return new GroupRoleResource($groupRole);
+        
+        return new GroupRoleResource($groupRole)->includePermissions();
     }
 
     /**
@@ -99,41 +99,49 @@ class GroupRoleController extends Controller
      * 
      * @param UpdateGroupRoleRequest $request
      * @param Group $group
-     * @param GroupRole $role
+     * @param GroupRole $groupRole
      * @return GroupRoleResource
      */
-    public function update(UpdateGroupRoleRequest $request, Group $group, GroupRole $role): GroupRoleResource
+    public function update(UpdateGroupRoleRequest $request, Group $group, GroupRole $groupRole): GroupRoleResource
     {
         $this->authorizeStealth($group, 'update', 'You are not authorized to edit roles', [GroupRole::class, $group]);
 
         if ($request->name) {
-            $role->update([
+            $groupRole->update([
                 'name' => $request->name,
             ]);
         }
 
         if ($request->permissions) {
-            $role->update([
+            $groupRole->update([
                 'permissions' => array_map(fn($val) => RolePermissions::from($val), $request->permissions),
             ]);
         }
 
-        return new GroupRoleResource($role->refresh());
+        return new GroupRoleResource($groupRole->refresh())->includePermissions();
     }
 
     /**
      * Delete a group role
      * 
      * @param Group $group
-     * @param GroupRole $role
+     * @param GroupRole $groupRole
      * @return JsonResponse
      */
-    public function destroy(Group $group, GroupRole $role): JsonResponse
+    public function destroy(Group $group, GroupRole $groupRole): JsonResponse
     {
         $this->authorizeStealth($group, 'delete', 'You are not authorized to delete roles', [GroupRole::class, $group]);
 
-        $role->delete();
+        if ($groupRole->name === 'Owner') {
+            abort(403, "The 'Owner' role is protected.");
+        }
 
+        if ($groupRole->members()->exists()) {
+            return response()->json(['message' => "Conflict: Role currently in use.", 'errors' => ['role' => ['Cannot delete a role that is still assigned to members. Please reassign the members first.']]], 409);
+        }
+
+        $groupRole->delete();
         return response()->json(['message' => 'Role successfully deleted']);
+        
     }
 }

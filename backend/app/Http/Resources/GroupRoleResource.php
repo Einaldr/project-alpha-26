@@ -25,7 +25,7 @@ class GroupRoleResource extends JsonResource
     public function toArray(Request $request): array
     {
         $user = $request->user();
-        $group = $this->group();
+        $group = $this->group;
 
         return [
             'id' => $this->id,

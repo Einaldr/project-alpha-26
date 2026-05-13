@@ -192,4 +192,26 @@ class GroupMemberController extends Controller
 
         return new GroupMemberResource($member);
     }
+
+    public function leave(Request $request, Group $group)
+    {
+        $this->authorizeStealth($group, "view","You aren't a member of this group.");
+
+        $user = $request->user();
+
+        if ($user->id === $group->owner_id) {
+            abort(403, "Group Owner cannot leave the group they own. Transfer ownership before leaving.");
+        }
+
+        /** @var GroupMember $membership  */
+        $membership = $group->members()->where('user_id', $user->id)->first();
+
+        if (!$membership) {
+            abort(403, "You cannot leave a group you are not directly member of.");
+        }
+
+        $membership->delete();
+
+        return response()->noContent();
+    }
 }

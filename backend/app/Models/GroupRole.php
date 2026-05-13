@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupRole whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupRole wherePermissions($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupRole whereUpdatedAt($value)
+ * @property-read \App\Models\Group|null $group
  * @mixin \Eloquent
  */
 class GroupRole extends Model
@@ -53,5 +55,10 @@ class GroupRole extends Model
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(GroupMember::class, 'pivot_group_roles', 'role_id', 'group_member_id')->withTimestamps();
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
     }
 }

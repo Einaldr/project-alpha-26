@@ -95,6 +95,20 @@ return new class extends Migration
             $table->timestampsTZ();
             $table->softDeletesTz();
         });
+
+        Schema::create('group_invitations', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+
+            $table->foreignUuid('group_id')->constrained()->onDelete('cascade');
+
+            $table->string('email');
+            $table->string('token', 64)->unique();
+            $table->timestampTz('expires_at');
+
+            $table->timestampsTz();
+
+            $table->unique(['group_id', 'email']);
+        });
     }
 
     /**
@@ -106,5 +120,6 @@ return new class extends Migration
         Schema::dropIfExists('group_roles');
         Schema::dropIfExists('group_members');
         Schema::dropIfExists('group_audit_logs');
+        Schema::dropIfExists('group_invitations');
     }
 };

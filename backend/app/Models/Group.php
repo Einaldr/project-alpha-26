@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enum\GroupType;
+use App\Enum\RolePermissions;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -131,9 +132,9 @@ class Group extends Model
     }
 
     // Get all roles associated with this group
-    public function roles(): HasMany
+    public function groupRoles(): HasMany
     {
-        return $this->hasMany(GroupRole::class);
+        return $this->hasMany(GroupRole::class, 'group_id', 'id');
     }
 
     // Get the groups's parent group
@@ -218,6 +219,41 @@ class Group extends Model
      * Utility
      * =======================
      */
+
+    protected bool $isInitializing = false;
+
+    public function initialize(): self
+    {   
+        if ($this->isInitializing) {
+            return $this;
+        }
+
+        $this->isInitializing = true;
+
+        $ownerRole = $this->groupRoles()->firstOrCreate(['name' => 'Owner'], ['permissions' => RolePermissions::values()]);
+        $this->groupRoles()->firstOrCreate(['name' => 'Admin'], ['permissions' => 
+                    [RolePermissions::GROUP_UPDATE->value,
+                    RolePermissions::MEMBER_INVITE->value,
+                    RolePermissions::MEMBER_KICK->value,
+                    RolePermissions::ROLES_MANAGE->value,
+                    RolePermissions::PROJECT_MANAGE->value,
+                    RolePermissions::PROJECT_INVITE->value,
+                    RolePermissions::REPOSITORY_MANAGE->value,
+                    RolePermissions::AUDIT_LOG_VIEW->value,
+                    ]]);
+        $this->groupRoles()->firstOrCreate(['name' => 'Member'], ['permissions' => [RolePermissions::GROUP_VIEW->value]]);
+
+        $membership = $this->members()->firstOrCreate(['user_id' => $this->owner_id]);
+
+        $membership->roles()->syncWithoutDetaching([$ownerRole->id]);
+
+        if (!$this->icon_path) {
+            $this->generateDefaultIcon();
+            $this->refresh();
+        }
+
+        return $this;
+    }
 
     /**
      * Generate default icon.

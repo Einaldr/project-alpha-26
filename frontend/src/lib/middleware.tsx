@@ -35,7 +35,7 @@ const ProtectedRoute = () => {
 
             while (retries > 0) {
                 try {
-                    const response = await api.get('/users/me');
+                    const response = await api.get('/me');
 
                     const status = response?.status ?? 500;
 

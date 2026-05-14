@@ -6,6 +6,7 @@ import RegistrationPage from "./pages/RegistrationPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
 import DashboardPage from "./pages/DashboardPage"
+import MainLayout from "./components/layouts/MainLayout"
 
 export function App() {
   return (
@@ -19,7 +20,10 @@ export function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

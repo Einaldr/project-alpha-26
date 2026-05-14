@@ -1,8 +1,7 @@
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarProvider, SidebarRail, SidebarTrigger } from "../ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarRail} from "../ui/sidebar";
 
-export default function sidebar() {
+export default function AppSidebar() {
     return (
-        <SidebarProvider>
             <Sidebar>
                 <SidebarHeader />
 
@@ -18,10 +17,5 @@ export default function sidebar() {
 
                 <SidebarRail />
             </Sidebar>
-
-            <SidebarTrigger>
-                
-            </SidebarTrigger>
-        </SidebarProvider>
     )
 }

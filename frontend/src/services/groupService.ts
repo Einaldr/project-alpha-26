@@ -12,6 +12,11 @@ export const  groupService = {
         return data.data;
     },
 
+    workspace: async () => {
+        const {data} = await api.get<{data: Group}>('/me/workspace');
+        return data.data;
+    },
+
     show: async (id: string) => {
         const {data} = await api.get<{data: Group}>(`/groups/${id}`);
         return data.data;

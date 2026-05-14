@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\GroupType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
@@ -180,5 +181,14 @@ class GroupController extends Controller
                        ->load('owner');
         
         return GroupResource::collection($groups);
+    }
+
+    public function individualWorkspace(Request $request): GroupResource
+    {
+        $user = $request->user();
+
+        $workspace = Group::whereOwnerId($user->id)->where('type', GroupType::INDIVIDUAL)->first();
+
+        return new GroupResource($workspace);
     }
 }

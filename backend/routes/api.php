@@ -52,6 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/pernament', [ProfileController::class, 'forceDestroy']);
 
         Route::get('/groups', [GroupController::class, 'myGroups']);
+        Route::get('/workspace', [GroupController::class,'individualWorkspace']);
     });
 
     // --- Secure group endpoints

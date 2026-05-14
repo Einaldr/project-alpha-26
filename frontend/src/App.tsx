@@ -5,6 +5,7 @@ import { Toaster } from "sonner"
 import RegistrationPage from "./pages/RegistrationPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
+import DashboardPage from "./pages/DashboardPage"
 
 export function App() {
   return (
@@ -18,7 +19,7 @@ export function App() {
 
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<h1>Dashboard here</h1>} />
+            <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

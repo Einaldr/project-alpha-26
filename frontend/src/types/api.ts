@@ -25,6 +25,7 @@ export interface Group {
     group_type: GroupType;
     icon_url: string;
     permissions: Permissions[];
-    parent_id?: string,
+    parent_id?: string;
     parent?: Group;
+    children?: Group[];
 }

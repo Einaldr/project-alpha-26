@@ -188,7 +188,7 @@ class GroupController extends Controller
     {
         $user = $request->user();
 
-        $workspace = Group::whereOwnerId($user->id)->where('type', GroupType::INDIVIDUAL)->first();
+        $workspace = Group::whereOwnerId($user->id)->where('type', GroupType::INDIVIDUAL)->firstOrFail();
 
         return new GroupResource($workspace);
     }

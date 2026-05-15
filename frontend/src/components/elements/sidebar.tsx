@@ -1,21 +1,25 @@
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarRail} from "../ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarRail,
+} from "../ui/sidebar"
 
 export default function AppSidebar() {
-    return (
-            <Sidebar>
-                <SidebarHeader />
 
-                <SidebarContent>
+  return (
+    <Sidebar>
+      <SidebarHeader></SidebarHeader>
 
-                    <SidebarGroup>
+      <SidebarContent>
+        <SidebarGroup></SidebarGroup>
+      </SidebarContent>
 
-                    </SidebarGroup>
+      <SidebarFooter />
 
-                </SidebarContent>
-
-                <SidebarFooter />
-
-                <SidebarRail />
-            </Sidebar>
-    )
+      <SidebarRail />
+    </Sidebar>
+  )
 }

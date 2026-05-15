@@ -45,8 +45,8 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
         set({ isLoading: true })
 
         try {
-          const data = await groupService.show(id)
-          set({ activeGroup: data })
+          const group = await groupService.show(id)
+          set({ activeGroup: group })
         } catch (error) {
           console.error("Failed to fetch group", error)
         } finally {
@@ -55,7 +55,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
       },
 
       reset: () => set({activeGroup: null, workspace: null, isLoading: false}),
-      
+
     }),
     {
       name: "active-group-storage",

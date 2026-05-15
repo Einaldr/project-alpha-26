@@ -175,6 +175,7 @@ class GroupController extends Controller
     public function myGroups(Request $request): ResourceCollection
     {
         $groups = Group::memberOf($request->user())
+                       ->whereNull('parent_id')
                        ->latest()
                        ->get()
                        ->load('children')

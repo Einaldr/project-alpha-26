@@ -13,6 +13,7 @@ import type { Group } from "@/types/api"
 import { useEffect, useState } from "react"
 import { groupService } from "@/services/groupService"
 import { Separator } from "../../ui/separator"
+import { useNavigate } from "react-router-dom"
 
 export default function GroupSelector() {
   const [groups, setGroups] = useState<Group[]>([])
@@ -20,6 +21,7 @@ export default function GroupSelector() {
   const [requests, setRequests] = useState(0)
   const { activeGroup, setActiveGroup } = useActiveGroupStore()
   const { isMobile } = useSidebar()
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchGroups() {
@@ -51,6 +53,7 @@ export default function GroupSelector() {
 
   const changeGroup = (group: Group): void => {
     setActiveGroup(group)
+    navigate('/dashboard')
   }
 
   const isWorkspace = activeGroup.group_type == "individual" ? true : false
@@ -60,8 +63,8 @@ export default function GroupSelector() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton size="lg">
-          <div className="flex aspect-square justify-center size-8 rounded-lg">
-            <img src={activeGroup.icon_url} className="rounded-lg"/>
+          <div className="flex aspect-square size-8 justify-center rounded-lg">
+            <img src={activeGroup.icon_url} className="rounded-lg" />
           </div>
           <div className="grid">
             <span className="truncate font-medium">{activeGroup.name}</span>
@@ -74,7 +77,7 @@ export default function GroupSelector() {
                   : "Organization"}
             </span>
           </div>
-          <CaretUpDownIcon className="ml-auto"/>
+          <CaretUpDownIcon className="ml-auto" />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
@@ -88,7 +91,10 @@ export default function GroupSelector() {
           <DropdownMenuGroup key={group.id}>
             <DropdownMenuLabel>{group.name}</DropdownMenuLabel>
             <Separator />
-            <DropdownMenuItem className="gap-2 p-2" onClick={() => changeGroup(group)}>
+            <DropdownMenuItem
+              className="gap-2 p-2"
+              onClick={() => changeGroup(group)}
+            >
               <div className="size-8 rounded-lg">
                 <img src={group.icon_url} className="rounded-sm" />
               </div>
@@ -99,7 +105,11 @@ export default function GroupSelector() {
             {!group.children
               ? null
               : group.children.map((group) => (
-                  <DropdownMenuItem className="gap-2 p-2" onClick={() => changeGroup(group)} key={group.id}>
+                  <DropdownMenuItem
+                    className="gap-2 p-2"
+                    onClick={() => changeGroup(group)}
+                    key={group.id}
+                  >
                     <div className="size-8 rounded-lg">
                       <img src={group.icon_url} className="rounded-sm" />
                     </div>

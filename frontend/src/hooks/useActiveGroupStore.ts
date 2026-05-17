@@ -2,18 +2,19 @@ import { groupService } from "@/services/groupService"
 import type { Group } from "@/types/api"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
+import { useActiveMembership } from "./useActiveMembership"
 
 interface ActiveGroupState {
-  workspace: Group | null;
-  activeGroup: Group | null;
-  isLoading: boolean;
+  workspace: Group | null
+  activeGroup: Group | null
+  isLoading: boolean
 
-  fetchWorkspace: () => Promise<void>;
-  setActiveGroup: (group: Group | null) => void;
-  fetchAndSetActiveGroup: (id: string) => Promise<void>;
+  fetchWorkspace: () => Promise<void>
+  setActiveGroup: (group: Group | null) => void
+  fetchAndSetActiveGroup: (id: string) => Promise<void>
 
   // deconstructor
-  reset: () => void;
+  reset: () => void
 }
 
 export const useActiveGroupStore = create<ActiveGroupState>()(
@@ -36,10 +37,14 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           console.error("Failed to fetch workspace", error)
         } finally {
           set({ isLoading: false })
+          useActiveMembership.getState().updateMembership()
         }
       },
 
-      setActiveGroup: (group) => set({ activeGroup: group }),
+      setActiveGroup: (group) => {
+        set({ activeGroup: group })
+        useActiveMembership.getState().updateMembership()
+      },
 
       fetchAndSetActiveGroup: async (id) => {
         set({ isLoading: true })
@@ -51,11 +56,12 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           console.error("Failed to fetch group", error)
         } finally {
           set({ isLoading: false })
+          useActiveMembership.getState().updateMembership()
         }
       },
 
-      reset: () => set({activeGroup: null, workspace: null, isLoading: false}),
-
+      reset: () =>
+        set({ activeGroup: null, workspace: null, isLoading: false }),
     }),
     {
       name: "active-group-storage",

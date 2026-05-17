@@ -24,8 +24,14 @@ export interface Group {
     name: string;
     group_type: GroupType;
     icon_url: string;
-    permissions: Permissions[];
     parent_id?: string;
     parent?: Group;
     children?: Group[];
+}
+
+export interface Role {
+    id: string;
+    name: string;
+    permissions: Permissions[];
+    group: Group;
 }

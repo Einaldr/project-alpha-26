@@ -6,38 +6,51 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./dropdown-menu"
-import { SidebarMenuButton} from "./sidebar"
+} from "../../ui/dropdown-menu"
+import { SidebarMenuButton, useSidebar } from "../../ui/sidebar"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import type { Group } from "@/types/api"
 import { useEffect, useState } from "react"
 import { groupService } from "@/services/groupService"
+import { Separator } from "../../ui/separator"
 
 export default function GroupSelector() {
   const [groups, setGroups] = useState<Group[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { activeGroup } = useActiveGroupStore()
+  const [requests, setRequests] = useState(0)
+  const { activeGroup, setActiveGroup } = useActiveGroupStore()
+  const { isMobile } = useSidebar()
 
   useEffect(() => {
     async function fetchGroups() {
       try {
-        if (!isLoading) {
+        if (!isLoading && requests < 5) {
+          setRequests(requests + 1)
           setIsLoading(true)
           const groups = await groupService.myGroups()
           setGroups(groups)
         }
       } catch (error) {
         console.error("Failed to fetch groups:", error)
+
+        if (requests >= 5) {
+          console.error("Reached 5 requests cap to fetch groups:", error)
+          return
+        }
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchGroups()
-  }, [isLoading])
+  })
 
   if (!activeGroup) {
     return null
+  }
+
+  const changeGroup = (group: Group): void => {
+    setActiveGroup(group)
   }
 
   const isWorkspace = activeGroup.group_type == "individual" ? true : false
@@ -47,10 +60,10 @@ export default function GroupSelector() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton size="lg">
-          <div>
-            <img src={activeGroup.icon_url} />
+          <div className="flex aspect-square justify-center size-8 rounded-lg">
+            <img src={activeGroup.icon_url} className="rounded-lg"/>
           </div>
-          <div>
+          <div className="grid">
             <span className="truncate font-medium">{activeGroup.name}</span>
 
             <span className="truncate text-xs">
@@ -61,26 +74,41 @@ export default function GroupSelector() {
                   : "Organization"}
             </span>
           </div>
-          <CaretUpDownIcon />
+          <CaretUpDownIcon className="ml-auto"/>
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
+      <DropdownMenuContent
+        side={isMobile ? "bottom" : "right"}
+        sideOffset={12}
+        align="start"
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+      >
         {groups.map((group) => (
-          <DropdownMenuGroup>
+          <DropdownMenuGroup key={group.id}>
             <DropdownMenuLabel>{group.name}</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <img src={group.icon_url} />
-              <span>{group.name}</span>
+            <Separator />
+            <DropdownMenuItem className="gap-2 p-2" onClick={() => changeGroup(group)}>
+              <div className="size-8 rounded-lg">
+                <img src={group.icon_url} className="rounded-sm" />
+              </div>
+              <div>
+                <span className="font-medium">{group.name}</span>
+              </div>
             </DropdownMenuItem>
             {!group.children
               ? null
               : group.children.map((group) => (
-                  <DropdownMenuItem>
-                    <img src={group.icon_url} />
-                    <span>{group.name}</span>
+                  <DropdownMenuItem className="gap-2 p-2" onClick={() => changeGroup(group)} key={group.id}>
+                    <div className="size-8 rounded-lg">
+                      <img src={group.icon_url} className="rounded-sm" />
+                    </div>
+                    <div>
+                      <span>{group.name}</span>
+                    </div>
                   </DropdownMenuItem>
                 ))}
+            <div className="h-2" />
           </DropdownMenuGroup>
         ))}
       </DropdownMenuContent>

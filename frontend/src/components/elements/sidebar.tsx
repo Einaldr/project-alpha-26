@@ -1,3 +1,4 @@
+import GroupSelector from "./sidebar-elements/group-selector"
 import {
   Sidebar,
   SidebarContent,
@@ -10,8 +11,8 @@ import {
 export default function AppSidebar() {
 
   return (
-    <Sidebar>
-      <SidebarHeader></SidebarHeader>
+    <Sidebar collapsible="icon">
+      <SidebarHeader><GroupSelector /></SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup></SidebarGroup>

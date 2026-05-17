@@ -17,9 +17,9 @@ export function App() {
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               

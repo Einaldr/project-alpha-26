@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupMemberRequest;
 use App\Http\Requests\SyncGroupMemberRolesRequest;
 use App\Http\Resources\GroupMemberResource;
+use App\Http\Resources\GroupRoleResource;
 use App\Mail\GroupInvitationMail;
 use App\Models\Group;
 use App\Models\GroupInvitation;
@@ -213,5 +214,19 @@ class GroupMemberController extends Controller
         $membership->delete();
 
         return response()->noContent();
+    }
+
+    public function myPermissions(Request $request, Group $group)
+    {
+        $this->authorizeStealth($group, "view", "You aren't a member of this group.");
+
+        $user = $request->user();
+
+        /** @var GroupMember $membership  */
+        $membership = $group->members()->where('user_id', $user->id)->firstOrFail();
+
+        $roles = $membership->roles()->get();
+
+        return GroupRoleResource::collection($roles)->map(function ($resource) {return $resource->includePermissions();});
     }
 }

@@ -22,7 +22,9 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
-              
+              <Route path="/members" element={<h1>Members view WIP</h1>} />
+              <Route path="/members/invite" element={<h1>Invite member WIP</h1>} />
+              <Route path="/roles" element={<h1>Roles view WIP</h1>} />
             </Route>
           </Route>
         </Routes>

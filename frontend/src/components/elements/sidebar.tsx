@@ -3,10 +3,10 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   SidebarRail,
 } from "../ui/sidebar"
+import NavMembers from "./sidebar-elements/nav-members"
 
 export default function AppSidebar() {
 
@@ -15,9 +15,8 @@ export default function AppSidebar() {
       <SidebarHeader><GroupSelector /></SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup></SidebarGroup>
+        <NavMembers />
       </SidebarContent>
-
       <SidebarFooter />
 
       <SidebarRail />

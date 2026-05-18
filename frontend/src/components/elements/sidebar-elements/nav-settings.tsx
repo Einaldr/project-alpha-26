@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { useActiveMembership } from "@/hooks/useActiveMembership"
-import { CaretRightIcon, UserListIcon } from "@phosphor-icons/react"
+import { CaretRightIcon, GearIcon } from "@phosphor-icons/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -40,7 +40,7 @@ export default function NavSettings() {
               className="gap-2"
               onClick={() => setIsOpen(true)}
             >
-              <UserListIcon className="" />
+              <GearIcon className="" />
               <span>Settings</span>
               <CaretRightIcon className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
             </SidebarMenuButton>

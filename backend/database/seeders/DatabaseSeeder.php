@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
                    ->create();
 
         $testingGroup = Group::factory()->create([
-            'name'=> "Testing Group Group",
+            'name'=> "Testing Group",
             'owner_id' => $testingUser->id,
             'billing_email' => null,
         ]);

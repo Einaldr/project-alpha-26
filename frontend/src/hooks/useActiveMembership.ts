@@ -5,10 +5,10 @@ import { persist } from "zustand/middleware"
 import { useActiveGroupStore } from "./useActiveGroupStore"
 
 interface activeMembership {
-  roles: Permissions[] | null
+  permissions: Permissions[] | null
   isLoading: boolean
 
-  updateMembership: () => void
+  updatePermissions: () => void
   hasPermission: (permission: Permissions) => boolean
 }
 
@@ -17,10 +17,10 @@ interface activeMembership {
 export const useActiveMembership = create<activeMembership>()(
   persist(
     (set, get) => ({
-      roles: null,
+      permissions: null,
       isLoading: false,
 
-      updateMembership: async () => {
+      updatePermissions: async () => {
         const activeGroup = useActiveGroupStore.getState().activeGroup;
 
         if (!get().isLoading) {
@@ -41,10 +41,11 @@ export const useActiveMembership = create<activeMembership>()(
                 }
               })
             })
-
-            set({ roles: permissions })
+            
+            console.log('Got new permissions:', permissions)
+            set({ permissions: permissions })
           } else if (activeGroup == null) {
-            set({roles: null})
+            set({permissions: null})
           }
         } catch (error) {
           console.error("Error when updating membership permissions:", error)
@@ -54,11 +55,11 @@ export const useActiveMembership = create<activeMembership>()(
       },
 
       hasPermission: (permission: Permissions) => {
-        if (!get().roles) {
+        if (!get().permissions) {
           return false
         }
 
-        if (get().roles?.includes(permission)) {
+        if (get().permissions?.includes(permission)) {
           return true
         }
 

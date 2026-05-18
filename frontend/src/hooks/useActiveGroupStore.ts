@@ -2,7 +2,6 @@ import { groupService } from "@/services/groupService"
 import type { Group } from "@/types/api"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import { useActiveMembership } from "./useActiveMembership"
 
 interface ActiveGroupState {
   workspace: Group | null
@@ -37,13 +36,11 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           console.error("Failed to fetch workspace", error)
         } finally {
           set({ isLoading: false })
-          useActiveMembership.getState().updateMembership()
         }
       },
 
       setActiveGroup: (group) => {
         set({ activeGroup: group })
-        useActiveMembership.getState().updateMembership()
       },
 
       fetchAndSetActiveGroup: async (id) => {
@@ -56,7 +53,6 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           console.error("Failed to fetch group", error)
         } finally {
           set({ isLoading: false })
-          useActiveMembership.getState().updateMembership()
         }
       },
 

@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { Controller, useForm } from 'react-hook-form'
 import api from '@/lib/api.ts'
-import { useActiveGroupStore } from '@/hooks/useActiveGroupStore'
 
 
 const loginFormSchema = z.object({
@@ -17,7 +16,6 @@ const loginFormSchema = z.object({
 
 export default function LoginForm() {
     const navigate = useNavigate();
-    const {fetchWorkspace} = useActiveGroupStore();
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: standardSchemaResolver(loginFormSchema),
@@ -41,8 +39,6 @@ export default function LoginForm() {
             loading: 'Verifying credentials...',
             success: (data) => {
                 localStorage.setItem('token', data.token);
-
-                fetchWorkspace();
 
                 setTimeout(() => navigate('/dashboard'), 500);
 

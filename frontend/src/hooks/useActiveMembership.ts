@@ -21,50 +21,39 @@ export const useActiveMembership = create<activeMembership>()(
       isLoading: false,
 
       updatePermissions: async () => {
-        const activeGroup = useActiveGroupStore.getState().activeGroup;
+        if (get().isLoading) return
 
-        if (!get().isLoading) {
-          return null
+        const activeGroup = useActiveGroupStore.getState().activeGroup
+        if (!activeGroup?.id) {
+          set({ permissions: null })
+          return
         }
-        
-        set({isLoading: true})
-        
-        try {
-          if (activeGroup?.id) {
-            const roles = await roleService.myRoles(activeGroup?.id)
-            const permissions: Permissions[] = []
 
-            roles.forEach((role) => {
-              role.permissions.forEach((permission) => {
-                if (!permissions.includes(permission)) {
-                  permissions.push(permission)
-                }
-              })
-            })
-            
-            console.log('Got new permissions:', permissions)
-            set({ permissions: permissions })
-          } else if (activeGroup == null) {
-            set({permissions: null})
-          }
+        set({ isLoading: true })
+
+        try {
+          const roles = await roleService.myRoles(activeGroup.id)
+
+          const permissionSet = new Set<Permissions>()
+
+          roles.forEach((role) => {
+            role.permissions?.forEach((p) => permissionSet.add(p))
+          })
+
+          const permissions = Array.from(permissionSet)
+          set({ permissions, isLoading: false })
         } catch (error) {
           console.error("Error when updating membership permissions:", error)
         } finally {
-          set({isLoading: false})
+          set({ isLoading: false })
         }
       },
 
       hasPermission: (permission: Permissions) => {
-        if (!get().permissions) {
-          return false
-        }
-
-        if (get().permissions?.includes(permission)) {
-          return true
-        }
-
-        return false
-      }
+        const permissions = get().permissions
+        if (!permissions) return false
+        return permissions.includes(permission)
+      },
     }),
     {
       name: "active-permissions-storage",

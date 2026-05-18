@@ -12,16 +12,18 @@ import {
   SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
+import { useActiveMembership } from "@/hooks/useActiveMembership"
 import { CaretRightIcon, UserListIcon } from "@phosphor-icons/react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-export default function NavMembers() {
+export default function NavSettings() {
   const [isOpen, setIsOpen] = useState(false)
   const { activeGroup } = useActiveGroupStore()
   const navigate = useNavigate()
+  const { hasPermission } = useActiveMembership()
 
-  if (activeGroup?.group_type == "individual") return null
+  if (!hasPermission('group.update') || !hasPermission('audit_log.view')) return null
 
   return (
     <SidebarGroup>
@@ -45,12 +47,23 @@ export default function NavMembers() {
           </CollapsibleTrigger>
           <CollapsibleContent>
             <SidebarMenuSub>
-                <SidebarMenuSubButton asChild onClick={() => navigate('/members')}>
-                    <span>Settings</span>
+              {hasPermission("group.update") && !(activeGroup?.group_type == 'individual') ? (
+                <SidebarMenuSubButton
+                  asChild
+                  onClick={() => navigate("/group/settings")}
+                >
+                  <span>Settings</span>
                 </SidebarMenuSubButton>
-                <SidebarMenuSubButton asChild onClick={()=>navigate('/members/invite')}>
-                    <span>Audit Log</span>
+              ) : null}
+
+              {hasPermission("audit_log.view") ? (
+                <SidebarMenuSubButton
+                  asChild
+                  onClick={() => navigate("/group/auditlog")}
+                >
+                  <span>Audit Log</span>
                 </SidebarMenuSubButton>
+              ) : null}
             </SidebarMenuSub>
           </CollapsibleContent>
         </SidebarMenuItem>

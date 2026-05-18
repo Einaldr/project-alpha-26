@@ -7,6 +7,7 @@ import {
   SidebarRail,
 } from "../ui/sidebar"
 import NavMembers from "./sidebar-elements/nav-members"
+import NavSettings from "./sidebar-elements/nav-settings"
 
 export default function AppSidebar() {
 
@@ -16,6 +17,7 @@ export default function AppSidebar() {
 
       <SidebarContent>
         <NavMembers />
+        <NavSettings />
       </SidebarContent>
       <SidebarFooter />
 

@@ -47,17 +47,17 @@ export default function NavMembers() {
           </CollapsibleTrigger>
           <CollapsibleContent>
             <SidebarMenuSub>
-                <SidebarMenuSubButton asChild onClick={() => navigate('/members')}>
+                <SidebarMenuSubButton asChild onClick={() => navigate('/group/members')}>
                     <span>Members</span>
                 </SidebarMenuSubButton>
                 {hasPermission('member.invite') ? 
-                <SidebarMenuSubButton asChild onClick={()=>navigate('/members/invite')}>
+                <SidebarMenuSubButton asChild onClick={()=>navigate('/group/members/invite')}>
                     <span>Invite</span>
                 </SidebarMenuSubButton> 
                 : null 
                 }
                 {hasPermission('roles.manage') ? 
-                <SidebarMenuSubButton asChild onClick={() => navigate('/roles')}>
+                <SidebarMenuSubButton asChild onClick={() => navigate('/group/roles')}>
                     <span>Roles</span>
                 </SidebarMenuSubButton>
                 : null

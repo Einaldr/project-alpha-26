@@ -8,6 +8,7 @@ import {
 } from "../ui/sidebar"
 import NavMembers from "./sidebar-elements/nav-members"
 import NavSettings from "./sidebar-elements/nav-settings"
+import NavProjects from "./sidebar-elements/nav-projects"
 
 export default function AppSidebar() {
 
@@ -16,6 +17,7 @@ export default function AppSidebar() {
       <SidebarHeader><GroupSelector /></SidebarHeader>
 
       <SidebarContent>
+        <NavProjects />
         <NavMembers />
         <NavSettings />
       </SidebarContent>

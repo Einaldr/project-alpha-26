@@ -22,9 +22,12 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/members" element={<h1>Members view WIP</h1>} />
-              <Route path="/members/invite" element={<h1>Invite member WIP</h1>} />
-              <Route path="/roles" element={<h1>Roles view WIP</h1>} />
+              <Route path="/group/members" element={<h1>Members view WIP</h1>} />
+              <Route path="/group/members/invite" element={<h1>Invite member WIP</h1>} />
+              <Route path="/group/roles" element={<h1>Roles view WIP</h1>} />
+              <Route path="/group/settings" element={<h1>Group Settings view WIP</h1>} />
+              <Route path="/group/auditlog" element={<h1>Audit log view WIP</h1>} />
+              <Route path="/group/projects" element={<h1>Projects view WIP</h1>} />
             </Route>
           </Route>
         </Routes>

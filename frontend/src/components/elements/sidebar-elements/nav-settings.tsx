@@ -45,7 +45,7 @@ export default function NavSettings() {
         </SidebarMenuButton>
       ) : (
         <>
-          <SidebarGroupLabel>Group Settings</SidebarGroupLabel>
+          <SidebarGroupLabel className="pointer-events-none">Group Settings</SidebarGroupLabel>
           <Collapsible
             defaultOpen={false}
             open={isOpen}
@@ -53,7 +53,7 @@ export default function NavSettings() {
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
+              <CollapsibleTrigger asChild onClick={() => {navigate('/group/settings')}}>
                 <SidebarMenuButton
                   className="gap-2"
                   onClick={() => setIsOpen(true)}

@@ -1,4 +1,4 @@
-import { CaretUpDownIcon } from "@phosphor-icons/react"
+import { CaretUpDownIcon, CheckIcon } from "@phosphor-icons/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,7 +53,7 @@ export default function GroupSelector() {
 
   const changeGroup = (group: Group): void => {
     setActiveGroup(group)
-    navigate('/dashboard')
+    navigate('/group/projects')
   }
 
   const isWorkspace = activeGroup.group_type == "individual" ? true : false
@@ -95,12 +95,11 @@ export default function GroupSelector() {
               className="gap-2 p-2"
               onClick={() => changeGroup(group)}
             >
-              <div className="size-8 rounded-lg">
+              <div className="size-8">
                 <img src={group.icon_url} className="rounded-sm" />
               </div>
-              <div>
-                <span className="font-medium">{group.name}</span>
-              </div>
+              <span className="font-medium">{group.name}</span>
+              { activeGroup.id == group.id && <CheckIcon className="ml-auto" color="green" weight="bold" />}
             </DropdownMenuItem>
             {!group.children
               ? null
@@ -110,12 +109,11 @@ export default function GroupSelector() {
                     onClick={() => changeGroup(group)}
                     key={group.id}
                   >
-                    <div className="size-8 rounded-lg">
+                    <div className="size-8">
                       <img src={group.icon_url} className="rounded-sm" />
                     </div>
-                    <div>
-                      <span>{group.name}</span>
-                    </div>
+                    <span>{group.name}</span>
+                    { activeGroup.id == group.id && <CheckIcon className="ml-auto" />}
                   </DropdownMenuItem>
                 ))}
             <div className="h-2" />

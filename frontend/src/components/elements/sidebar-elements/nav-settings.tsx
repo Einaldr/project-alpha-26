@@ -19,13 +19,14 @@ import {
   GearIcon,
 } from "@phosphor-icons/react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 export default function NavSettings() {
   const [isOpen, setIsOpen] = useState(false)
   const { activeGroup } = useActiveGroupStore()
   const navigate = useNavigate()
   const { hasPermission } = useActiveMembership()
+  const location = useLocation();
 
   if (!hasPermission("group.update") || !hasPermission("audit_log.view"))
     return null
@@ -35,7 +36,7 @@ export default function NavSettings() {
   return (
     <SidebarGroup>
       {activeGroup.group_type == "individual" ? (
-        <SidebarMenuButton asChild onClick={() => navigate('/group/settings')}>
+        <SidebarMenuButton asChild onClick={() => navigate('/group/settings')} isActive={location.pathname == "/group/settings"}>
           <div>
             <GearIcon />
             <span>Settings</span>
@@ -56,6 +57,7 @@ export default function NavSettings() {
                 <SidebarMenuButton
                   className="gap-2"
                   onClick={() => setIsOpen(true)}
+                  isActive={location.pathname == "/group/auditlog" || location.pathname == "/group/settings"}
                 >
                   <GearIcon className="" />
                   <span>Settings</span>
@@ -68,6 +70,7 @@ export default function NavSettings() {
                     <SidebarMenuSubButton
                       asChild
                       onClick={() => navigate("/group/settings")}
+                      isActive={location.pathname == "/group/settings"}
                     >
                       <span>Settings</span>
                     </SidebarMenuSubButton>
@@ -77,6 +80,7 @@ export default function NavSettings() {
                     <SidebarMenuSubButton
                       asChild
                       onClick={() => navigate("/group/auditlog")}
+                      isActive={location.pathname == "/group/auditlog"}
                     >
                       <span>Audit Log</span>
                     </SidebarMenuSubButton>

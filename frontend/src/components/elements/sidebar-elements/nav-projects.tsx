@@ -13,15 +13,15 @@ export default function NavProjects() {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
-        <SidebarMenuItem>
-          <SidebarMenuButton onClick={() => navigate('/group/projects')}>
-            <div>
-                <FoldersIcon />
-            </div>
-            <span className="font-medium">Projects</span>
-            <CaretDoubleRightIcon className="ml-auto"/>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild onClick={() => navigate("/group/projects")}>
+          <div>
+            <FoldersIcon />
+            <span>Projects</span>
+            <CaretDoubleRightIcon className="ml-auto" />
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     </SidebarGroup>
   )
 }

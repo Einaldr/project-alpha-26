@@ -45,7 +45,7 @@ export default function NavMembers() {
         className="group/collapsible"
       >
         <SidebarMenuItem>
-          <CollapsibleTrigger onClick={handleCollapsedAction}>
+          <CollapsibleTrigger onClick={handleCollapsedAction} asChild>
             <SidebarMenuButton
               className="gap-2"
               onClick={() => setIsOpen(true)}

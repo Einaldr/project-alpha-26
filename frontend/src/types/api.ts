@@ -17,6 +17,11 @@ export type Permissions = 'group.update' |
 export interface User {
     id: string;
     name: string;
+    email: string;
+    status: string;
+    tos_version: string;
+    privacy_policy_version: string;
+    joined_at: string;
 }
 
 export interface Group {

@@ -5,10 +5,12 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarSeparator,
 } from "../ui/sidebar"
 import NavMembers from "./sidebar-elements/nav-members"
 import NavSettings from "./sidebar-elements/nav-settings"
 import NavProjects from "./sidebar-elements/nav-projects"
+import UserManagement from "./sidebar-elements/user-management"
 
 export default function AppSidebar() {
 
@@ -21,7 +23,10 @@ export default function AppSidebar() {
         <NavMembers />
         <NavSettings />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <SidebarSeparator />
+        <UserManagement />
+      </SidebarFooter>
 
       <SidebarRail />
     </Sidebar>

@@ -20,7 +20,7 @@ export const useUser = create<ActiveUserState>()(
       isLoading: false,
 
       fetchUser: async () => {
-        if (get().isLoading) {
+        if (!get().isLoading) {
           set({ isLoading: true })
           try {
             const user = await userService.show()

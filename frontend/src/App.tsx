@@ -28,6 +28,7 @@ export function App() {
               <Route path="/group/settings" element={<h1>Group Settings view WIP</h1>} />
               <Route path="/group/auditlog" element={<h1>Audit log view WIP</h1>} />
               <Route path="/group/projects" element={<h1>Projects view WIP</h1>} />
+              <Route path="/group/create" element={<h1>Create new group view WIP</h1>} />
             </Route>
           </Route>
         </Routes>

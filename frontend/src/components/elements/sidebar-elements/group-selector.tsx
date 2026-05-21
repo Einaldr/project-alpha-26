@@ -1,10 +1,11 @@
-import { CaretUpDownIcon, CheckIcon } from "@phosphor-icons/react"
+import { CaretUpDownIcon, CheckIcon, PlusIcon } from "@phosphor-icons/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu"
 import { SidebarMenuButton, useSidebar } from "../../ui/sidebar"
@@ -53,7 +54,7 @@ export default function GroupSelector() {
 
   const changeGroup = (group: Group): void => {
     setActiveGroup(group)
-    navigate('/group/projects')
+    navigate("/group/projects")
   }
 
   const isWorkspace = activeGroup.group_type == "individual" ? true : false
@@ -99,7 +100,9 @@ export default function GroupSelector() {
                 <img src={group.icon_url} className="rounded-sm" />
               </div>
               <span className="font-medium">{group.name}</span>
-              { activeGroup.id == group.id && <CheckIcon className="ml-auto" color="green" weight="bold" />}
+              {activeGroup.id == group.id && (
+                <CheckIcon className="ml-auto" color="green" weight="bold" />
+              )}
             </DropdownMenuItem>
             {!group.children
               ? null
@@ -113,12 +116,22 @@ export default function GroupSelector() {
                       <img src={group.icon_url} className="rounded-sm" />
                     </div>
                     <span>{group.name}</span>
-                    { activeGroup.id == group.id && <CheckIcon className="ml-auto" />}
+                    {activeGroup.id == group.id && (
+                      <CheckIcon className="ml-auto" />
+                    )}
                   </DropdownMenuItem>
                 ))}
             <div className="h-2" />
           </DropdownMenuGroup>
         ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => navigate("/group/create")}
+          data-active={() => location.pathname == "/group/create"}
+        >
+          <PlusIcon />
+          <span>Create</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

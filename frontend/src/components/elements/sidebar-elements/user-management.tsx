@@ -1,3 +1,4 @@
+import LogoutAlert from "@/components/alerts/LogoutAlert"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,6 @@ import { useUser } from "@/hooks/useUser"
 import {
   CaretDoubleRightIcon,
   GearIcon,
-  SignOutIcon,
   UserGearIcon,
 } from "@phosphor-icons/react"
 import { useNavigate } from "react-router-dom"
@@ -51,8 +51,7 @@ export default function UserManagement() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive">
-            <SignOutIcon color="red" />
-            <span className="text-red-500">Logout</span>
+            <LogoutAlert />
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

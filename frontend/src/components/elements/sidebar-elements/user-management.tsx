@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom"
 
 export default function UserManagement() {
   const { user } = useUser()
-  const { isMobile } = useSidebar()
+  const { isMobile, open } = useSidebar()
   const navigate = useNavigate()
 
   if (!user) return null
@@ -27,8 +27,8 @@ export default function UserManagement() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton className="bg-primary" size="lg">
-          <span className="ml-2 text-base font-bold">{user.name}</span>
-          <CaretDoubleRightIcon className="mr-2 ml-auto" />
+          <span className="ml-2 text-base font-bold">{open ? user.name : user.name[0]}</span>
+          {open && <CaretDoubleRightIcon className="mr-2 ml-auto" />}
         </SidebarMenuButton>
       </DropdownMenuTrigger>
 
@@ -36,7 +36,7 @@ export default function UserManagement() {
         side={isMobile ? "top" : "right"}
         sideOffset={12}
         align="start"
-        className="w-(--radix-dropdown-menu-trigger-width) min-w-24 rounded-lg"
+        className="w-(--radix-dropdown-menu-trigger-width) min-w-48 max-w-48 rounded-lg"
       >
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => navigate('/user/profile')}>

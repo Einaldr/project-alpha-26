@@ -1,3 +1,4 @@
+import { useActiveGroupStore } from "@/hooks/useActiveGroupStore";
 import axios from "axios";
 
 const api = axios.create({
@@ -49,6 +50,8 @@ api.interceptors.response.use(undefined, async (error) => {
         if (localStorage.getItem('token')) {
             window.dispatchEvent(new CustomEvent('session-error', { detail: 'expired' }));
             localStorage.removeItem('token');
+            const {reset} = useActiveGroupStore();
+            reset();
         } else {
             window.dispatchEvent(new CustomEvent('session-error', { detail: 'unauthenticated' }));
         }

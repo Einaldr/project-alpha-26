@@ -5,6 +5,8 @@ import { Toaster } from "sonner"
 import RegistrationPage from "./pages/RegistrationPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
+import DashboardPage from "./pages/DashboardPage"
+import MainLayout from "./components/layouts/MainLayout"
 
 export function App() {
   return (
@@ -15,10 +17,21 @@ export function App() {
           <Route path="/register" element={<RegistrationPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<h1>Dashboard here</h1>} />
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/group/members" element={<h1>Members view WIP</h1>} />
+              <Route path="/group/members/invite" element={<h1>Invite member WIP</h1>} />
+              <Route path="/group/roles" element={<h1>Roles view WIP</h1>} />
+              <Route path="/group/settings" element={<h1>Group Settings view WIP</h1>} />
+              <Route path="/group/auditlog" element={<h1>Audit log view WIP</h1>} />
+              <Route path="/group/projects" element={<h1>Projects view WIP</h1>} />
+              <Route path="/group/create" element={<h1>Create new group view WIP</h1>} />
+              <Route path="/user/settings" element={<h1>User settings view WIP</h1>} />
+              <Route path="/user/profile" element={<h1>User profile view WIP</h1>} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

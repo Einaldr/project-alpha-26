@@ -10,9 +10,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
-{
-    use WithoutModelEvents;
-
+{ 
     /**
      * Seed the application's database.
      */
@@ -59,7 +57,7 @@ class DatabaseSeeder extends Seeder
                    ->create();
 
         $testingGroup = Group::factory()->create([
-            'name'=> "Testing Group Group",
+            'name'=> "Testing Group",
             'owner_id' => $testingUser->id,
             'billing_email' => null,
         ]);

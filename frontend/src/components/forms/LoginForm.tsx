@@ -38,7 +38,6 @@ export default function LoginForm() {
         toast.promise(loginWithDelay, {
             loading: 'Verifying credentials...',
             success: (data) => {
-
                 localStorage.setItem('token', data.token);
 
                 setTimeout(() => navigate('/dashboard'), 500);

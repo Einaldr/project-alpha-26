@@ -30,7 +30,7 @@ class GroupRoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'permissions' => $this->when($this->includePermissions && ($user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES) || $user->hasGroupPermission($group, RolePermissions::ROLES_MANAGE)), $this->permissions),
+            'permissions' => $this->when($this->includePermissions && ($user->hasGroupPermission($group, RolePermissions::MEMBER_MANAGE_ROLES) || $user->hasGroupPermission($group, RolePermissions::ROLES_MANAGE) || $user->roles->contains('id', $this->id)), $this->permissions),
             'group' => new GroupResource($this->whenLoaded('group')),
             'members' => GroupMemberResource::collection($this->whenLoaded('members'))
         ];

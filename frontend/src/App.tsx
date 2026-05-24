@@ -7,6 +7,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
 import DashboardPage from "./pages/DashboardPage"
 import MainLayout from "./components/layouts/MainLayout"
+import MembersView from "./components/views/MembersView"
 
 export function App() {
   return (
@@ -22,7 +23,7 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/group/members" element={<h1>Members view WIP</h1>} />
+              <Route path="/group/members" element={<MembersView />} />
               <Route path="/group/members/invite" element={<h1>Invite member WIP</h1>} />
               <Route path="/group/roles" element={<h1>Roles view WIP</h1>} />
               <Route path="/group/settings" element={<h1>Group Settings view WIP</h1>} />

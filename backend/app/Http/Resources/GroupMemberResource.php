@@ -14,9 +14,11 @@ class GroupMemberResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $userResource = new UserResource($this->user);
+        $userResource->asMember();
         return [
             'member_id' => $this->id,
-            'user' => new UserResource($this->user),
+            'user' => $userResource,
             'roles' => GroupRoleResource::collection($this->roles),
         ];
     }

@@ -40,3 +40,9 @@ export interface Role {
     permissions: Permissions[];
     group: Group;
 }
+
+export interface GroupMember {
+    id: string;
+    user: User;
+    roles: Role[];
+}

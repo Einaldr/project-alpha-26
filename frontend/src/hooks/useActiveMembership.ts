@@ -12,8 +12,6 @@ interface activeMembership {
   hasPermission: (permission: Permissions) => boolean
 }
 
-// TODO: Finish this
-
 export const useActiveMembership = create<activeMembership>()(
   persist(
     (set, get) => ({

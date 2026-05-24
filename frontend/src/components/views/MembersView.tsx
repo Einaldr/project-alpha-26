@@ -10,16 +10,16 @@ export default function MembersView() {
   const { activeGroup } = useActiveGroupStore()
   const [isLoading, setIsLoading] = useState(false)
 
-  async function load() {
-    if (isLoading) return null
+  if (!activeGroup?.id) {
+    throw new Error(
+      "Members View: couldn't fetch members because of activeGroup.id is not set"
+    )
+  }
+
+  const load = async (): Promise<void> => {
+    if (isLoading) return
 
     setIsLoading(true)
-
-    if (!activeGroup?.id) {
-      throw new Error(
-        "Members View: couldn't fetch members because of activeGroup.id is not set"
-      )
-    }
 
     try {
       const newMembers = await memberService.fetchGroupMembers(activeGroup.id)
@@ -36,21 +36,20 @@ export default function MembersView() {
       load()
     } catch {
       return (
-          <div>
-            <h3>Failed to load members</h3>
-            <Button variant="default" onClick={load}>
-              Retry
-            </Button>
-          </div>
+        <div>
+          <h3>Failed to load members</h3>
+          <Button variant="default" onClick={load}>
+            Retry
+          </Button>
+        </div>
       )
     }
   } else {
-    return (
-      <div className="flex h-full w-full flex-col justify-center gap-2 p-2 items-center">
-          {members.map((member) => (
-            <MemberCard member={member} key={member.id} />
-          ))}
-      </div>
-    )
-  }
+  return (
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-2">
+      {members.map((member) => (
+        <MemberCard member={member} key={member.member_id} onRefresh={load} />
+      ))}
+    </div>
+  )}
 }

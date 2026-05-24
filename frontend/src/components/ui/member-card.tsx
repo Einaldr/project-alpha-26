@@ -8,15 +8,43 @@ import {
   CardTitle,
 } from "./card"
 import { Button } from "./button"
-import { DotsThreeVerticalIcon } from "@phosphor-icons/react"
-import { DropdownMenu, DropdownMenuTrigger } from "./dropdown-menu"
+import { DotsThreeVerticalIcon, UserCircleMinusIcon } from "@phosphor-icons/react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
+import { memberService } from "@/services/memberService"
+import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
+import { toast } from "sonner"
 
 interface MemberCardProps {
   member: GroupMember
+  onRefresh: () => Promise<void>
 }
 
-// TODO: Complete dropdownmenu for user management.
-export const MemberCard = ({ member }: MemberCardProps) => {
+export const MemberCard = ({ member, onRefresh }: MemberCardProps) => {
+  const {activeGroup} = useActiveGroupStore()
+
+  if (!activeGroup?.id) return null
+
+  const handleMemberKick = async () => {
+    try {
+      await memberService.kickMember(member.member_id, activeGroup.id)
+    } catch (error) {
+      console.error("Failed to kick a member:", error);
+    }
+  }
+
+  function kick() {
+    toast.promise(handleMemberKick, {
+      loading: "Kicking user...",
+      success: () => {
+        onRefresh()
+        return "Successfully kicked the user!"
+      },
+      error: (err) => {
+        return "Failed to kick the user: " + err
+      } 
+    })
+  }
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -24,12 +52,17 @@ export const MemberCard = ({ member }: MemberCardProps) => {
         <CardDescription>{member.user.email}</CardDescription>
         <CardAction>
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex">
                 <DotsThreeVerticalIcon weight="bold" />
               </Button>
-              
             </DropdownMenuTrigger>
+            <DropdownMenuContent side='right' sideOffset={22} align='center'>
+              <DropdownMenuItem onClick={kick}>
+                <UserCircleMinusIcon color='red' />
+                <span className="text-destructive">Kick user</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
           </DropdownMenu>
         </CardAction>
       </CardHeader>

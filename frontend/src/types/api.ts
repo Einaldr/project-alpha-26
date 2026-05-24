@@ -42,7 +42,7 @@ export interface Role {
 }
 
 export interface GroupMember {
-    id: string;
+    member_id: string;
     user: User;
     roles: Role[];
 }

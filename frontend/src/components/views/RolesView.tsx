@@ -5,6 +5,7 @@ import { roleService } from "@/services/roleService"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { Button } from "../ui/button"
 import { PlusCircleIcon } from "@phosphor-icons/react"
+import { Link } from "react-router-dom"
 
 export default function RolesView() {
   const [isLoading, setIsLoading] = useState(false)
@@ -45,11 +46,13 @@ export default function RolesView() {
       {roles.map((role) => (
         <RoleCard role={role} />
       ))}
-      <Button className="w-full max-w-lg">
-        <PlusCircleIcon className="mr-auto" />
-        <span>Add Role</span>
-        <PlusCircleIcon className="ml-auto" />
-      </Button>
+      <Link to="/group/roles/create" className="w-full max-w-lg">
+        <Button className="w-full">
+          <PlusCircleIcon className="mr-auto" />
+          <span>Add Role</span>
+          <PlusCircleIcon className="ml-auto" />
+        </Button>
+      </Link>
     </div>
   )
 }

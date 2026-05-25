@@ -8,30 +8,73 @@ import {
   CardTitle,
 } from "./card"
 import { Button } from "./button"
-import { DotsThreeVerticalIcon } from "@phosphor-icons/react"
+import { DotsThreeVerticalIcon, MinusCircleIcon, PencilSimpleLineIcon } from "@phosphor-icons/react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
+import { roleService } from "@/services/roleService"
+import { toast } from "sonner"
+import { Link } from "react-router-dom"
 
 interface RoleCardProps {
   role: Role
-  // onRefresh: () => Promise<void> | void
+  onRefresh: () => Promise<void> | void
 }
 
-export const RoleCard = ({ role }: RoleCardProps) => {
+export const RoleCard = ({ role, onRefresh }: RoleCardProps) => {
+
+  const handleDeleteRole = async () => {
+    try {
+      await roleService.deleteRole(role.group.id, role.id)
+    } catch (error) {
+      console.error("Failed to delete the role: ", error)
+      throw new Error('Failed to delete the role: ' + error)
+    }
+  }
+
+  function deleteRole() {
+    toast.promise(handleDeleteRole, {
+      loading: "Deleteing role...",
+      success: () => {
+        onRefresh()
+        return "Successfully deleted the role!"
+      },
+      error: (err) => {
+        return "Failed to delete the role: " + err
+      }
+    })
+  }
+
   return (
     <Card className="w-full max-w-lg min-w-sm">
       <CardHeader>
         <CardTitle>{role.name}</CardTitle>
         <CardAction>
-          <Button variant='ghost'>
-            <DotsThreeVerticalIcon weight="bold" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost">
+                <DotsThreeVerticalIcon weight="bold" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side='right' sideOffset={22} align="center">
+              <DropdownMenuItem>
+                <Link to='/group/roles/update' state={{role: role}} className="flex flex-row gap-2 items-center">
+                  <PencilSimpleLineIcon />
+                  <span>Edit</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={deleteRole}>
+                <MinusCircleIcon color="red" />
+                <span className="text-destructive">Delete role</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-1">
         <span>Permissions:</span>
-        <div className="grid grid-cols-3 border bg-muted p-1 rounded-sm">
-        {role.permissions.map((perm) => (
-          <span key={perm}>{perm}</span>
-        ))}
+        <div className="grid grid-cols-3 rounded-sm border bg-muted p-1">
+          {role.permissions.map((perm) => (
+            <span key={perm}>{perm}</span>
+          ))}
         </div>
       </CardContent>
       <CardFooter />

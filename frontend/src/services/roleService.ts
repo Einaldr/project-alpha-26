@@ -20,5 +20,14 @@ export const roleService = {
     createRole: async (groupId: string, data: {name: string, permissions: Permissions[]}): Promise<void> => {
         const response = await api.post(`/groups/${groupId}/roles`, data)
         return response.data.data
+    },
+
+    updateRole: async (groupId: string, roleId: string, data: {name: string, permissions: Permissions[]}): Promise<void> => {
+        const response = await api.patch(`/groups/${groupId}/roles/${roleId}`, data)
+        return response.data.data
+    },
+
+    deleteRole: async (groupId: string, roleId: string): Promise<void> => {
+        await api.delete(`/groups/${groupId}/roles/${roleId}`)
     }
 }

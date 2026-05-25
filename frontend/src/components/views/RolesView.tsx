@@ -44,7 +44,7 @@ export default function RolesView() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-2">
       {roles.map((role) => (
-        <RoleCard role={role} />
+        <RoleCard role={role} onRefresh={load} />
       ))}
       <Link to="/group/roles/create" className="w-full max-w-lg">
         <Button className="w-full">

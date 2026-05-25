@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import LoginPage from "@/pages/LoginPage"
 import ProtectedRoute from "@/lib/middleware"
 import { Toaster } from "sonner"
@@ -9,6 +9,7 @@ import DashboardPage from "./pages/DashboardPage"
 import MainLayout from "./components/layouts/MainLayout"
 import MembersView from "./components/views/MembersView"
 import RolesView from "./components/views/RolesView"
+import RoleCreationForm from "./components/forms/RoleCreationForm"
 
 export function App() {
   return (
@@ -27,7 +28,7 @@ export function App() {
               <Route path="/group/members" element={<MembersView />} />
               <Route path="/group/members/invite" element={<h1>Invite member WIP</h1>} />
               <Route path="/group/roles" element={<RolesView />} />
-              <Route path="/group/roles/create" element={<Link to='/groups/roles'>Role creation</Link>} />
+              <Route path="/group/roles/create" element={<RoleCreationForm />} />
               <Route path="/group/settings" element={<h1>Group Settings view WIP</h1>} />
               <Route path="/group/auditlog" element={<h1>Audit log view WIP</h1>} />
               <Route path="/group/projects" element={<h1>Projects view WIP</h1>} />

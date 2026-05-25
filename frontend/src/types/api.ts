@@ -1,6 +1,7 @@
 export type GroupType = 'individual' | 'org' | 'team';
 
 export type Permissions = 'group.update' |
+                          'group.view' |
                           'group.delete' |
                           'group.create_child' |
                           'group.view_child' |
@@ -13,6 +14,22 @@ export type Permissions = 'group.update' |
                           'project.kick' |
                           'repository.manage' |
                           'audit_log.view';
+
+export const PermissionsSchema: Permissions[] = [
+    'group.update',
+    'group.delete',
+    'group.view_child',
+    'group.create_child',
+    'member.invite',
+    'member.kick',
+    'members.manage_roles',
+    'roles.manage',
+    'project.invite',
+    'project.kick',
+    'project.manage',
+    'repository.manage',
+    'audit_log.view'
+]
 
 export interface User {
     id: string;

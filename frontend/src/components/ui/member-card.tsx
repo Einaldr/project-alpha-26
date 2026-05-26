@@ -8,11 +8,12 @@ import {
   CardTitle,
 } from "./card"
 import { Button } from "./button"
-import { DotsThreeVerticalIcon, UserCircleMinusIcon } from "@phosphor-icons/react"
+import { DotsThreeVerticalIcon, PencilSimpleLineIcon, UserCircleMinusIcon } from "@phosphor-icons/react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu"
 import { memberService } from "@/services/memberService"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { toast } from "sonner"
+import { Link } from "react-router-dom"
 
 interface MemberCardProps {
   member: GroupMember
@@ -58,6 +59,12 @@ export const MemberCard = ({ member, onRefresh }: MemberCardProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side='right' sideOffset={22} align='center'>
+              <DropdownMenuItem>
+                <Link to='/group/members/manage/roles' state={{member: member}} className="flex flex-row gap-2 items-center">
+                  <PencilSimpleLineIcon />
+                  <span>Edit roles</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={kick}>
                 <UserCircleMinusIcon color='red' />
                 <span className="text-destructive">Kick user</span>

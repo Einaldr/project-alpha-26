@@ -11,6 +11,7 @@ import MembersView from "./components/views/MembersView"
 import RolesView from "./components/views/RolesView"
 import RoleCreationForm from "./components/forms/RoleCreationForm"
 import { RoleUpdateForm } from "./components/forms/RoleUpdateForm"
+import { MemberUpdateForm } from "./components/forms/MemberUpdateForm"
 
 export function App() {
   return (
@@ -28,6 +29,7 @@ export function App() {
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/group/members" element={<MembersView />} />
               <Route path="/group/members/invite" element={<h1>Invite member WIP</h1>} />
+              <Route path="/group/members/manage/roles" element={<MemberUpdateForm />} />
               <Route path="/group/roles" element={<RolesView />} />
               <Route path="/group/roles/create" element={<RoleCreationForm />} />
               <Route path="/group/roles/update" element={<RoleUpdateForm />} />

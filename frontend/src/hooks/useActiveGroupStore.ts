@@ -1,5 +1,6 @@
 import { groupService } from "@/services/groupService"
-import type { Group } from "@/types/api"
+import { roleService } from "@/services/roleService"
+import type { Group, Role } from "@/types/api"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
@@ -8,9 +9,13 @@ interface ActiveGroupState {
   activeGroup: Group | null
   isLoading: boolean
 
+  groupRoles: Role[] | null
+
   fetchWorkspace: () => Promise<void>
   setActiveGroup: (group: Group | null) => void
   fetchAndSetActiveGroup: (id: string) => Promise<void>
+
+  fetchRoles: () => Promise<void>
 
   // deconstructor
   reset: () => void
@@ -21,6 +26,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
     (set, get) => ({
       workspace: null,
       activeGroup: null,
+      groupRoles: null,
       isLoading: false,
 
       fetchWorkspace: async () => {
@@ -36,11 +42,13 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           console.error("Failed to fetch workspace", error)
         } finally {
           set({ isLoading: false })
+          get().fetchRoles()
         }
       },
 
       setActiveGroup: (group) => {
         set({ activeGroup: group })
+        get().fetchRoles()
       },
 
       fetchAndSetActiveGroup: async (id) => {
@@ -53,11 +61,23 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           console.error("Failed to fetch group", error)
         } finally {
           set({ isLoading: false })
+          get().fetchRoles();
         }
       },
 
       reset: () =>
         set({ activeGroup: null, workspace: null, isLoading: false }),
+
+      fetchRoles: async () => {
+        const groupId = get().activeGroup?.id
+        if (!groupId) throw new Error("Failed to fetch roles, groupId is null.")
+          try{ 
+            const newRoles = await roleService.fetchGroupRoles(groupId)
+            set({groupRoles: newRoles})
+          } catch (error) {
+            throw new Error("Failed to fetch new group roles: " + error)
+          }
+      }
     }),
     {
       name: "active-group-storage",

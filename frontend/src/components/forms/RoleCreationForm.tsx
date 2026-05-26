@@ -31,7 +31,7 @@ const createRoleFormSchema = z.object({
 })
 
 export default function RoleCreationForm() {
-    const {activeGroup} = useActiveGroupStore();
+    const {activeGroup, fetchRoles} = useActiveGroupStore();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -65,6 +65,7 @@ export default function RoleCreationForm() {
     toast.promise(handleCreation(data), {
         success: () => {
             navigate('/group/roles')
+            fetchRoles()
             return "Role successfully created!"
         },
         error: (err) => {

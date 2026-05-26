@@ -27,7 +27,8 @@ export const roleService = {
         return response.data.data
     },
 
-    deleteRole: async (groupId: string, roleId: string): Promise<void> => {
-        await api.delete(`/groups/${groupId}/roles/${roleId}`)
+    deleteRole: async (groupId: string, roleId: string): Promise<number> => {
+        const {status} = await api.delete(`/groups/${groupId}/roles/${roleId}`)
+        return status
     }
 }

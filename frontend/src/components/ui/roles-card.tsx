@@ -13,17 +13,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { roleService } from "@/services/roleService"
 import { toast } from "sonner"
 import { Link } from "react-router-dom"
+import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 
 interface RoleCardProps {
   role: Role
-  onRefresh: () => Promise<void> | void
 }
 
-export const RoleCard = ({ role, onRefresh }: RoleCardProps) => {
+export const RoleCard = ({ role }: RoleCardProps) => {
+  const {fetchRoles} = useActiveGroupStore()
 
   const handleDeleteRole = async () => {
     try {
-      await roleService.deleteRole(role.group.id, role.id)
+      const response = await roleService.deleteRole(role.group.id, role.id)
+      if (response == 409) throw new Error("Role is use.")
+
     } catch (error) {
       console.error("Failed to delete the role: ", error)
       throw new Error('Failed to delete the role: ' + error)
@@ -34,7 +37,7 @@ export const RoleCard = ({ role, onRefresh }: RoleCardProps) => {
     toast.promise(handleDeleteRole, {
       loading: "Deleteing role...",
       success: () => {
-        onRefresh()
+        fetchRoles()
         return "Successfully deleted the role!"
       },
       error: (err) => {

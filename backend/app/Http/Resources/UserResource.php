@@ -15,6 +15,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class UserResource extends JsonResource
 {
+    private $renderAsMember = false;
+    public function asMember() {
+        $this->renderAsMember = true;
+    }
     /**
      * Transform the resource into an array.
      *
@@ -31,7 +35,7 @@ class UserResource extends JsonResource
         return[
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->when($isMe, $this->email),
+            'email' => $this->when(($isMe || $this->renderAsMember), $this->email),
             'status' => $this->getNormalizedStatus($isMe),
             'tos_version' => $this->when($isMe, $this->tos_version),
             'privacy_policy_version' => $this->when($isMe, $this->privacy_policy_version),

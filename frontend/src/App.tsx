@@ -7,6 +7,11 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
 import DashboardPage from "./pages/DashboardPage"
 import MainLayout from "./components/layouts/MainLayout"
+import MembersView from "./components/views/MembersView"
+import RolesView from "./components/views/RolesView"
+import RoleCreationForm from "./components/forms/RoleCreationForm"
+import { RoleUpdateForm } from "./components/forms/RoleUpdateForm"
+import { MemberUpdateForm } from "./components/forms/MemberUpdateForm"
 
 export function App() {
   return (
@@ -22,9 +27,12 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/group/members" element={<h1>Members view WIP</h1>} />
+              <Route path="/group/members" element={<MembersView />} />
               <Route path="/group/members/invite" element={<h1>Invite member WIP</h1>} />
-              <Route path="/group/roles" element={<h1>Roles view WIP</h1>} />
+              <Route path="/group/members/manage/roles" element={<MemberUpdateForm />} />
+              <Route path="/group/roles" element={<RolesView />} />
+              <Route path="/group/roles/create" element={<RoleCreationForm />} />
+              <Route path="/group/roles/update" element={<RoleUpdateForm />} />
               <Route path="/group/settings" element={<h1>Group Settings view WIP</h1>} />
               <Route path="/group/auditlog" element={<h1>Audit log view WIP</h1>} />
               <Route path="/group/projects" element={<h1>Projects view WIP</h1>} />

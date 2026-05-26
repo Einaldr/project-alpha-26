@@ -28,8 +28,8 @@ export default function MainLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main>
-        <SidebarTrigger />
+      <main className="flex-1 flex flex-col">
+        <SidebarTrigger className="absolute z-50"/>
         <Outlet />
       </main>
     </SidebarProvider>

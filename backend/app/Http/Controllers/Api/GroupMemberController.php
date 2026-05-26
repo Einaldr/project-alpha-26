@@ -160,8 +160,8 @@ class GroupMemberController extends Controller
      * @return JsonResponse
      */
     public function kickMember(Group $group, GroupMember $member): JsonResponse
-    {
-        $this->authorizeStealth($group, 'kick', "You don't have permissions to kick members.", $member);
+    {   
+        $this->authorizeStealth($group, 'kick', "You don't have permissions to kick members.", [GroupMember::class, $group]);
 
         if ($member->user_id === $group->owner_id) {
             abort(403, "The group owner cannot be kicked.");
@@ -183,7 +183,7 @@ class GroupMemberController extends Controller
      */
     public function syncRoles(SyncGroupMemberRolesRequest $request, Group $group, GroupMember $member): GroupMemberResource
     {
-        $this->authorizeStealth($group, 'syncRoles', "You don't have permissions to change the member's roles.", [GroupMember::class, $group]);
+        $this->authorizeStealth($group, 'syncRole', "You don't have permissions to change the member's roles.", [GroupMember::class, $group]);
 
         if ($member->user_id === $group->owner_id) {
             abort(403, "The group owner's roles cannot be modified.");

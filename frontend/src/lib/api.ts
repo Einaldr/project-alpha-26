@@ -61,4 +61,10 @@ api.interceptors.response.use(undefined, async (error) => {
     return Promise.reject(error);
 })
 
+api.interceptors.response.use(undefined, async (error) => {
+    if (error.response.data) {
+        console.error("Failed to complete action. Server response: " + error.response.data)
+    }
+})
+
 export default api;

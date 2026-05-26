@@ -30,11 +30,11 @@ export const useActiveMembership = create<activeMembership>()(
         set({ isLoading: true })
 
         try {
-          const roles = await roleService.myRoles(activeGroup.id)
+          const newRoles = await roleService.myRoles(activeGroup.id)
 
           const permissionSet = new Set<Permissions>()
 
-          roles.forEach((role) => {
+          newRoles.forEach((role) => {
             role.permissions?.forEach((p) => permissionSet.add(p))
           })
 

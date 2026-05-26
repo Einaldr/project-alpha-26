@@ -39,6 +39,7 @@ class GroupRoleController extends Controller
             'per_page' => ['nullable', 'integer', 'min:1', 'max:50'],
             'search' => ['nullable', 'string', 'min:3', 'max:255'],
             'order' => ['nullable', 'string', 'min:3', 'max:3'],
+            'permissions' => ['nullable', 'boolean'],
         ]);
 
         $per_page = $request->integer('per_page', 15);
@@ -53,9 +54,18 @@ class GroupRoleController extends Controller
             $query->orderBy('created_at', $order);
         }
 
-        return GroupRoleResource::collection(
-            $query->paginate($per_page)->appends($request->query())
-        );
+        $roles = $query->paginate($per_page)->appends($request->query());
+
+
+        $collection = GroupRoleResource::collection($roles);
+
+    
+        if ($request->permissions == true) {
+            $collection->collection->each->includePermissions();
+        }
+
+
+        return $collection;
     }
 
     /**

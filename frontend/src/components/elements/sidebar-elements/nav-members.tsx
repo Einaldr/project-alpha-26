@@ -29,12 +29,6 @@ export default function NavMembers() {
 
   if (activeGroup?.group_type == "individual") return null
 
-  const handleCollapsedAction = (e: React.MouseEvent) => {
-    e.preventDefault()
-
-    navigate("/group/members")
-  }
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="pointer-events-none">Member Management</SidebarGroupLabel>
@@ -45,10 +39,10 @@ export default function NavMembers() {
         className="group/collapsible"
       >
         <SidebarMenuItem>
-          <CollapsibleTrigger onClick={handleCollapsedAction} asChild>
+          <CollapsibleTrigger onClick={() => navigate("/group/members")} asChild>
             <SidebarMenuButton
               className="gap-2"
-              onClick={() => setIsOpen(true)}
+              onClick={() => {setIsOpen(true)}}
               isActive={
                 location.pathname.startsWith("/group/members") ||
                 location.pathname == "/group/roles"

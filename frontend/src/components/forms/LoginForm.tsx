@@ -40,7 +40,7 @@ export default function LoginForm() {
             success: (data) => {
                 localStorage.setItem('token', data.token);
 
-                setTimeout(() => navigate('/dashboard'), 500);
+                setTimeout(() => navigate('/group/projects'), 500);
 
                 return 'Welcome back, ' + data.user.name + '!';
             },

@@ -105,7 +105,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
                 Route::prefix('{member}')->group(function () {
                     Route::get('/', [GroupMemberController::class, 'show']);
-                    Route::delete('/', [GroupMemberController::class, 'kick']);
+                    Route::delete('/', [GroupMemberController::class, 'kickMember']);
+                    Route::patch('/', [GroupMemberController::class, 'syncRoles']);
                 });
             });
         });

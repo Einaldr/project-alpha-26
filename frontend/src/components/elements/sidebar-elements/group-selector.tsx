@@ -12,7 +12,7 @@ import { SidebarMenuButton, useSidebar } from "../../ui/sidebar"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import type { Group } from "@/types/api"
 import { Separator } from "../../ui/separator"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function GroupSelector() {
   const { activeGroup, setActiveGroup, groups } = useActiveGroupStore()
@@ -100,13 +100,14 @@ export default function GroupSelector() {
           </DropdownMenuGroup>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => navigate("/group/create")}
-          data-active={() => location.pathname == "/group/create"}
-        >
-          <PlusIcon />
-          <span>Create</span>
-        </DropdownMenuItem>
+        <Link to="/group/create">
+          <DropdownMenuItem
+            data-active={() => location.pathname == "/group/create"}
+          >
+            <PlusIcon />
+            <span>Create</span>
+          </DropdownMenuItem>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   )

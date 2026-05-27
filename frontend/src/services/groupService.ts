@@ -1,6 +1,6 @@
+import type { createGroupFormSchemaType } from "@/components/forms/GroupCreateForm";
 import api from "@/lib/api";
 import type { Group } from "@/types/api";
-import type z from "zod";
 
 export const  groupService = {
     index: async (params?: object): Promise<Group[]> => {
@@ -23,7 +23,7 @@ export const  groupService = {
         return data.data;
     },
 
-    store: async (formData: {name: string, icon: z.core.File, billing_email: string}): Promise<Group> => {
+    store: async (formData: createGroupFormSchemaType): Promise<Group> => {
         const {data} = await api.post('/groups', formData);
         return data.data;
     },

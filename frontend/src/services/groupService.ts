@@ -28,8 +28,8 @@ export const  groupService = {
         return data.data;
     },
 
-    update: async (groupId: string, formData: {name: string, icon: z.core.File, billing_email: string}): Promise<Group> => {
-        const {data} = await api.patch(`/groups/${groupId}`, formData);
+    update: async (groupId: string, formData: FormData): Promise<Group> => {
+        const {data} = await api.post(`/groups/${groupId}`, formData, { headers: {'Content-Type': 'multipart/form-data'}});
         return data.data;
     }
 }

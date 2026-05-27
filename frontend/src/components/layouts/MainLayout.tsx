@@ -7,7 +7,7 @@ import { useActiveMembership } from "@/hooks/useActiveMembership"
 import { useUser } from "@/hooks/useUser"
 
 export default function MainLayout() {
-  const { fetchWorkspace, workspace, activeGroup } = useActiveGroupStore()
+  const { fetchWorkspace, workspace, activeGroup, groups, fetchGroups } = useActiveGroupStore()
   const { updatePermissions } = useActiveMembership()
   const {fetchUser, user} = useUser()
 
@@ -24,6 +24,12 @@ export default function MainLayout() {
   useEffect(() => {
     updatePermissions();
   }, [activeGroup?.id, updatePermissions])
+
+  useEffect(()=> {
+    if (!groups) {
+      fetchGroups()
+    }
+  })
 
   return (
     <SidebarProvider>

@@ -21,22 +21,22 @@ const updateGroupFormSchema = z.object({
   name: z
     .string()
     .min(5, "Name must be at least 5 characters long.")
-    .max(255, "Name can not be more than 255 characters long."),
-  icon: z.file().mime(["image/jpeg", "image/png", "image/webp"]).max(5000),
-  billing_email: z.email(),
+    .max(255, "Name can not be more than 255 characters long.").nullable(),
+  icon: z.file().mime(["image/jpeg", "image/png", "image/webp"]).max(5_000_000).nullable(),
+  billing_email: z.email().nullable(),
 })
 
 export const GroupUpdateForm = () => {
-  const { activeGroup, fetchAndSetActiveGroup } = useActiveGroupStore()
+  const { activeGroup, fetchGroups, setActiveGroup } = useActiveGroupStore()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof updateGroupFormSchema>>({
     resolver: standardSchemaResolver(updateGroupFormSchema),
     defaultValues: {
-      name: activeGroup?.name || "",
-      icon: undefined,
-      billing_email: "",
+      name: activeGroup?.name || null,
+      icon: null,
+      billing_email: null,
     },
   })
 
@@ -50,13 +50,22 @@ export const GroupUpdateForm = () => {
       </div>
     )
 
-  const groupId = activeGroup.id
-
   const handleUpdate = async (data: z.infer<typeof updateGroupFormSchema>) => {
     if (isLoading) throw new Error("Group is already being created.")
     setIsLoading(true)
     try {
-      const apiCall = groupService.update(activeGroup.id, data)
+      const formData = new FormData()
+
+      formData.append('_method', 'PATCH')
+
+      if (data.name) formData.append('name', data.name)
+      if (data.billing_email) formData.append('billing_email', data.billing_email)
+
+      if (data.icon instanceof File) {
+        formData.append('icon', data.icon)
+      }
+
+      const apiCall = groupService.update(activeGroup.id, formData)
       const timer = new Promise((resolve) => setTimeout(resolve, 1000))
 
       const [response] = await Promise.all([apiCall, timer])
@@ -71,8 +80,16 @@ export const GroupUpdateForm = () => {
 
   async function onSubmit(data: z.infer<typeof updateGroupFormSchema>) {
     toast.promise(handleUpdate(data), {
-      success: () => {
-        fetchAndSetActiveGroup(groupId)
+      success: async () => {
+        await fetchGroups()
+        const updatedGroups = useActiveGroupStore.getState().groups
+        if (activeGroup?.id && updatedGroups){
+          const currentGroupId = activeGroup.id
+          const updatedGroup = updatedGroups.find(group => group.id === currentGroupId)
+          if (updatedGroup) {
+            await setActiveGroup(updatedGroup)
+          }
+        } 
         navigate("/group/projects")
         return "Group successfully updated!"
       },
@@ -95,6 +112,7 @@ export const GroupUpdateForm = () => {
                   <FieldLabel htmlFor="creation-name">Name</FieldLabel>
                   <Input
                     {...field}
+                    value={(field.value as string) ?? ""}
                     aria-invalid={fieldState.invalid}
                     type="text"
                     id="name"
@@ -119,6 +137,7 @@ export const GroupUpdateForm = () => {
                   </FieldLabel>
                   <Input
                     {...field}
+                    value={(field.value as string) ?? ""}
                     aria-invalid={fieldState.invalid}
                     type="email"
                     id="fieldupdate-email"

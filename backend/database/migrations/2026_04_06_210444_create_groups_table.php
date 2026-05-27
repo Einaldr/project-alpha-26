@@ -84,7 +84,7 @@ return new class extends Migration
 
             // In case the group is deleted, cascade
             $table->foreignUuid('group_id')->constrained()->onDelete('cascade');
-            $table->foreignUuid('user_id')->constrained();
+            $table->foreignUuid('user_id')->constrained()->nullOnDelete();
 
             // --- Content ---
             $table->string('action');

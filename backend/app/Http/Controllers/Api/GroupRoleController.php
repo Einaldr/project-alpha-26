@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\AuditAction;
 use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupRoleRequest;
 use App\Http\Requests\UpdateGroupRoleRequest;
 use App\Http\Resources\GroupRoleResource;
+use App\Models\AuditLog;
 use App\Models\Group;
 use App\Models\GroupRole;
 use App\Traits\HandlesStealthAuth;
@@ -101,6 +103,10 @@ class GroupRoleController extends Controller
             )
         ]);
 
+        AuditLog::log($group, AuditAction::ROLE_CREATED, [
+            'fields' => array_keys($request->validated())
+        ]);
+
         return new GroupRoleResource($role);
     }
 
@@ -128,6 +134,10 @@ class GroupRoleController extends Controller
             ]);
         }
 
+        AuditLog::log($group, AuditAction::ROLE_UPDATED, [
+            "role_id" => $groupRole->id
+        ]);
+
         return new GroupRoleResource($groupRole->refresh())->includePermissions();
     }
 
@@ -149,6 +159,10 @@ class GroupRoleController extends Controller
         if ($groupRole->members()->exists()) {
             return response()->json(['message' => "Conflict: Role currently in use.", 'errors' => ['role' => ['Cannot delete a role that is still assigned to members. Please reassign the members first.']]], 409);
         }
+
+        AuditLog::log($group, AuditAction::ROLE_DELETED, [
+            "roleName" => $groupRole->id
+        ]);
 
         $groupRole->delete();
         return response()->json(['message' => 'Role successfully deleted']);

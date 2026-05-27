@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\AuditAction;
 use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGroupMemberRequest;
@@ -9,6 +10,7 @@ use App\Http\Requests\SyncGroupMemberRolesRequest;
 use App\Http\Resources\GroupMemberResource;
 use App\Http\Resources\GroupRoleResource;
 use App\Mail\GroupInvitationMail;
+use App\Models\AuditLog;
 use App\Models\Group;
 use App\Models\GroupInvitation;
 use App\Models\GroupMember;
@@ -118,6 +120,10 @@ class GroupMemberController extends Controller
 
         Mail::to($request->email)->send(new GroupInvitationMail($group, $frontendUrl, $expiration));
 
+        AuditLog::log($group, AuditAction::MEMBER_INVITED, [
+            "invitedEmail" => $request->email
+        ]);
+
         return response()->json(['message' => 'Invitation sent!']);
     }
 
@@ -138,14 +144,18 @@ class GroupMemberController extends Controller
             abort(403, 'This invitation was intended for a different user.');
         }
 
+        $groupId = $invitation->group->id;
+
         $member = GroupMember::create([
             'user_id' => User::where('email', '=', $invitation->email)->id,
-            'group_id' => $invitation->group->id,
+            'group_id' => $groupId,
         ]);
 
         $member->roles()->attach($invitation->role_ids);
 
         $invitation->delete();
+
+        AuditLog::log($groupId, AuditAction::MEMBER_JOINED);
 
         return response()->json(['message' => 'Invitation accepted!']);
     }
@@ -168,7 +178,12 @@ class GroupMemberController extends Controller
         }
 
         $userName = $member->user->name;
+        $userId = $member->user_id;
         $member->delete();
+
+        AuditLog::log($group, AuditAction::MEMBER_KICKED, [
+            "user_id" => $userId   
+        ]);
 
         return response()->json(['message' => $userName . ' has been kicked.']);
     }
@@ -191,6 +206,8 @@ class GroupMemberController extends Controller
 
         $member->roles()->sync($request->roles);
 
+        AuditLog::log($group, AuditAction::MEMBER_UPDATED);
+
         return new GroupMemberResource($member);
     }
 
@@ -210,6 +227,10 @@ class GroupMemberController extends Controller
         if (!$membership) {
             abort(403, "You cannot leave a group you are not directly member of.");
         }
+
+        AuditLog::log($group, AuditAction::MEMBER_LEFT, [
+            'user_id' => $membership->user_id
+        ]);
 
         $membership->delete();
 

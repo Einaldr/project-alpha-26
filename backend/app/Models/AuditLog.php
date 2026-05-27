@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use App\Enum\AuditAction;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property-read \App\Models\Group|null $group
  * @property-read Model|\Eloquent $target
  * @property-read \App\Models\User|null $user
- * @method static \Database\Factories\AuditLogFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog onlyTrashed()
@@ -24,7 +25,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class AuditLog extends Model
 {
-    /** @use HasFactory<\Database\Factories\AuditLogFactory> */
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $keyType = 'string';
@@ -46,6 +46,7 @@ class AuditLog extends Model
 
     protected $casts = [
         'payload' => 'array',
+        'action' => AuditAction::class
     ];
 
     // The target of the action
@@ -64,5 +65,23 @@ class AuditLog extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+     public static function log(
+        Group|string $group, 
+        AuditAction $action, 
+        ?Model $target = null,
+        array $payload = []
+    ): self {
+        return self::create([
+            'group_id'    => $group instanceof Group ? $group->id : $group,
+            'user_id'     => Auth::id(),
+            'action'      => $action,
+            
+            'target_id'   => $target?->getKey(), 
+            'target_type' => $target ? $target->getMorphClass() : null, 
+            
+            'payload'     => $payload,
+        ]);
     }
 }

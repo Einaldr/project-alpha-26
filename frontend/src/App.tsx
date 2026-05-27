@@ -14,6 +14,7 @@ import { RoleUpdateForm } from "./components/forms/RoleUpdateForm"
 import { MemberUpdateForm } from "./components/forms/MemberUpdateForm"
 import { GroupUpdateForm } from "./components/forms/GroupSettingsForm"
 import { GroupCreateForm } from "./components/forms/GroupCreateForm"
+import AuditlogView from "./components/views/AuditlogView"
 
 export function App() {
   return (
@@ -36,7 +37,7 @@ export function App() {
               <Route path="/group/roles/create" element={<RoleCreationForm />} />
               <Route path="/group/roles/update" element={<RoleUpdateForm />} />
               <Route path="/group/settings" element={<GroupUpdateForm />} />
-              <Route path="/group/auditlog" element={<h1>Audit log view WIP</h1>} />
+              <Route path="/group/auditlog" element={<AuditlogView />} />
               <Route path="/group/projects" element={<h1>Projects view WIP</h1>} />
               <Route path="/group/create" element={<GroupCreateForm />} />
               <Route path="/user/settings" element={<h1>User settings view WIP</h1>} />

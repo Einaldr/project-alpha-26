@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\GroupMemberController;
 use App\Http\Controllers\Api\GroupRoleController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\AuditLogController;
 use App\Models\GroupMember;
 use App\Models\GroupRole;
 use Illuminate\Support\Facades\Route;
@@ -86,6 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/', [GroupController::class, 'destroy']);
             Route::post('/leave', [GroupMemberController::class, 'leave']);
             Route::get('/permissions', [GroupMemberController::class, 'myPermissions']);
+            Route::get('/auditlogs', [AuditLogController::class, 'index']);
 
             Route::prefix('roles')->scopeBindings()->group(function () {
 

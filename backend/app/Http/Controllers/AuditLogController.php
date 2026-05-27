@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\AuditLogResource;
 use App\Models\Group;
 use App\Traits\HandlesStealthAuth;
@@ -13,9 +12,6 @@ class AuditLogController extends Controller
 {
     use HandlesStealthAuth;
 
-    /**
-     * Display a paginated list of audit logs for the group.
-     */
     public function index(Request $request, Group $group): AnonymousResourceCollection
     {
         $this->authorizeStealth($group, 'viewLogs', 'You do not have permission to view audit logs.');

@@ -79,12 +79,12 @@ return new class extends Migration
         });
 
         // Audit logs table
-        Schema::create('group_audit_logs', function (Blueprint $table) {
+        Schema::create('audit_logs', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             // In case the group is deleted, cascade
             $table->foreignUuid('group_id')->constrained()->onDelete('cascade');
-            $table->foreignUuid('user_id')->constrained();
+            $table->foreignUuid('user_id')->nullable()->constrained()->nullOnDelete();
 
             // --- Content ---
             $table->string('action');

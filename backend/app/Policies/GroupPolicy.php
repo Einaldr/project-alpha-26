@@ -85,4 +85,9 @@ class GroupPolicy
     {
         return $user->hasGroupPermission($group, RolePermissions::MEMBER_INVITE);
     }
+
+    public function viewLogs(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::AUDIT_LOG_VIEW);
+    }
 }

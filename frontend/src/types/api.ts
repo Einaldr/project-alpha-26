@@ -1,5 +1,7 @@
 export type GroupType = 'individual' | 'org' | 'team';
 
+export const GroupTypeEnum: GroupType[] = [ 'individual', 'org', 'team']
+
 export type Permissions = 'group.update' |
                           'group.view' |
                           'group.delete' |

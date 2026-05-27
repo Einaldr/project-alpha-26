@@ -46,6 +46,7 @@ class AuditLog extends Model
 
     protected $casts = [
         'payload' => 'array',
+        'action' => AuditAction::class
     ];
 
     // The target of the action
@@ -66,13 +67,21 @@ class AuditLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function log(Group|string $group, AuditAction $action, array $payload = []): self
-    {
+     public static function log(
+        Group|string $group, 
+        AuditAction $action, 
+        ?Model $target = null,
+        array $payload = []
+    ): self {
         return self::create([
-            'group_id' => $group instanceof Group ? $group->id : $group,
-            'user_id' => Auth::id(),
-            'action' => $action,
-            'payload' => $payload,
+            'group_id'    => $group instanceof Group ? $group->id : $group,
+            'user_id'     => Auth::id(),
+            'action'      => $action,
+            
+            'target_id'   => $target?->getKey(), 
+            'target_type' => $target ? $target->getMorphClass() : null, 
+            
+            'payload'     => $payload,
         ]);
     }
 }

@@ -103,9 +103,7 @@ class GroupRoleController extends Controller
             )
         ]);
 
-        AuditLog::log($group, AuditAction::ROLE_CREATED, [
-            'fields' => array_keys($request->validated())
-        ]);
+        AuditLog::log($group, AuditAction::ROLE_CREATED, $role);
 
         return new GroupRoleResource($role);
     }
@@ -134,9 +132,7 @@ class GroupRoleController extends Controller
             ]);
         }
 
-        AuditLog::log($group, AuditAction::ROLE_UPDATED, [
-            "role_id" => $groupRole->id
-        ]);
+        AuditLog::log($group, AuditAction::ROLE_UPDATED, $groupRole);
 
         return new GroupRoleResource($groupRole->refresh())->includePermissions();
     }
@@ -160,9 +156,7 @@ class GroupRoleController extends Controller
             return response()->json(['message' => "Conflict: Role currently in use.", 'errors' => ['role' => ['Cannot delete a role that is still assigned to members. Please reassign the members first.']]], 409);
         }
 
-        AuditLog::log($group, AuditAction::ROLE_DELETED, [
-            "roleName" => $groupRole->id
-        ]);
+        AuditLog::log($group, AuditAction::ROLE_DELETED, $groupRole);
 
         $groupRole->delete();
         return response()->json(['message' => 'Role successfully deleted']);

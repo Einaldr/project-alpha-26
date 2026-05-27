@@ -19,10 +19,9 @@ class GroupObserver
     public function created(Group $group): void
     {
         $group->initialize();
-        AuditLog::log($group, AuditAction::GROUP_CREATED);
     }
 
     public function updated(Group $group): void{
-        AuditLog::log($group, AuditAction::GROUP_UPDATED);
+        AuditLog::log($group, AuditAction::GROUP_UPDATED, $group);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\AuditAction;
 use App\Enum\GroupType;
 use App\Enum\RolePermissions;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -251,6 +252,8 @@ class Group extends Model
             $this->generateDefaultIcon();
             $this->refresh();
         }
+
+        AuditLog::log($this, AuditAction::GROUP_CREATED, $this);
 
         return $this;
     }

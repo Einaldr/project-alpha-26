@@ -120,8 +120,8 @@ class GroupMemberController extends Controller
 
         Mail::to($request->email)->send(new GroupInvitationMail($group, $frontendUrl, $expiration));
 
-        AuditLog::log($group, AuditAction::MEMBER_INVITED, [
-            "invitedEmail" => $request->email
+        AuditLog::log($group, AuditAction::MEMBER_INVITED, null, [
+            'email' => $request->email
         ]);
 
         return response()->json(['message' => 'Invitation sent!']);
@@ -179,11 +179,8 @@ class GroupMemberController extends Controller
 
         $userName = $member->user->name;
         $userId = $member->user_id;
+        AuditLog::log($group, AuditAction::MEMBER_KICKED, $member);
         $member->delete();
-
-        AuditLog::log($group, AuditAction::MEMBER_KICKED, [
-            "user_id" => $userId   
-        ]);
 
         return response()->json(['message' => $userName . ' has been kicked.']);
     }
@@ -228,9 +225,7 @@ class GroupMemberController extends Controller
             abort(403, "You cannot leave a group you are not directly member of.");
         }
 
-        AuditLog::log($group, AuditAction::MEMBER_LEFT, [
-            'user_id' => $membership->user_id
-        ]);
+        AuditLog::log($group, AuditAction::MEMBER_LEFT, $membership);
 
         $membership->delete();
 

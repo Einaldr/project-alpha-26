@@ -93,7 +93,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
       },
 
       reset: () =>
-        set({ activeGroup: null, workspace: null, isLoading: false }),
+        set({ activeGroup: null, workspace: null, isLoading: false, groups: null, groupRoles: null, requests: 0 }),
 
       fetchRoles: async () => {
         const groupId = get().activeGroup?.id

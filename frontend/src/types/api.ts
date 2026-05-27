@@ -33,6 +33,19 @@ export const PermissionsSchema: Permissions[] = [
     'audit_log.view'
 ]
 
+export type AuditActions = 'group.created' |
+    'group.updated' |
+    'group.deleted' |
+    'child.created' |
+    'member.invited' |
+    'member.joined' |
+    'member.left' |
+    'member.kicked' |
+    'member.updated' |
+    'role.created' |
+    'role.updated' |
+    'role.deleted'
+
 export interface User {
     id: string;
     name: string;
@@ -64,4 +77,11 @@ export interface GroupMember {
     member_id: string;
     user: User;
     roles: Role[];
+}
+
+export interface AuditLog {
+    id: string,
+    actor: User | {id: null, name: "System"},
+    action: AuditActions,
+    payload: [],
 }

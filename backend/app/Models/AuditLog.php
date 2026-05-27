@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @property-read \App\Models\Group|null $group
@@ -69,7 +70,7 @@ class AuditLog extends Model
     {
         return self::create([
             'group_id' => $group instanceof Group ? $group->id : $group,
-            'user_id' => auth()->id,
+            'user_id' => Auth::id(),
             'action' => $action,
             'payload' => $payload,
         ]);

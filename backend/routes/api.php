@@ -87,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/', [GroupController::class, 'destroy']);
             Route::post('/leave', [GroupMemberController::class, 'leave']);
             Route::get('/permissions', [GroupMemberController::class, 'myPermissions']);
-            Route::get('/auditlog', [AuditLogController::class, 'index']);
+            Route::get('/auditlogs', [AuditLogController::class, 'index']);
 
             Route::prefix('roles')->scopeBindings()->group(function () {
 

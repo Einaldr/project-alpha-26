@@ -16,7 +16,10 @@ class AuditLogResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'actor' => new UserResource($this->whenLoaded('user')), 
+            'actor' => $this->user_id ? new UserResource($this->whenLoaded('user')) : [
+                'id' => null,
+                'name' => 'System',
+            ], 
             'action' => $this->action->value,
             'payload' => $this->payload,
             'created_at' => $this->created_at?->toIso8601String(),

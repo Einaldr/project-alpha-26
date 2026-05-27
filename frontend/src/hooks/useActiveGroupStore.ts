@@ -8,9 +8,12 @@ interface ActiveGroupState {
   workspace: Group | null
   activeGroup: Group | null
   isLoading: boolean
+  groups: Group[] | null
+  requests: number
 
   groupRoles: Role[] | null
 
+  fetchGroups: () => Promise<void>
   fetchWorkspace: () => Promise<void>
   setActiveGroup: (group: Group | null) => void
   fetchAndSetActiveGroup: (id: string) => Promise<void>
@@ -28,6 +31,8 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
       activeGroup: null,
       groupRoles: null,
       isLoading: false,
+      groups: null,
+      requests: 0,
 
       fetchWorkspace: async () => {
         set({ isLoading: true })
@@ -46,9 +51,31 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
         }
       },
 
-      setActiveGroup: (group) => {
+      setActiveGroup: async (group) => {
         set({ activeGroup: group })
-        get().fetchRoles()
+        await get().fetchRoles()
+      },
+
+      fetchGroups: async () => {
+        if (get().isLoading) throw new Error("Already fetching...")
+        set({isLoading: true})
+        try {
+        if (get().requests < 5) {
+          set({requests: get().requests + 1})
+          const groups = await groupService.myGroups()
+          set({groups: groups})
+        }
+      } catch (error) {
+        console.error("Failed to fetch groups:", error)
+
+        if (get().requests >= 5) {
+          console.error("Reached 5 requests cap to fetch groups:", error)
+          return
+        }
+      } finally {
+        set({isLoading: false, requests: 0})
+      }
+
       },
 
       fetchAndSetActiveGroup: async (id) => {

@@ -11,49 +11,24 @@ import {
 import { SidebarMenuButton, useSidebar } from "../../ui/sidebar"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import type { Group } from "@/types/api"
-import { useEffect, useState } from "react"
-import { groupService } from "@/services/groupService"
 import { Separator } from "../../ui/separator"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function GroupSelector() {
-  const [groups, setGroups] = useState<Group[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [requests, setRequests] = useState(0)
-  const { activeGroup, setActiveGroup } = useActiveGroupStore()
+  const { activeGroup, setActiveGroup, groups } = useActiveGroupStore()
   const { isMobile } = useSidebar()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    async function fetchGroups() {
-      try {
-        if (!isLoading && requests < 5) {
-          setRequests(requests + 1)
-          setIsLoading(true)
-          const groups = await groupService.myGroups()
-          setGroups(groups)
-        }
-      } catch (error) {
-        console.error("Failed to fetch groups:", error)
-
-        if (requests >= 5) {
-          console.error("Reached 5 requests cap to fetch groups:", error)
-          return
-        }
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchGroups()
-  })
 
   if (!activeGroup) {
     return null
   }
 
-  const changeGroup = (group: Group): void => {
-    setActiveGroup(group)
+  if (!groups) {
+    return null
+  }
+
+  const changeGroup = async (group: Group) => {
+    await setActiveGroup(group)
     navigate("/group/projects")
   }
 
@@ -125,13 +100,14 @@ export default function GroupSelector() {
           </DropdownMenuGroup>
         ))}
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => navigate("/group/create")}
-          data-active={() => location.pathname == "/group/create"}
-        >
-          <PlusIcon />
-          <span>Create</span>
-        </DropdownMenuItem>
+        <Link to="/group/create">
+          <DropdownMenuItem
+            data-active={() => location.pathname == "/group/create"}
+          >
+            <PlusIcon />
+            <span>Create</span>
+          </DropdownMenuItem>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   )

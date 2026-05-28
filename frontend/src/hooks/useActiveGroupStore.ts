@@ -1,7 +1,8 @@
 import { auditlogService } from "@/services/auditlogService"
 import { groupService } from "@/services/groupService"
+import { memberService } from "@/services/memberService"
 import { roleService } from "@/services/roleService"
-import type { AuditLog, Group, Role } from "@/types/api"
+import type { AuditLog, Group, Role, GroupMember } from "@/types/api"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
@@ -11,6 +12,7 @@ interface ActiveGroupState {
   isLoading: boolean
   groups: Group[] | null
   requests: number
+  members: GroupMember[] | null
 
   groupRoles: Role[] | null
 
@@ -21,6 +23,7 @@ interface ActiveGroupState {
   fetchWorkspace: () => Promise<void>
   setActiveGroup: (group: Group | null) => void
   fetchAndSetActiveGroup: (id: string) => Promise<void>
+  fetchMembers: () => Promise<void>
 
   fetchRoles: () => Promise<void>
 
@@ -38,6 +41,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
       groups: null,
       requests: 0,
       auditlogs: null,
+      members: null,
 
       fetchWorkspace: async () => {
         set({ isLoading: true })
@@ -54,6 +58,17 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           set({ isLoading: false })
           get().fetchRoles()
         }
+      },
+
+      fetchMembers: async () => {
+        const groupId = get().activeGroup?.id
+        try {
+          if (!groupId) throw new Error("Failed to fetch members: groupId is null")
+              const newMembers = await memberService.fetchGroupMembers(groupId)
+              set({members: newMembers})
+            } catch (error) {
+              throw new Error("Members View: couldn't fetch members: " + error)
+            }
       },
 
       fetchAuditLogs: async () => {
@@ -73,6 +88,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
         set({ activeGroup: group })
         await get().fetchRoles()
         await get().fetchAuditLogs()
+        await get().fetchMembers()
       },
 
       fetchGroups: async () => {
@@ -108,6 +124,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           set({ isLoading: false })
           get().fetchRoles()
           get().fetchAuditLogs()
+          get().fetchMembers()
         }
       },
 
@@ -120,6 +137,7 @@ export const useActiveGroupStore = create<ActiveGroupState>()(
           groupRoles: null,
           requests: 0,
           auditlogs: null,
+          members: null
         }),
 
       fetchRoles: async () => {

@@ -36,4 +36,6 @@ RUN composer dump-autoload --optimize --no-dev --classmap-authoritative \
 RUN chmod -R 775 storage bootstrap/cache \
     && chown -R root:www-data storage bootstrap/cache
 
+RUN php artisan storage:link
+
 EXPOSE 80

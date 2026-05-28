@@ -39,6 +39,5 @@ RUN chmod -R 775 storage bootstrap/cache \
 RUN php artisan storage:link
 
 ENV DOCUMENT_ROOT=/app/public
-WORKDIR /app/public
 
 EXPOSE 80

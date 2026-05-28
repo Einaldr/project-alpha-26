@@ -1,0 +1,15 @@
+{
+    frankenphp
+    order php_server before file_server
+}
+
+:80 {
+    # Set the web root to the public folder
+    root * public/
+
+    # Handle static files (icons, images, css)
+    file_server
+
+    # Standard FrankenPHP/Laravel handler
+    php_server
+}

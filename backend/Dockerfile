@@ -19,6 +19,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
+COPY Caddyfile /etc/caddy/Caddyfile
+
 # 1. Copy composer files first to leverage Docker layer caching
 COPY composer.json composer.lock ./
 

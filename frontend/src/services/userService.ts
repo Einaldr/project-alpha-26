@@ -10,5 +10,10 @@ export const userService = {
     logout: async (): Promise<boolean> => {
         const response = await api.post('/auth/logout')
         return response.status == 200
+    },
+
+    changeUsername: async (newUsername: {name: string}): Promise<User> => {
+        const {data} = await api.patch('/me', newUsername)
+        return data.data
     }
 }

@@ -6,12 +6,15 @@ import { standardSchemaResolver } from "@hookform/resolvers/standard-schema"
 import { Controller, useForm } from "react-hook-form"
 import { userService } from "@/services/userService"
 import { toast } from "sonner"
+import { useUser } from "@/hooks/useUser"
 
 const loginFormSchema = z.object({
   name: z.string().min(4).max(255),
 })
 
 export default function UsernameSettingForm() {
+  const {fetchUser} = useUser()
+
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: standardSchemaResolver(loginFormSchema),
     defaultValues: {
@@ -30,9 +33,11 @@ export default function UsernameSettingForm() {
     }
 
     toast.promise(loginWithDelay, {
-      loading: "Verifying credentials...",
+      loading: "Updating username...",
       success: (data) => {
         form.reset()
+        form.setValue("name", "")
+        fetchUser()
         return `Changed username to ${data.name}`
       },
       error: (err) => {
@@ -68,7 +73,7 @@ export default function UsernameSettingForm() {
 
         <Field>
           <Button size="lg" type="submit" className="w-full">
-            Login
+            Update
           </Button>
         </Field>
       </FieldGroup>

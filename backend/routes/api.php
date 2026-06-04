@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\GroupMemberController;
 use App\Http\Controllers\Api\GroupRoleController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\Api\AuditLogController;
 use App\Models\GroupMember;
 use App\Models\GroupRole;
 use Illuminate\Support\Facades\Route;

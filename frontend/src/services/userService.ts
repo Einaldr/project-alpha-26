@@ -10,5 +10,17 @@ export const userService = {
     logout: async (): Promise<boolean> => {
         const response = await api.post('/auth/logout')
         return response.status == 200
+    },
+
+    changeUsername: async (newUsername: {name: string}): Promise<User> => {
+        const {data} = await api.patch('/me', newUsername)
+        return data.data
+    },
+
+    changePassword: async (data: {current_password: string, password: string}): Promise<string|null> => {
+        const request = await api.post('/auth/password/change', data);
+        const token = request.data?.token
+        if (!token || typeof token != 'string') throw new Error('Failed to recieve a new token.')
+        return token
     }
 }

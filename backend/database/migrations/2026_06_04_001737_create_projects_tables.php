@@ -31,7 +31,7 @@ return new class extends Migration
             $table->unique(['group_id', 'name']);
         });
 
-        Schema::create('project_collaborators', function (Blueprint $table) {
+        Schema::create('project_members', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('project_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
@@ -54,7 +54,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('projects');
-        Schema::dropIfExists('project_collaborators');
+        Schema::dropIfExists('project_members');
         Schema::dropIfExists('project_secrets');
     }
 };

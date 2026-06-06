@@ -70,6 +70,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GroupRole> $groupRoles
+ * @property-read int|null $group_roles_count
  * @mixin \Eloquent
  */
 class Group extends Model

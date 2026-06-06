@@ -5,3 +5,6 @@
 !assets/
 !assets/icons
 !assets/images
+!assets/default
+!assets/default/projects
+!assets/default/projects/*

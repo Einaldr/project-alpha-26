@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\FileExtension;
+use Intervention\Image\ImageManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Intervention\Image\Drivers\Gd\Driver;
 
 /**
  * @property-read \App\Models\Group|null $group
@@ -52,5 +57,24 @@ class Project extends Model
     public function members(): HasMany
     {
         return $this->hasMany(ProjectMember::class, 'project_id');
+    }
+
+    /**
+     * Save user-provided background image.
+     * @param UploadedFile $file The user-provided icon.
+     * @return string Path to the icon.
+     */
+    public function saveCustomBackground(UploadedFile $file): string
+    {
+        $image = new ImageManager(new Driver())->decode($file)->cover(400, 400);
+
+        $path = "groups/{$this->group->id}/{$this->id}/background.webp";
+        
+        $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
+
+        Storage::disk('images')->put($path, $encoded);
+        $this->update(['icon_path' => $path]);
+
+        return $path;
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name', 64);
             $table->text('description')->nullable();
 
-            $table->text('icon_url');
+            $table->text('image_url');
 
             $table->text('git_url');
             $table->string('default_branch')->default('main');

@@ -39,19 +39,19 @@ class Project extends Model
         'group_id',
         'name',
         'description',
-        'icon_url',
+        'image_url',
         'git_url',
         'default_branch',
     ];
 
     public function secrets(): HasOne
     {
-        return $this->hasOne(ProjectSecrets::class, 'id', 'id');
+        return $this->hasOne(ProjectSecrets::class, 'project_id', 'id');
     }
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(Group::class, 'id', 'group_id');
+        return $this->belongsTo(Group::class);
     }
 
     public function members(): HasMany
@@ -73,7 +73,7 @@ class Project extends Model
         $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
 
         Storage::disk('images')->put($path, $encoded);
-        $this->update(['icon_path' => $path]);
+        $this->update(['image_url' => $path]);
 
         return $path;
     }

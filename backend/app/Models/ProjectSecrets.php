@@ -19,6 +19,8 @@ class ProjectSecrets extends Model
 {
      use HasUuids;
 
+
+    protected $primaryKey = 'project_id';
     protected $keyType = 'string';
 
     public $incrementing = false;

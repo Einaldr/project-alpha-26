@@ -24,7 +24,7 @@ class GitService
         $urlArg = escapeshellarg($cloneUrl);
         $pathArg = escapeshellarg($project->git_path);
 
-        $process = Process::run("git clone --quiet {$urlArg} {$pathArg}");
+        $process = Process::run("git clone --no-hardlinks --quiet {$urlArg} {$pathArg}");
 
         return $process->successful();
     }

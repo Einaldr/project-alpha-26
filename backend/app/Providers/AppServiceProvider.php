@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         });
         \App\Models\Group::observe(\App\Observers\GroupObserver::class);
         \App\Models\User::observe(\App\Observers\UserObserver::class);
+        \App\Models\Project::observe(\App\Observers\ProjectObserver::class);
         Relation::morphMap([
         'group'  => \App\Models\Group::class,
         'role'   => \App\Models\GroupRole::class,

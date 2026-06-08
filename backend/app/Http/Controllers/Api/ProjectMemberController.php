@@ -71,7 +71,7 @@ class ProjectMemberController extends Controller
      */
     public function update(Request $request, Group $group, Project $project, ProjectMember $projectMember): ProjectMemberResource
     {
-        $this->authorizeStealth($group, 'manageMembers', 'You cannot manage members.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'manageMembers', 'You cannot manage members.', [Project::class, $project]);
 
         $request->validate([
             'permissions' => ['required', 'array'],
@@ -98,7 +98,7 @@ class ProjectMemberController extends Controller
      */
     public function destroy(Group $group, Project $project, ProjectMember $projectMember): JsonResponse
     {
-        $this->authorizeStealth($group, 'manageMembers', 'You cannot manage members.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'manageMembers', 'You cannot manage members.', [Project::class, $project]);
 
         // Prevent removing the Org owner from the project
         if ($projectMember->user_id === $project->group->owner_id) {

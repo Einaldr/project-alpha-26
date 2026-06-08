@@ -27,7 +27,7 @@ class ProjectFileController extends Controller
     public function index(Request $request, Group $group, Project $project): JsonResponse
     {
         // 1. Security Check: Can the user view this project?
-        $this->authorizeStealth($group, 'view', 'You do not have permission to browse files.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'view', 'You do not have permission to browse files.', [Project::class, $project]);
 
         // 2. Resolve the target path
         $relativeQueryPath = ltrim($request->query('path', ''), '/');
@@ -81,7 +81,7 @@ class ProjectFileController extends Controller
      */
     public function show(Request $request, Group $group, Project $project): JsonResponse
     {
-        $this->authorizeStealth($group, 'view', 'You do not have permission to view files.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'view', 'You do not have permission to view files.', [Project::class, $project]);
 
         $relativeQueryPath = ltrim($request->query('path', ''), '/');
         if (empty($relativeQueryPath)) {
@@ -139,7 +139,7 @@ class ProjectFileController extends Controller
      */
     public function branches(Group $group, Project $project): JsonResponse
     {
-        $this->authorizeStealth($group, 'view', "You can not view branches.", [Project::class, $group]);
+        $this->authorizeStealth($group, 'view', "You can not view branches.", [Project::class, $project]);
 
         $branches = $this->gitService->getBranches($project);
 
@@ -157,7 +157,7 @@ class ProjectFileController extends Controller
     public function pull(Group $group, Project $project): JsonResponse
     {
         // Require update/write permissions to trigger a pull
-        $this->authorizeStealth($group, 'update', 'You cannot pull repository changes.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'update', 'You cannot pull repository changes.', [Project::class, $project]);
 
         $project->load('secrets'); // Eager load credentials
 
@@ -177,7 +177,7 @@ class ProjectFileController extends Controller
      */
     public function checkout(Request $request, Group $group, Project $project): JsonResponse
     {
-        $this->authorizeStealth($group, 'update', 'You cannot switch branches.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'update', 'You cannot switch branches.', [Project::class, $project]);
 
         $request->validate([
             'branch' => ['required', 'string', 'max:255'],

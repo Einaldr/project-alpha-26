@@ -69,7 +69,7 @@ class ProjectController extends Controller
      */
     public function show(Group $group, Project $project): ProjectResource
     {
-        $this->authorizeStealth($group, 'view', "You don't have access to the project",[Project::class, $group]);
+        $this->authorizeStealth($group, 'view', "You don't have access to the project",[Project::class, $project]);
 
         return new ProjectResource($project->load(['group', 'members.user']));
     }
@@ -79,7 +79,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Group $group, Project $project): ProjectResource
     {
-        $this->authorizeStealth($group, 'update', "You can not update project",[Project::class, $group]);
+        $this->authorizeStealth($group, 'update', "You can not update project",[Project::class, $project]);
 
         $validated = $request->validate([
             'name' => ['nullable', 'string', 'max:64'],
@@ -102,7 +102,7 @@ class ProjectController extends Controller
      */
     public function destroy(Group $group, Project $project): JsonResponse
     {
-        $this->authorizeStealth($group, 'delete', "You can not delete the project",[Project::class, $group]);
+        $this->authorizeStealth($group, 'delete', "You can not delete the project",[Project::class, $project]);
 
         $project->delete();
 

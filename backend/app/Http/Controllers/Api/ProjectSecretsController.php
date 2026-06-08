@@ -21,7 +21,7 @@ class ProjectSecretsController extends Controller
      */
     public function show(Group $group, Project $project): ProjectSecretsResource
     {
-        $this->authorizeStealth($group, 'manageSecrets', 'You cannot view repository credentials.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'manageSecrets', 'You cannot view repository credentials.', [Project::class, $project]);
 
         // Get existing secrets or return a blank placeholder
         $secrets = $project->secrets ?: $project->secrets()->create([
@@ -37,7 +37,7 @@ class ProjectSecretsController extends Controller
      */
     public function update(Request $request, Group $group, Project $project): ProjectSecretsResource
     {
-        $this->authorizeStealth($group, 'manageSecrets', 'You cannot update repository credentials.', [Project::class, $group]);
+        $this->authorizeStealth($group, 'manageSecrets', 'You cannot update repository credentials.', [Project::class, $project]);
 
         $request->validate([
             'auth_type' => ['required', Rule::enum(GitAuthType::class)],
@@ -59,7 +59,7 @@ class ProjectSecretsController extends Controller
      */
     public function destroy(Group $group, Project $project): JsonResponse
     {
-        $this->authorizeStealth($group, 'manageSecrets', "You can not manage repository secrets", [Project::class, $group]);
+        $this->authorizeStealth($group, 'manageSecrets', "You can not manage repository secrets", [Project::class, $project]);
 
         if ($project->secrets) {
             $project->secrets->update([

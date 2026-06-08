@@ -14,6 +14,17 @@ class ProjectMemberResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            // Standardizing on 'member_id' to clarify this is the relationship ID, not the user's ID
+            'member_id' => $this->id,
+            
+            // Nested User details (protects password, email, etc.)
+            'user' => new UserResource($this->whenLoaded('user')),
+            
+            // Project-level permissions (array of strings cast from your Enum)
+            'permissions' => $this->permissions,
+            
+            'created_at' => $this->created_at?->toIso8601String(),
+        ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enum\ProjectPermissions;
 use App\Enum\RolePermissions;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -106,6 +107,16 @@ class Project extends Model
             }
         }
         });
+    }
+
+    /**
+    * Get the absolute directory path of the git repository inside the private disk.
+    */
+    protected function gitPath(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Storage::disk('repositories')->path("groups/{$this->group_id}/{$this->id}")
+        );
     }
 
     /**

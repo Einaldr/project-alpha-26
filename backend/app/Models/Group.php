@@ -158,6 +158,11 @@ class Group extends Model
         return $this->hasMany(Group::class, 'parent_id', 'id');
     }
 
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
     /**
      * =======================
      * ATTRIBUTES

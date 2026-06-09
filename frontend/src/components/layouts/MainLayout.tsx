@@ -5,10 +5,12 @@ import { useEffect } from "react"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { useActiveMembership } from "@/hooks/useActiveMembership"
 import { useUser } from "@/hooks/useUser"
+import { useProjectsStore } from "@/hooks/useProjectsStore"
 
 export default function MainLayout() {
   const { fetchWorkspace, workspace, activeGroup, groups, fetchGroups } = useActiveGroupStore()
   const { updatePermissions } = useActiveMembership()
+  const {fetchProjects} = useProjectsStore()
   const {fetchUser, user} = useUser()
 
   useEffect(() => {
@@ -17,13 +19,18 @@ export default function MainLayout() {
     }
     if (!user) {
       fetchUser()
-      console.log(user)
     }
   }, [fetchWorkspace, workspace, user, fetchUser])
 
   useEffect(() => {
     updatePermissions();
   }, [activeGroup?.id, updatePermissions])
+
+  useEffect(() => {
+    if (activeGroup?.id){
+      fetchProjects(activeGroup.id)
+    }
+  }, [activeGroup?.id, fetchProjects])
 
   useEffect(()=> {
     if (!groups) {

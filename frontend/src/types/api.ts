@@ -46,6 +46,14 @@ export type AuditActions = 'group.created' |
     'role.updated' |
     'role.deleted'
 
+export type ProjectPermissions = 'project.read' |
+                                 'project.write'|
+                                 'project.manage'|
+                                 'project.members.invite'|
+                                 'project.members.kick'
+
+export type GitAuthType = 'git.auth.http'
+
 export interface User {
     id: string;
     name: string;
@@ -84,4 +92,31 @@ export interface AuditLog {
     actor: User | {id: null, name: "System"},
     action: AuditActions,
     payload: [],
+}
+
+export interface ProjectMember {
+    member_id: string,
+    user: User,
+    permissions: ProjectPermissions[]
+    created_at: string
+}
+
+export interface ProjectSecrets {
+    auth_type: GitAuthType,
+    is_configured: boolean,
+    updated_at: string
+}
+
+export interface Project {
+    id: string,
+    name: string,
+    description: string,
+    image_url: string,
+    git_url: string,
+    default_branch: string,
+    last_pulled_at: string,
+
+    group: Group|null,
+    members: ProjectMember[]|null,
+    secrets: ProjectSecrets|null,
 }

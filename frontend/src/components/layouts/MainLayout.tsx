@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import AppSidebar from "../elements/sidebar"
+import AppSidebar from "../Sidebars/MainSidebar"
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { useEffect } from "react"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"

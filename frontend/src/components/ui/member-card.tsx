@@ -14,6 +14,7 @@ import { memberService } from "@/services/memberService"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { toast } from "sonner"
 import { Link } from "react-router-dom"
+import { Badge } from "./badge"
 
 interface MemberCardProps {
   member: GroupMember
@@ -75,9 +76,9 @@ export const MemberCard = ({ member, onRefresh }: MemberCardProps) => {
       </CardHeader>
       <CardFooter>
         {member.roles.map((role) => (
-          <div className="rounded-md border-2 p-1 text-xs text-muted-foreground">
+          <Badge variant="secondary">
             {role.name}
-          </div>
+          </Badge>
         ))}
       </CardFooter>
     </Card>

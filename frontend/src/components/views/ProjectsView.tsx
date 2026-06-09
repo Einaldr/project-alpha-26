@@ -4,7 +4,7 @@ import { ProjectCard } from "../ui/project-card";
 import { Link } from "react-router-dom";
 
 export default function ProjectsView() {
-    const {projects} = useProjectsStore()
+    const {projects, changeProject} = useProjectsStore()
 
     if (!projects) return (
         <div className="w-full h-full items-center">
@@ -16,7 +16,7 @@ export default function ProjectsView() {
     return (
         <div className="flex h-full w-full flex-row flex-wrap items-start gap-4 p-6">
             {projects.map((project) => (
-                <Link to={{pathname: `/projects/${project.id}`}}>
+                <Link to={{pathname: `/projects/${project.id}`}} key={project.id} onClick={() => changeProject(project)}>
                     <ProjectCard project={project} />
                 </Link>
             ))}

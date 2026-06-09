@@ -119,4 +119,5 @@ export interface Project {
     group: Group|null,
     members: ProjectMember[]|null,
     secrets: ProjectSecrets|null,
+    permissions: ProjectPermissions[]
 }

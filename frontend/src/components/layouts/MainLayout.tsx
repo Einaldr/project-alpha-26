@@ -10,7 +10,7 @@ import { useProjectsStore } from "@/hooks/useProjectsStore"
 export default function MainLayout() {
   const { fetchWorkspace, workspace, activeGroup, groups, fetchGroups } = useActiveGroupStore()
   const { updatePermissions } = useActiveMembership()
-  const {fetchProjects} = useProjectsStore()
+  const {fetchProjects, resetProjects} = useProjectsStore()
   const {fetchUser, user} = useUser()
 
   useEffect(() => {
@@ -28,9 +28,10 @@ export default function MainLayout() {
 
   useEffect(() => {
     if (activeGroup?.id){
+      resetProjects()
       fetchProjects(activeGroup.id)
     }
-  }, [activeGroup?.id, fetchProjects])
+  }, [activeGroup?.id, resetProjects, fetchProjects])
 
   useEffect(()=> {
     if (!groups) {

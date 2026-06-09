@@ -149,6 +149,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('/branches', [ProjectFileController::class, 'branches']);
                     Route::post('/pull', [ProjectFileController::class, 'pull']);
                     Route::post('/checkout', [ProjectFileController::class, 'checkout']);
+                    Route::get('/permissions', [ProjectController::class, 'myPermissions']);
                 });
             });
         });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enum\ProjectPermissions;
+use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjectResource;
 use App\Models\Group;
@@ -107,5 +108,28 @@ class ProjectController extends Controller
         $project->delete();
 
         return response()->json(['message' => 'Project successfully deleted.']);
+    }
+
+    /**
+     * Return user's permissions to the specified project.
+     */
+    public function myPermissions(Request $request, Group $group, Project $project): JsonResponse
+    {
+        $this->authorizeStealth($group, 'view', "You don't have access to the project",[Project::class, $project]);
+
+        $user = $request->user();
+
+        $isOrgManager = $project->group->owner_id === $user->id || $user->hasGroupPermission($project->group, RolePermissions::PROJECT_MANAGE);
+
+        if ($isOrgManager) {
+            return response()->json([
+                'permissions' => ProjectPermissions::values()
+            ]);
+        }
+
+        $projectMember = $project->members()->where('user_id', $user->id)->firstOrFail();
+        return response()->json([
+            'permissions' => $projectMember->permissions
+        ]);
     }
 }

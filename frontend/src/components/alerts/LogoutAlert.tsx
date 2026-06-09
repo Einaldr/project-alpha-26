@@ -36,6 +36,7 @@ export default function LogoutAlert({ open, onOpenChange }: LogoutAlertProps) {
         localStorage.removeItem('active-group-storage')
         localStorage.removeItem('active-permissions-storage')
         localStorage.removeItem('active-user-storage')
+        localStorage.removeItem('projects-storage')
 
         navigate('/login')
         return "Successfully logged out!"

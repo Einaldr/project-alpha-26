@@ -1,4 +1,4 @@
-import GroupSelector from "./sidebar-elements/group-selector"
+import GroupSelector from "./MainSidebar-elements/group-selector"
 import {
   Sidebar,
   SidebarContent,
@@ -7,10 +7,10 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "../ui/sidebar"
-import NavMembers from "./sidebar-elements/nav-members"
-import NavSettings from "./sidebar-elements/nav-settings"
-import NavProjects from "./sidebar-elements/nav-projects"
-import UserManagement from "./sidebar-elements/user-management"
+import NavMembers from "./MainSidebar-elements/nav-members"
+import NavSettings from "./MainSidebar-elements/nav-settings"
+import NavProjects from "./MainSidebar-elements/nav-projects"
+import UserManagement from "./MainSidebar-elements/user-management"
 
 export default function AppSidebar() {
 

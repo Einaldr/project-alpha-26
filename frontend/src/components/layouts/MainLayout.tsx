@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 import AppSidebar from "../Sidebars/MainSidebar"
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { useEffect } from "react"
@@ -10,8 +10,9 @@ import { useProjectsStore } from "@/hooks/useProjectsStore"
 export default function MainLayout() {
   const { fetchWorkspace, workspace, activeGroup, groups, fetchGroups } = useActiveGroupStore()
   const { updatePermissions } = useActiveMembership()
-  const {fetchProjects, resetProjects} = useProjectsStore()
+  const {fetchProjects, resetProjects, fetchBranches, activeProject} = useProjectsStore()
   const {fetchUser, user} = useUser()
+  const location = useLocation()
 
   useEffect(() => {
     if (!workspace) {
@@ -32,6 +33,12 @@ export default function MainLayout() {
       fetchProjects(activeGroup.id)
     }
   }, [activeGroup?.id, resetProjects, fetchProjects])
+
+  useEffect(() =>{
+    if (activeGroup?.id && activeProject && activeProject.id && location.pathname.endsWith('/settings')) {
+      fetchBranches(activeGroup?.id, activeProject)
+    }
+  }, [fetchBranches, activeGroup?.id, activeProject, location.pathname])
 
   useEffect(()=> {
     if (!groups) {

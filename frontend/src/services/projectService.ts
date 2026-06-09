@@ -15,5 +15,15 @@ export const projectService = {
     fetchProjectPermissions: async (groupId: string, projectId: string): Promise<ProjectPermissions[]> => {
         const {data} = await api.get(`/groups/${groupId}/projects/${projectId}/permissions`);
         return data.permissions
+    },
+
+    fetchAvailableBranches: async (groupId: string, projectId: string): Promise<{current: string, branches: string[]}> => {
+        const {data} = await api.get(`/groups/${groupId}/projects/${projectId}/branches`)
+        return data
+    },
+
+    updateProject: async (groupId: string, projectId: string, formData: FormData): Promise<Project> => {
+        const {data} = await api.post(`/groups/${groupId}/projects/${projectId}`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+        return data
     }
 }

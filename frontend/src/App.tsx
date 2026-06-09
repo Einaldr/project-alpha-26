@@ -18,6 +18,7 @@ import AuditlogView from "./components/views/AuditlogView"
 import UserSettingsView from "./components/views/UserSettingsView"
 import WorkInProgressPage from "./pages/WorkInProgressPage"
 import ProjectsView from "./components/views/ProjectsView"
+import { ProjectUpdateForm } from "./components/forms/ProjectUpdateForm"
 
 export function App() {
   return (
@@ -46,6 +47,7 @@ export function App() {
               <Route path="/user/settings" element={<UserSettingsView />} />
               <Route path="/user/profile" element={<WorkInProgressPage />} />
               <Route path="/projects/:projectId" element={<h1>You are viewing a project</h1>} />
+              <Route path="/projects/:projectId/settings" element={<ProjectUpdateForm />} />
             </Route>
           </Route>
         </Routes>

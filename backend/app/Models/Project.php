@@ -133,7 +133,7 @@ class Project extends Model
         $encoded = $image->encodeUsingFileExtension(FileExtension::WEBP);
 
         Storage::disk('images')->put($path, $encoded);
-        $this->update(['image_url' => '/images' . $path]);
+        $this->update(['image_url' => 'images/' . $path]);
 
         return $path;
     }

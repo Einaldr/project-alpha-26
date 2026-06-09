@@ -7,6 +7,7 @@ interface projectsStore {
   projects: Project[]
   activeProject: Project | null
   isLoading: boolean
+  branches: {current: string, branches: string[]} | null
 
   fetchProjects: (group: Group | string) => void
   changeProject: (project: Project) => void
@@ -15,6 +16,8 @@ interface projectsStore {
     group: Group | string,
     project: Project
   ) => Promise<ProjectPermissions[]>
+
+  fetchBranches: (group: Group | string, project: Project) => void
 
   resetProjects: () => void
 }
@@ -25,6 +28,7 @@ export const useProjectsStore = create<projectsStore>()(
       projects: [],
       activeProject: null,
       isLoading: false,
+      branches: null,
 
       fetchProjects: async (group: Group | string) => {
         if (get().isLoading) {
@@ -138,6 +142,30 @@ export const useProjectsStore = create<projectsStore>()(
         } catch (error) {
           console.warn("Failed to fetch project's permissions: " + error)
           throw new Error(`Failed to fetch project's permissions: ${error}`)
+        }
+      },
+
+      fetchBranches: async (group: Group | string, project: Project) => {
+        let groupId = null
+        if (typeof group == "string") {
+          groupId = group
+        } else {
+          if (group?.id) {
+            groupId = group.id
+          } else {
+            console.warn("Failed to fetch projects: couldn't extract group id.")
+            throw new Error(
+              "Failed to fetch projects: couldn't extract group id."
+            )
+          }
+        }
+
+        try{
+          const newBranches = await projectService.fetchAvailableBranches(groupId, project.id)
+          set({branches: newBranches})
+        } catch (error) {
+          console.warn("Failed to fetch available branches: ", error)
+          throw new Error("Failed to fetch available branches: " + error)
         }
       },
 

@@ -21,6 +21,10 @@ const RegistrationFormSchema = z.object({
 const RegistrationForm = () => {
     const navigate = useNavigate();
 
+    if (localStorage.getItem('token')) {
+        navigate('/group/projects')
+    }
+
     const form = useForm<z.infer<typeof RegistrationFormSchema>>({
         resolver: standardSchemaResolver(RegistrationFormSchema),
         defaultValues: {

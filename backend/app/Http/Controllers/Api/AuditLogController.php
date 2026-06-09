@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuditLogResource;
+use App\Models\AuditLog;
 use App\Models\Group;
 use App\Traits\HandlesStealthAuth;
 use Illuminate\Http\Request;
@@ -26,10 +27,10 @@ class AuditLogController extends Controller
 
         $perPage = $request->integer('per_page', 50);
 
-        $logs = $group->auditLogs()
-            ->with('user')
-            ->latest()
-            ->paginate($perPage);
+        $logs = AuditLog::query()->where('group_id', '=', $group->id)
+                ->with('user')
+                ->latest()
+                ->paginate($perPage);
 
         return AuditLogResource::collection($logs);
     }

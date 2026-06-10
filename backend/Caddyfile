@@ -1,15 +1,16 @@
+# Caddyfile
 {
-    frankenphp
-    order php_server before file_server
+	frankenphp
 }
 
-:80 {
-    # Set the web root to the public folder
-    root * public/
-
-    # Handle static files (icons, images, css)
-    file_server
-
-    # Standard FrankenPHP/Laravel handler
-    php_server
+# The domain name of your server
+localhost {
+	# Set the webroot to the public/ directory
+	root public/
+	# Enable compression (optional)
+	encode zstd br gzip
+	# Execute PHP files from the public/ directory and serve assets
+	php_server {
+		try_files {path} index.php
+	}
 }

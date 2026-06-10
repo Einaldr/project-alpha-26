@@ -7,7 +7,7 @@ import { Card } from "../ui/card"
 import { Button } from "../ui/button"
 import { Separator } from "../ui/separator"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useState } from "react"
 import { toast } from "sonner"
 import { useProjectsStore } from "@/hooks/useProjectsStore"
@@ -129,8 +129,7 @@ export const ProjectUpdateForm = () => {
   }
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center self-center">
-      <Card className="w-full max-w-lg p-4">
+      <Card className="w-full max-w-lg p-4 self-center">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
@@ -250,10 +249,6 @@ export const ProjectUpdateForm = () => {
             </Field>
           </FieldGroup>
         </form>
-        <Link to="/group/projects" onClick={() => form.reset}>
-        <Button size="lg" variant="destructive" className="w-full">Cancel</Button>
-        </Link>
       </Card>
-    </div>
   )
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enum\ProjectPermissions;
 use App\Enum\RolePermissions;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\Group;
 use App\Models\Project;
@@ -35,14 +36,12 @@ class ProjectController extends Controller
     /**
      * Store a newly created project.
      */
-    public function store(Request $request, Group $group): ProjectResource
+    public function store(StoreProjectRequest $request, Group $group): ProjectResource
     {
         // 1. Authorization: check if they can create projects in this Org
         $this->authorizeStealth($group, 'createProject');
 
-        $validated = $request->validated();
-
-        $project = $group->projects()->create($validated);
+        $project = $group->projects()->create($request->validated());
 
         // 3. Unified Secrets Creation: Save secrets under the same transaction
         if ($request->filled('auth_type')) {

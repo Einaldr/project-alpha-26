@@ -45,6 +45,7 @@ return new class extends Migration
             $table->foreignUuid('project_id')->primary()->constrained();
             $table->string('auth_type')->default('none');
             $table->text('access_token')->nullable();
+            $table->timestampsTz();
         });
     }
 

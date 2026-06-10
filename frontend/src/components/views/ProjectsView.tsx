@@ -27,7 +27,7 @@ export default function ProjectsView() {
         }}>Retry</Button></>)}>
       {projects.map((project) => (
         <Link
-          to={{ pathname: `/projects/${project.id}` }}
+          to={{ pathname: `/projects/${project.id}/view` }}
           key={project.id}
           onClick={() => changeProject(project)}
         >

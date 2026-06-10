@@ -125,3 +125,25 @@ export interface Project {
     secrets: ProjectSecrets|null,
     permissions: ProjectPermissions[]
 }
+
+export interface File {
+    name: string,
+    path: string,
+    extension: string,
+    size: number,
+    is_binary: boolean,
+    content: string | null,
+}
+
+export interface TreeFile {
+    name: string,
+    type: 'directory' | 'file',
+    path: string,
+    size?: number,
+}
+
+export interface Tree {
+    current_path: string,
+    current_branch: string,
+    data: TreeFile[]
+}

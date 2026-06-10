@@ -20,6 +20,7 @@ import WorkInProgressPage from "./pages/WorkInProgressPage"
 import ProjectsView from "./components/views/ProjectsView"
 import ProjectSettingsView from "./components/views/ProjectsSettingsView"
 import { ProjectCreateForm } from "./components/forms/ProjectCreationForm"
+import FileView from "./components/views/FileView"
 
 export function App() {
   return (
@@ -48,7 +49,7 @@ export function App() {
               <Route path="/user/settings" element={<UserSettingsView />} />
               <Route path="/user/profile" element={<WorkInProgressPage />} />
               <Route path="/projects/create" element={<ProjectCreateForm />} />
-              <Route path="/projects/:projectId" element={<h1>You are viewing a project</h1>} />
+              <Route path="/projects/:projectId/view/:filepath?" element={<FileView />} />
               <Route path="/projects/:projectId/settings" element={<ProjectSettingsView />} />
             </Route>
           </Route>

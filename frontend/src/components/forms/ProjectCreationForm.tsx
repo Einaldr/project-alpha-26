@@ -113,10 +113,10 @@ export const ProjectCreateForm = () => {
     toast.promise(handleCreate(data), {
       success: async (newProject) => {
         if (activeGroup?.id) {
-            fetchProjects(activeGroup.id)
+            await fetchProjects(activeGroup.id)
             changeProject(newProject)
         }
-        navigate("/group/projects")
+        navigate(`/projects/${newProject.id}`)
         return "Project successfully created!"
       },
       error: (err) => {

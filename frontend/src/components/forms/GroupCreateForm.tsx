@@ -109,8 +109,8 @@ export const GroupCreateForm = () => {
   async function onSubmit(data: z.infer<typeof createGroupFormSchema>) {
     toast.promise(handleCreate(data), {
       success: async (newGroup) => {
-        fetchGroups()
-        setActiveGroup(newGroup)
+        await fetchGroups()
+        await setActiveGroup(newGroup)
         navigate("/group/projects")
         return "Group successfully created!"
       },

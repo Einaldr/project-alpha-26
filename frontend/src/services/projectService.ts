@@ -40,5 +40,10 @@ export const projectService = {
     updateSecrets: async (groupId: string, projectId: string, formData: FormData): Promise<void> => {
         const {data} = await api.post(`/groups/${groupId}/projects/${projectId}/secrets`, formData)
         return data.message
+    },
+
+    createProject: async (groupId: string, formData: FormData): Promise<Project> => {
+        const {data} = await api.post(`/groups/${groupId}/projects`, formData)
+        return data.data
     }
 }

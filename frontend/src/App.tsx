@@ -19,6 +19,7 @@ import UserSettingsView from "./components/views/UserSettingsView"
 import WorkInProgressPage from "./pages/WorkInProgressPage"
 import ProjectsView from "./components/views/ProjectsView"
 import ProjectSettingsView from "./components/views/ProjectsSettingsView"
+import { ProjectCreateForm } from "./components/forms/ProjectCreationForm"
 
 export function App() {
   return (
@@ -46,7 +47,7 @@ export function App() {
               <Route path="/group/create" element={<GroupCreateForm />} />
               <Route path="/user/settings" element={<UserSettingsView />} />
               <Route path="/user/profile" element={<WorkInProgressPage />} />
-              <Route path="/projects/create" element={<h1>You are creating a project</h1>} />
+              <Route path="/projects/create" element={<ProjectCreateForm />} />
               <Route path="/projects/:projectId" element={<h1>You are viewing a project</h1>} />
               <Route path="/projects/:projectId/settings" element={<ProjectSettingsView />} />
             </Route>

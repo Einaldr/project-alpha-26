@@ -1,5 +1,5 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema"
-import { Controller, useForm, useWatch } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
@@ -8,10 +8,9 @@ import { Button } from "../ui/button"
 import { Separator } from "../ui/separator"
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { Link, useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
-import { groupService } from "@/services/groupService"
-import { GroupTypeEnum } from "@/types/api"
+import { GitAuthTypeSchema } from "@/types/api"
 import {
   Select,
   SelectContent,
@@ -19,100 +18,103 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Checkbox } from "../ui/checkbox"
+import { projectService } from "@/services/projectService"
+import { useProjectsStore } from "@/hooks/useProjectsStore"
 
-const createGroupFormSchema = z
+const createProjectFormSchema = z
   .object({
     name: z
       .string()
       .min(5, "Name must be at least 5 characters long.")
       .max(255, "Name can not be more than 255 characters long."),
-    icon: z
+    description: z.string().max(512).optional(),
+    git_url: z.string().max(255),
+    default_branch: z.string().max(255).optional(),
+    background_image: z
       .file()
       .mime(["image/jpeg", "image/png", "image/webp"])
       .max(5_000_000)
       .nullable(),
-    billing_email: z.email().nullable(),
-    parent_id: z.uuidv7().nullable(),
-    is_private_child: z.boolean().optional(),
-    type: z.enum(GroupTypeEnum),
+    auth_type: z.enum(GitAuthTypeSchema).optional(),
+    access_token: z.string().max(255).optional(),
   })
   .refine(
     (data) => {
-      if (data.type != "team" && data.is_private_child) {
+      if (data.auth_type && !data.access_token) {
         return false
       }
       return true
     },
     {
-      message: "A team cannot be private if it is not a team.",
-      path: ["is_private_child"]
+      message:
+        "You need to fill access token if authentication type is choosen.",
+      path: ["access_token"],
     }
   )
-  .refine(
-    (data) => {
-      if (data.type == "individual") {
-        return false
-      }
-      return true
-    },
-    {
-      message: "You cannot create more workspaces.",
-      path: ["type"]
-    }
-  )
-  .refine((data)=>{
-    if ((data.parent_id !== null && data.parent_id != "") && typeof data.is_private_child !== "boolean") {
-      return false
-    }
-    return true
-  }, {
-    message: "Privacy status must be specified when a prent is set.",
-    path: ["is_private_child"]
-  })
 
-export type createGroupFormSchemaType = z.infer<typeof createGroupFormSchema>
+export type createProjectFormSchemaType = z.infer<
+  typeof createProjectFormSchema
+>
 
-export const GroupCreateForm = () => {
-  const { fetchGroups, setActiveGroup } = useActiveGroupStore()
+export const ProjectCreateForm = () => {
+  const {fetchProjects, changeProject} = useProjectsStore()
+  const { activeGroup } = useActiveGroupStore()
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
-  const form = useForm<z.infer<typeof createGroupFormSchema>>({
-    resolver: standardSchemaResolver(createGroupFormSchema),
+  const form = useForm<z.infer<typeof createProjectFormSchema>>({
+    resolver: standardSchemaResolver(createProjectFormSchema),
     defaultValues: {
       name: "",
-      icon: null,
-      billing_email: null,
-      parent_id: null,
-      is_private_child: undefined,
-      type: "org",
+      description: undefined,
+      git_url: undefined,
+      default_branch: "main",
+      background_image: undefined,
+      auth_type: undefined,
+      access_token: undefined,
     },
   })
 
-  const handleCreate = async (data: z.infer<typeof createGroupFormSchema>) => {
+  const handleCreate = async (
+    data: z.infer<typeof createProjectFormSchema>
+  ) => {
     if (isLoading) throw new Error("Group is already being created.")
     try {
-      const apiCall = groupService.store(data)
+      const formData = new FormData()
+
+      formData.append("name", data.name)
+      if (data.description) {
+        formData.append("description", data.description)
+      }
+    
+      formData.append("git_url", data.git_url)
+      formData.append('default_branch', data?.default_branch || "main")
+      if (data?.auth_type) formData.append('auth_type', data.auth_type)
+      if (data?.auth_type && data?.access_token) formData.append('access_token', data.access_token)
+
+      if (!activeGroup?.id) throw new Error("Failed to create new project: activeGroup's id is null")
+      const apiCall = projectService.createProject(activeGroup?.id, formData)
       const timer = new Promise((resolve) => setTimeout(resolve, 1000))
 
       const [response] = await Promise.all([apiCall, timer])
 
       return response
     } catch {
-      throw new Error("Failed to create the group")
+      throw new Error("Failed to create the project")
     } finally {
       setIsLoading(false)
     }
   }
 
-  async function onSubmit(data: z.infer<typeof createGroupFormSchema>) {
+  async function onSubmit(data: z.infer<typeof createProjectFormSchema>) {
     toast.promise(handleCreate(data), {
-      success: async (newGroup) => {
-        fetchGroups()
-        setActiveGroup(newGroup)
+      success: async (newProject) => {
+        if (activeGroup?.id) {
+            fetchProjects(activeGroup.id)
+            changeProject(newProject)
+        }
         navigate("/group/projects")
-        return "Group successfully created!"
+        return "Project successfully created!"
       },
       error: (err) => {
         return err || "Something went wrong"
@@ -120,38 +122,11 @@ export const GroupCreateForm = () => {
     })
   }
 
-  const groupTypeChoosen = useWatch({
-    control: form.control,
-    name: "type",
-  })
-
-  const parentId = useWatch({
-    control: form.control,
-    name: "parent_id"
-  })
-
-  useEffect(() => {
-    if (groupTypeChoosen == "org") {
-      form.setValue("parent_id", null)
-      form.setValue("is_private_child", undefined)
-    }
-  }, [groupTypeChoosen, form])
-
-  useEffect(() => {
-    if (parentId !== null && parentId != "") {
-      if (form.getValues("is_private_child") === undefined) {
-        form.setValue("is_private_child", false)
-      }
-    } else {
-      form.setValue("is_private_child", undefined)
-    }
-  }, [parentId, form])
-
   return (
     <div className="flex h-full w-full flex-col items-center justify-center self-center">
       <Card className="w-full max-w-lg p-4">
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          {/** Group name */}
+          {/** Project name */}
           <FieldGroup>
             <Controller
               name="name"
@@ -165,8 +140,32 @@ export const GroupCreateForm = () => {
                     aria-invalid={fieldState.invalid}
                     type="text"
                     id="name"
-                    placeholder="Enter the group name here"
+                    placeholder="Enter the project name here"
                     required
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/** Project Info */}
+            <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="fieldcreate-desc">
+                    Description
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    value={(field.value as string) ?? ""}
+                    aria-invalid={fieldState.invalid}
+                    type="text"
+                    id="fieldcreate-desc"
+                    placeholder="Enter the project's description here"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -177,15 +176,15 @@ export const GroupCreateForm = () => {
           </FieldGroup>
           <Separator className="mt-4 mb-4 w-full" />
 
-          {/** Group Info */}
+          {/** Secrets */}
           <FieldGroup>
             <Controller
-              name="type"
+              name="auth_type"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="fieldupdate-email">
-                    Group Type
+                  <FieldLabel htmlFor="fieldupdate-auth">
+                    Authentication Type
                   </FieldLabel>
                   <Select
                     name={field.name}
@@ -199,8 +198,12 @@ export const GroupCreateForm = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent position="item-aligned">
-                      <SelectItem value="org" textValue="Organization">Organization</SelectItem>
-                      <SelectItem value="team" textValue="Team">Team</SelectItem>
+                      <SelectItem value={GitAuthTypeSchema[0]} textValue="http">
+                        http
+                      </SelectItem>
+                      <SelectItem value="none" textValue="None" onClick={() => form.resetField('auth_type')}>
+                        None
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   {fieldState.invalid && (
@@ -210,70 +213,20 @@ export const GroupCreateForm = () => {
               )}
             />
             <Controller
-              name="billing_email"
+              name="access_token"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="fieldcreate-email">
-                    Billing Email
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    value={(field.value as string) ?? ""}
-                    aria-invalid={fieldState.invalid}
-                    type="email"
-                    id="fieldcreate-email"
-                    placeholder=""
-                    autoComplete="email"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-          <Separator className="mt-4 mb-4 w-full" />
-
-          {/** Child details */}
-          <FieldGroup>
-            <Controller
-              name="parent_id"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="fieldcreate-parent_id">
-                    Parent ID:
+                  <FieldLabel htmlFor="fieldcreate-access">
+                    Access Token
                   </FieldLabel>
                   <Input
                     {...field}
                     value={field.value ?? ""}
                     aria-invalid={fieldState.invalid}
                     type="text"
-                    id="fieldcreate-parent_id"
-                    disabled={groupTypeChoosen != "team"}
+                    id="fieldcreate-access"
                   />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="is_private_child"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field orientation="horizontal" data-invalid={fieldState.invalid}>
-                  <Checkbox
-                    id="fieldcreate-is_private_child"
-                    disabled={groupTypeChoosen != "team"}
-                    aria-invalid={fieldState.invalid}
-                    onCheckedChange={field.onChange}
-                    checked={!!field.value}
-                  />
-                  <FieldLabel htmlFor="fieldcreate-parent_id">
-                    Is a private child?
-                  </FieldLabel>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -283,10 +236,10 @@ export const GroupCreateForm = () => {
           </FieldGroup>
           <Separator className="mt-4 mb-4 w-full" />
 
-          {/** Icon */}
+          {/** bg image */}
           <FieldGroup>
             <Controller
-              name="icon"
+              name="background_image"
               control={form.control}
               render={({
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars

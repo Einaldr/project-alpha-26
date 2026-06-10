@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupMember whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupMember whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GroupMember whereUserId($value)
+ * @method static \Database\Factories\GroupMemberFactory factory($count = null, $state = [])
  * @mixin \Eloquent
  */
 class GroupMember extends Pivot

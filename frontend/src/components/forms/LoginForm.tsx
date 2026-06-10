@@ -17,6 +17,10 @@ const loginFormSchema = z.object({
 export default function LoginForm() {
     const navigate = useNavigate();
 
+    if (localStorage.getItem('token')) {
+        navigate('/group/projects')
+    }
+
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: standardSchemaResolver(loginFormSchema),
         defaultValues: {

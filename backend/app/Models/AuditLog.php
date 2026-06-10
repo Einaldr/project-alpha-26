@@ -21,6 +21,26 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog withoutTrashed()
+ * @property string $id
+ * @property string $group_id
+ * @property string|null $user_id
+ * @property AuditAction $action
+ * @property string|null $target_type
+ * @property string|null $target_id
+ * @property array<array-key, mixed>|null $payload
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereAction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog wherePayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereTargetId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereTargetType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AuditLog whereUserId($value)
  * @mixin \Eloquent
  */
 class AuditLog extends Model

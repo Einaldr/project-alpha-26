@@ -65,6 +65,21 @@ return [
             'report' => false,
         ],
 
+        'defaults' => [
+            'driver' => 'local',
+            'root' => storage_path('app/assets/default'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'assets/default',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'repositories' => [
+            'driver' => 'local',
+            'root' => storage_path('app/repositories'), // Private directory
+            'throw' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -95,6 +110,7 @@ return [
         public_path('/assets/storage') => storage_path('app/public'),
         public_path('/assets/icons') => storage_path('app/assets/icons'),
         public_path('/assets/images') => storage_path('app/assets/images'),
+        public_path('/assets/default') => storage_path('app/assets/default')
     ],
 
 ];

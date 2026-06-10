@@ -13,7 +13,7 @@ trait HandlesStealthAuth
 
         if (Gate::denies($ability, $policySubject)) {
             if ($group->parent_id && $group->is_private_child) {
-                abort(404, __('Group not found.'));
+                abort(404, __('Resource not found.'));
             }
             abort(403, $message ?? __('This action is unauthorized'));
         }

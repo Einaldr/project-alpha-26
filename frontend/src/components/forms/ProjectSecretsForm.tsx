@@ -102,7 +102,7 @@ export default function SecretsSettingForm() {
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel htmlFor="fieldupdate-desc">
-                  Default branch
+                  Auth Type
                 </FieldLabel>
                 <Select
                   name={field.name}
@@ -140,7 +140,7 @@ export default function SecretsSettingForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="creation-name">Name</FieldLabel>
+                  <FieldLabel htmlFor="creation-name">Authentication Token</FieldLabel>
                   <Input
                     {...field}
                     value={(field.value as string) ?? ""}

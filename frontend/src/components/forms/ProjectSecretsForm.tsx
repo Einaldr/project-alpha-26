@@ -1,32 +1,74 @@
-import { Input } from "@/components/ui/input"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Button } from "@/components/ui/button"
 import { z } from "zod"
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema"
 import { Controller, useForm } from "react-hook-form"
-import { userService } from "@/services/userService"
 import { toast } from "sonner"
-import { useUser } from "@/hooks/useUser"
+import { GitAuthTypeSchema } from "@/types/api"
+import { useProjectsStore } from "@/hooks/useProjectsStore"
+import { useParams } from "react-router-dom"
+import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+import { projectService } from "@/services/projectService"
+import { Card } from "../ui/card"
+import { Input } from "../ui/input"
 
-// TODO: Finish project secrets form
-
-const loginFormSchema = z.object({
-  name: z.string().min(4).max(255),
+const projectSecretsFormSchema = z.object({
+  auth_type: z.enum(GitAuthTypeSchema),
+  access_token: z.string().max(255),
 })
 
 export default function SecretsSettingForm() {
-  const {fetchUser} = useUser()
+  const { projectId } = useParams()
+  const { projects, fetchProjects } = useProjectsStore()
+  const { activeGroup } = useActiveGroupStore()
 
-  const form = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: standardSchemaResolver(loginFormSchema),
+  const project = projects.find((element) => element.id == projectId)
+
+  const form = useForm<z.infer<typeof projectSecretsFormSchema>>({
+    resolver: standardSchemaResolver(projectSecretsFormSchema),
     defaultValues: {
-      name: undefined,
+      auth_type: project?.secrets?.auth_type,
+      access_token: undefined,
     },
   })
 
-  async function onSubmit(data: z.infer<typeof loginFormSchema>) {
-    const loginWithDelay = async () => {
-      const apiCall = userService.changeUsername(data)
+  const availableAuthTypes: string[] = []
+  GitAuthTypeSchema.forEach((authType) => {
+    const splitted = authType.split(".")
+    availableAuthTypes.push(splitted[2])
+  })
+
+  async function onSubmit(data: z.infer<typeof projectSecretsFormSchema>) {
+    const updateWithDelay = async () => {
+      const formData = new FormData()
+
+      formData.append("_method", "PUT")
+
+      formData.append("auth_type", data.auth_type)
+      formData.append("access_token", data.access_token)
+
+      if (!activeGroup?.id) {
+        throw new Error(
+          "Failed to update project secrets: activeGroup.id is null."
+        )
+      } else if (typeof projectId != "string") {
+        throw new Error(
+          "Failed to update project secrets: projectId isn't a string."
+        )
+      }
+
+      const apiCall = projectService.updateSecrets(
+        activeGroup?.id,
+        projectId,
+        formData
+      )
       const timer = new Promise((resolve) => setTimeout(resolve, 1000))
 
       const [response] = await Promise.all([apiCall, timer])
@@ -34,13 +76,13 @@ export default function SecretsSettingForm() {
       return response
     }
 
-    toast.promise(loginWithDelay, {
+    toast.promise(updateWithDelay, {
       loading: "Updating username...",
-      success: (data) => {
-        form.reset()
-        form.setValue("name", "")
-        fetchUser()
-        return `Changed username to ${data.name}`
+      success: () => {
+        if (activeGroup?.id) {
+          fetchProjects(activeGroup)
+        }
+        return "Successfully updated project's secrets!"
       },
       error: (err) => {
         return err?.response?.data?.message || "Something went wrong"
@@ -49,36 +91,78 @@ export default function SecretsSettingForm() {
   }
 
   return (
-    <form
-      className="flex w-full flex-col items-center"
-      onSubmit={form.handleSubmit(onSubmit)}
-    >
-      <FieldGroup className="rounded-sm border border-border p-8">
-        <Controller
-          name="name"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="updateuser-user">New Username:</FieldLabel>
-              <Input
-                {...field}
-                aria-invalid={fieldState.invalid}
-                type="text"
-                id="updateuser-user"
-                autoComplete="text"
-                required
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+    <Card className="w-full max-w-lg self-center p-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FieldGroup>
+          <Controller
+            name="auth_type"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field>
+                <FieldLabel htmlFor="fieldupdate-desc">
+                  Default branch
+                </FieldLabel>
+                <Select
+                  name={field.name}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id="type-input"
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent position="item-aligned">
+                    {GitAuthTypeSchema.map((element) => (
+                      <SelectItem
+                        value={element}
+                        textValue={
+                          availableAuthTypes[GitAuthTypeSchema.indexOf(element)]
+                        }
+                        key={element}
+                      >
+                        {availableAuthTypes[GitAuthTypeSchema.indexOf(element)]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+          <Controller
+              name="access_token"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="creation-name">Name</FieldLabel>
+                  <Input
+                    {...field}
+                    value={(field.value as string) ?? ""}
+                    aria-invalid={fieldState.invalid}
+                    type="text"
+                    id="name"
+                    placeholder={project?.secrets?.is_configured ? "Access token is configured!" : "Secrets are not configured"}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-        <Field>
-          <Button size="lg" type="submit" className="w-full">
-            Update
-          </Button>
-        </Field>
-      </FieldGroup>
-    </form>
+          <Field>
+            <Button size="lg" type="submit" className="w-full">
+              Update
+            </Button>
+          </Field>
+        </FieldGroup>
+      </form>
+    </Card>
   )
 }

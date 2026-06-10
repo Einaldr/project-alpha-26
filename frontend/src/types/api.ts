@@ -54,6 +54,10 @@ export type ProjectPermissions = 'project.read' |
 
 export type GitAuthType = 'git.auth.http'
 
+export const GitAuthTypeSchema: GitAuthType[] = [
+    "git.auth.http"
+]
+
 export interface User {
     id: string;
     name: string;

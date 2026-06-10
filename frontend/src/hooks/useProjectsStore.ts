@@ -1,8 +1,8 @@
 import type {
-  GitAuthType,
   Group,
   Project,
   ProjectPermissions,
+  ProjectSecrets,
 } from "@/types/api"
 import { persist } from "zustand/middleware"
 import { projectService } from "@/services/projectService"
@@ -13,7 +13,6 @@ interface projectsStore {
   activeProject: Project | null
   isLoading: boolean
   branches: { current: string; branches: string[] } | null
-  secrets: { auth_type: GitAuthType; is_configured: boolean } | null
 
   fetchProjects: (group: Group | string) => void
   changeProject: (project: Project) => void
@@ -24,7 +23,10 @@ interface projectsStore {
   ) => Promise<ProjectPermissions[]>
 
   fetchBranches: (group: Group | string, project: Project) => void
-  fetchSecrets: (group: Group | string) => void
+  fetchSecrets: (
+    group: Group | string,
+    project: Project
+  ) => Promise<ProjectSecrets>
 
   resetProjects: () => void
 }
@@ -36,7 +38,6 @@ export const useProjectsStore = create<projectsStore>()(
       activeProject: null,
       isLoading: false,
       branches: null,
-      secrets: null,
 
       fetchProjects: async (group: Group | string) => {
         if (get().isLoading) {
@@ -73,6 +74,16 @@ export const useProjectsStore = create<projectsStore>()(
             } catch (error) {
               console.warn(
                 `Failed to fetch project's permissions (${project.id}): ${error}`
+              )
+            }
+
+            try {
+              const projectSecrets = await get().fetchSecrets(groupId, project)
+
+              project.secrets = projectSecrets
+            } catch (error) {
+              console.warn(
+                `Failed to fetch project's secrets (${project.id}): ${error}`
               )
             }
           })
@@ -179,7 +190,7 @@ export const useProjectsStore = create<projectsStore>()(
         }
       },
 
-      fetchSecrets: async (group: Group | string) => {
+      fetchSecrets: async (group: Group | string, project: Project) => {
         let groupId = null
         if (typeof group == "string") {
           groupId = group
@@ -196,15 +207,20 @@ export const useProjectsStore = create<projectsStore>()(
           }
         }
 
-        const project = get().activeProject
-
         try {
           if (project?.id) {
-            const newSecrets = await projectService.fetchSecrets(
+            const secrets = await projectService.fetchSecrets(
               groupId,
               project.id
             )
-            set({ secrets: newSecrets })
+
+            if (!secrets) {
+              throw new Error("Failed to fetch secrets.")
+            }
+
+            return secrets
+          } else {
+            throw new Error("Failed to fetch secrets: project.id is not set")
           }
         } catch (error) {
           throw new Error("Failed to fetch new secrets: " + error)

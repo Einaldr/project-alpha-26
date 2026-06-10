@@ -1,5 +1,5 @@
 import api from "@/lib/api";
-import type { GitAuthType, Project, ProjectPermissions } from "@/types/api";
+import type { Project, ProjectPermissions, ProjectSecrets } from "@/types/api";
 
 export const projectService = {
     fetchProjects: async (groupId: string, params?: object): Promise<Project[]> => {
@@ -32,8 +32,14 @@ export const projectService = {
         return data.message
     },
 
-    fetchSecrets: async (groupId: string, projectId: string): Promise<{auth_type: GitAuthType, is_configured: boolean}> => {
+    fetchSecrets: async (groupId: string, projectId: string): Promise<ProjectSecrets> => {
         const {data} = await api.get(`/groups/${groupId}/projects/${projectId}/secrets`)
         return data.data
+    },
+
+    updateSecrets: async (groupId: string, projectId: string, formData: FormData): Promise<void> => {
+        // TODO: Fix this request
+        const {data} = await api.post(`/groups/${groupId}/projects/${projectId}/secrets`, formData)
+        return data.message
     }
 }

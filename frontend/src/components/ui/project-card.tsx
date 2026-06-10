@@ -1,9 +1,13 @@
 import type { Project } from "@/types/api";
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from "./card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu";
-import { DotsThreeVerticalIcon, PencilSimpleLineIcon } from "@phosphor-icons/react";
+import { DotsThreeVerticalIcon, PencilSimpleLineIcon, XCircleIcon } from "@phosphor-icons/react";
 import { Button } from "./button";
 import { Link } from "react-router-dom";
+import { useActiveGroupStore } from "@/hooks/useActiveGroupStore";
+import { projectService } from "@/services/projectService";
+import { useProjectsStore } from "@/hooks/useProjectsStore";
+import { toast } from "sonner";
 
 interface projectCardProps {
     project: Project
@@ -11,6 +15,32 @@ interface projectCardProps {
 }
 
 export const ProjectCard = ({project, onClick}: projectCardProps) => {
+    const {fetchProjects} = useProjectsStore()
+    const {activeGroup} = useActiveGroupStore()
+
+    const handleDeletion = async () => {
+        if (!activeGroup?.id) throw new Error("Failed to delete project: activeGroup.id is null.")
+        
+            try {
+                await projectService.deleteProject(activeGroup.id, project.id)
+            } catch {
+                throw new Error("Failed to delete project.")
+            }
+    }
+
+    function runDeletion() {
+        toast.promise(handleDeletion, {
+            loading: "Deleting project...",
+            success: () => {
+                if (activeGroup) fetchProjects(activeGroup)
+                return "Successfully deleted the project!"
+            },
+            error: (err) => {
+                return "Failed to kick the user: " + err
+            }
+        })
+    }
+
     return (
         <Card className="w-full max-w-sm hover:drop-shadow-primary hover:drop-shadow-lg/50" onClick={onClick}>
             <img src={project.image_url} alt={project.name + "'s image"} className="relative z-20 aspect-video w-full object-cover max-w-sm" />
@@ -30,6 +60,10 @@ export const ProjectCard = ({project, onClick}: projectCardProps) => {
                   <PencilSimpleLineIcon />
                   <span>Edit project</span>
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={runDeletion}>
+                <XCircleIcon color="red"/>
+                <span className="text-destructive">Delete project</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -25,5 +25,10 @@ export const projectService = {
     updateProject: async (groupId: string, projectId: string, formData: FormData): Promise<Project> => {
         const {data} = await api.post(`/groups/${groupId}/projects/${projectId}`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
         return data
+    },
+
+    deleteProject: async (groupId: string, projectId: string): Promise<void> => {
+        const {data} = await api.delete(`/groups/${groupId}/projects/${projectId}`)
+        return data.message
     }
 }

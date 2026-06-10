@@ -69,7 +69,7 @@ export const ProjectCreateForm = () => {
       description: undefined,
       git_url: undefined,
       default_branch: "main",
-      background_image: undefined,
+      background_image: null,
       auth_type: undefined,
       access_token: undefined,
     },
@@ -91,6 +91,9 @@ export const ProjectCreateForm = () => {
       formData.append('default_branch', data?.default_branch || "main")
       if (data?.auth_type) formData.append('auth_type', data.auth_type)
       if (data?.auth_type && data?.access_token) formData.append('access_token', data.access_token)
+      if (data.background_image instanceof File) {
+        formData.append('background_image', data.background_image)
+      }
 
       if (!activeGroup?.id) throw new Error("Failed to create new project: activeGroup's id is null")
       const apiCall = projectService.createProject(activeGroup?.id, formData)
@@ -173,6 +176,50 @@ export const ProjectCreateForm = () => {
                 </Field>
               )}
             />
+            <Controller
+              name="git_url"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="fieldcreate-url">
+                    Git Address
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    value={(field.value as string) ?? ""}
+                    aria-invalid={fieldState.invalid}
+                    type="text"
+                    id="fieldcreate-url"
+                    placeholder="Enter the git url here"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="default_branch"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="fieldcreate-branch">
+                    Default branch
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    value={(field.value as string) ?? ""}
+                    aria-invalid={fieldState.invalid}
+                    type="text"
+                    id="fieldcreate-branch"
+                    placeholder="Enter the default branch's name here"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
           </FieldGroup>
           <Separator className="mt-4 mb-4 w-full" />
 
@@ -201,7 +248,7 @@ export const ProjectCreateForm = () => {
                       <SelectItem value={GitAuthTypeSchema[0]} textValue="http">
                         http
                       </SelectItem>
-                      <SelectItem value="none" textValue="None" onClick={() => form.resetField('auth_type')}>
+                      <SelectItem value="none" textValue="None" onClick={() => form.setValue('auth_type', undefined)}>
                         None
                       </SelectItem>
                     </SelectContent>

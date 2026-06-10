@@ -59,13 +59,13 @@ export const ProjectCard = ({ project, onClick }: projectCardProps) => {
 
   return (
     <Card
-      className="w-full max-w-sm hover:drop-shadow-lg/50 hover:drop-shadow-primary"
+      className="w-full h-70 hover:drop-shadow-lg/50 hover:drop-shadow-primary flex flex-col justify-between overflow-hidden"
       onClick={onClick}
     >
       <img
         src={project.image_url}
         alt={project.name + "'s image"}
-        className="relative z-20 aspect-video w-full max-w-sm object-cover"
+        className="w-full h-full object-cover" 
       />
       <CardHeader>
         <CardTitle>{project.name}</CardTitle>

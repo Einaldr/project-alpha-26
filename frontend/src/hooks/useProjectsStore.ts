@@ -1,4 +1,9 @@
-import type { Group, Project, ProjectPermissions } from "@/types/api"
+import type {
+  GitAuthType,
+  Group,
+  Project,
+  ProjectPermissions,
+} from "@/types/api"
 import { persist } from "zustand/middleware"
 import { projectService } from "@/services/projectService"
 import { create } from "zustand"
@@ -7,7 +12,8 @@ interface projectsStore {
   projects: Project[]
   activeProject: Project | null
   isLoading: boolean
-  branches: {current: string, branches: string[]} | null
+  branches: { current: string; branches: string[] } | null
+  secrets: { auth_type: GitAuthType; is_configured: boolean } | null
 
   fetchProjects: (group: Group | string) => void
   changeProject: (project: Project) => void
@@ -18,6 +24,7 @@ interface projectsStore {
   ) => Promise<ProjectPermissions[]>
 
   fetchBranches: (group: Group | string, project: Project) => void
+  fetchSecrets: (group: Group | string) => void
 
   resetProjects: () => void
 }
@@ -29,6 +36,7 @@ export const useProjectsStore = create<projectsStore>()(
       activeProject: null,
       isLoading: false,
       branches: null,
+      secrets: null,
 
       fetchProjects: async (group: Group | string) => {
         if (get().isLoading) {
@@ -43,7 +51,7 @@ export const useProjectsStore = create<projectsStore>()(
           if (group?.id) {
             groupId = group.id
           } else {
-            set({isLoading: false})
+            set({ isLoading: false })
             console.warn("Failed to fetch projects: couldn't extract group id.")
             throw new Error(
               "Failed to fetch projects: couldn't extract group id."
@@ -62,7 +70,6 @@ export const useProjectsStore = create<projectsStore>()(
               )
 
               project.permissions = projectPermissions
-
             } catch (error) {
               console.warn(
                 `Failed to fetch project's permissions (${project.id}): ${error}`
@@ -96,7 +103,7 @@ export const useProjectsStore = create<projectsStore>()(
           if (group?.id) {
             groupId = group.id
           } else {
-            set({isLoading: false})
+            set({ isLoading: false })
             console.warn("Failed to fetch projects: couldn't extract group id.")
             throw new Error(
               "Failed to fetch projects: couldn't extract group id."
@@ -124,7 +131,7 @@ export const useProjectsStore = create<projectsStore>()(
           if (group?.id) {
             groupId = group.id
           } else {
-            set({isLoading: false})
+            set({ isLoading: false })
             console.warn("Failed to fetch projects: couldn't extract group id.")
             throw new Error(
               "Failed to fetch projects: couldn't extract group id."
@@ -160,12 +167,47 @@ export const useProjectsStore = create<projectsStore>()(
           }
         }
 
-        try{
-          const newBranches = await projectService.fetchAvailableBranches(groupId, project.id)
-          set({branches: newBranches})
+        try {
+          const newBranches = await projectService.fetchAvailableBranches(
+            groupId,
+            project.id
+          )
+          set({ branches: newBranches })
         } catch (error) {
           console.warn("Failed to fetch available branches: ", error)
           throw new Error("Failed to fetch available branches: " + error)
+        }
+      },
+
+      fetchSecrets: async (group: Group | string) => {
+        let groupId = null
+        if (typeof group == "string") {
+          groupId = group
+        } else {
+          if (group?.id) {
+            groupId = group.id
+          } else {
+            console.warn(
+              "Failed to fetch project secrets: couldn't extract group id."
+            )
+            throw new Error(
+              "Failed to fetch project secrets: couldn't extract group id."
+            )
+          }
+        }
+
+        const project = get().activeProject
+
+        try {
+          if (project?.id) {
+            const newSecrets = await projectService.fetchSecrets(
+              groupId,
+              project.id
+            )
+            set({ secrets: newSecrets })
+          }
+        } catch (error) {
+          throw new Error("Failed to fetch new secrets: " + error)
         }
       },
 

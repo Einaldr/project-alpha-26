@@ -59,27 +59,27 @@ export const ProjectCard = ({ project, onClick }: projectCardProps) => {
 
   return (
     <Card
-      className="w-full h-70 hover:drop-shadow-lg/50 hover:drop-shadow-primary flex flex-col justify-between overflow-hidden"
+      className="flex h-70 w-full flex-col justify-between overflow-hidden hover:drop-shadow-lg/50 hover:drop-shadow-primary"
       onClick={onClick}
     >
       <img
         src={project.image_url}
         alt={project.name + "'s image"}
-        className="w-full h-full object-cover" 
+        className="h-full w-full object-cover"
       />
       <CardHeader>
         <CardTitle>{project.name}</CardTitle>
         <CardDescription>{project.description}</CardDescription>
         <CardAction>
-          {(project.permissions ?? []).includes('project.manage')  && (
+          {(project.permissions ?? []).includes("project.manage") && (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation}>
                 <Button variant="ghost" className="flex">
                   <DotsThreeVerticalIcon weight="bold" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" sideOffset={22} align="center">
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => e.stopPropagation}>
                   <Link
                     to={{ pathname: `/projects/${project.id}/settings` }}
                     className="flex flex-row items-center gap-2"
@@ -88,7 +88,12 @@ export const ProjectCard = ({ project, onClick }: projectCardProps) => {
                     <span>Edit project</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={runDeletion}>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    runDeletion()
+                  }}
+                >
                   <XCircleIcon color="red" />
                   <span className="text-destructive">Delete project</span>
                 </DropdownMenuItem>

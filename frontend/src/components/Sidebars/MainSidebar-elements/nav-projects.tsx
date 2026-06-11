@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 export default function NavProjects() {
   const navigate = useNavigate()
   const location = useLocation()
-  const isActive = location.pathname == "/group/projects"
+  const isActive = location.pathname == "/group/projects" || location.pathname.startsWith('/projects')
 
   return (
     <SidebarGroup>

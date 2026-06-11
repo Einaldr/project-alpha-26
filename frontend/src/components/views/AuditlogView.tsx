@@ -1,9 +1,14 @@
 import { useActiveGroupStore } from "@/hooks/useActiveGroupStore"
 import { AuditlogCard } from "../ui/auditlog-card"
 import { Button } from "../ui/button"
+import { useEffect } from "react"
 
 export default function AuditlogView() {
   const { auditlogs, fetchAuditLogs } = useActiveGroupStore()
+
+  useEffect(() => {
+    fetchAuditLogs()
+  }, [fetchAuditLogs])
 
   if (!auditlogs) {
     return (
@@ -17,7 +22,7 @@ export default function AuditlogView() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-2">
       {auditlogs.map((log) => (
-        <AuditlogCard log={log} />
+        <AuditlogCard log={log} key={log.id} />
       ))}
     </div>
   )

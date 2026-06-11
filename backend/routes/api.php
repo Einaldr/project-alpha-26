@@ -7,6 +7,10 @@ use App\Http\Controllers\Api\GroupRoleController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuditLogController;
+use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\ProjectFileController;
+use App\Http\Controllers\Api\ProjectMemberController;
+use App\Http\Controllers\Api\ProjectSecretsController;
 use App\Models\GroupMember;
 use App\Models\GroupRole;
 use Illuminate\Support\Facades\Route;
@@ -109,6 +113,43 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('/', [GroupMemberController::class, 'show']);
                     Route::delete('/', [GroupMemberController::class, 'kickMember']);
                     Route::patch('/', [GroupMemberController::class, 'syncRoles']);
+                });
+            });
+
+            Route::prefix('projects')->scopeBindings()->group(function () {
+                Route::get('/', [ProjectController::class, 'index']);  // List projects in this group
+                Route::post('/', [ProjectController::class, 'store']); // Create project in this group
+
+                Route::prefix('{project}')->group(function () {
+                    Route::get('/', [ProjectController::class, 'show']);
+                    Route::patch('/', [ProjectController::class, 'update']);
+                    Route::delete('/', [ProjectController::class, 'destroy']);
+
+                    Route::prefix('secrets')->group(function () {
+                        Route::get('/', [ProjectSecretsController::class, 'show']);
+                        Route::put('/', [ProjectSecretsController::class, 'update']);
+                        Route::delete('/', [ProjectSecretsController::class, 'destroy']);
+                    });
+
+                    Route::prefix('members')->group(function () {
+                        Route::get('/', [ProjectMemberController::class, 'index']);
+                        Route::post('/', [ProjectMemberController::class, 'store']); // Direct add from Org members
+
+                        Route::prefix('{projectMember}')->group(function () {
+                            Route::patch('/', [ProjectMemberController::class, 'update']);
+                            Route::delete('/', [ProjectMemberController::class, 'destroy']);
+                        });
+                    });
+
+                    Route::prefix('files')->group(function () {
+                        Route::get('/', [ProjectFileController::class, 'index']);    // Lazy-load folder tree
+                        Route::get('/show', [ProjectFileController::class, 'show']); // Read raw file content
+                    });
+
+                    Route::get('/branches', [ProjectFileController::class, 'branches']);
+                    Route::post('/pull', [ProjectFileController::class, 'pull']);
+                    Route::post('/checkout', [ProjectFileController::class, 'checkout']);
+                    Route::get('/permissions', [ProjectController::class, 'myPermissions']);
                 });
             });
         });

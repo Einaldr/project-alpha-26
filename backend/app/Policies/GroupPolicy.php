@@ -90,4 +90,9 @@ class GroupPolicy
     {
         return $user->hasGroupPermission($group, RolePermissions::AUDIT_LOG_VIEW);
     }
+
+    public function createProject(User $user, Group $group): bool
+    {
+        return $user->hasGroupPermission($group, RolePermissions::PROJECT_MANAGE);
+    }
 }

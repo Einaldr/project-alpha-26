@@ -116,7 +116,7 @@ export const ProjectCreateForm = () => {
             await fetchProjects(activeGroup.id)
             await changeProject(newProject)
         }
-        navigate(`/projects/${newProject.id}`)
+        navigate(`/projects/${newProject.id}/view`)
         return "Project successfully created!"
       },
       error: (err) => {

@@ -114,7 +114,7 @@ export const ProjectCreateForm = () => {
       success: async (newProject) => {
         if (activeGroup?.id) {
             await fetchProjects(activeGroup.id)
-            changeProject(newProject)
+            await changeProject(newProject)
         }
         navigate(`/projects/${newProject.id}`)
         return "Project successfully created!"
@@ -122,6 +122,7 @@ export const ProjectCreateForm = () => {
       error: (err) => {
         return err || "Something went wrong"
       },
+      loading: "Creating the project..."
     })
   }
 

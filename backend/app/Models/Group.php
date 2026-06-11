@@ -174,7 +174,7 @@ class Group extends Model
     {
         return Attribute::make(
         get: fn () => $this->icon_path 
-            ? asset('icons/' . $this->icon_path . '?v=' . $this->updated_at?->timestamp) 
+            ? asset('assets/icons/' . $this->icon_path . '?v=' . $this->updated_at?->timestamp) 
             : null,
         );
     }

@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:5173'],
+    'allowed_origins' => ['https://project-alpha-25.czubala.dev'],
 
     'allowed_origins_patterns' => [],
 

@@ -316,6 +316,8 @@ class Group extends Model
         Storage::disk('icons')->put($path, $encoded);
         $this->update(['icon_path' => $path]);
 
+        $this->touch();
+
         return $path;
     }
 }

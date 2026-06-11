@@ -63,6 +63,15 @@ class Project extends Model
         return $this->hasMany(ProjectMember::class, 'project_id');
     }
 
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value) => $value 
+                ? asset('assets/' . $value . '?v=' . $this->updated_at?->timestamp) 
+                : null,
+        );
+    }
+
     public function scopeVisibleTo(Builder $query, ?User $user): void
 {
     $query->where(function ($q) use ($user) {

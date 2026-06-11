@@ -19,7 +19,7 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             
-            'image_url' => $this->image_url ? asset('assets/' . $this->image_url) : null,
+            'image_url' => $this->image_url,
             
             'git_url' => $this->git_url,
             'default_branch' => $this->default_branch,

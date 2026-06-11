@@ -173,7 +173,9 @@ class Group extends Model
     protected function iconUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->icon_path ? asset('assets/icons/' . $this->icon_path) : null,
+        get: fn () => $this->icon_path 
+            ? asset('icons/' . $this->icon_path . '?v=' . $this->updated_at?->timestamp) 
+            : null,
         );
     }
 
